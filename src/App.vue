@@ -11,8 +11,9 @@
       "
     >
     </VideoBackground>
-    <NavigationMenu style="z-index: 1" />
+
     <v-main class="main">
+      <NavigationMenu style="z-index: 1" />
       <div class="centered">
         <router-view />
       </div>
