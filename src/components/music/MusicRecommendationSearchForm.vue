@@ -1,11 +1,12 @@
 <template>
   <div class="recommendation-field">
-    <v-card class="recommendation-card">
+    <v-card class="recommendation-card" flat>
       <div class="recommendation-title">Project By CREZY</div>
       <div class="recommendation-subtitle">
         Tell us about your day <br />
         Let us zhuzh it up
       </div>
+      <div class="recommendation-divider">/////////////////////////////</div>
       <div class="d-flex">
         <input
           type="text"
@@ -46,25 +47,35 @@ export default {
 }
 
 .recommendation-card {
-  margin-top: 15rem;
+  margin-top: 10rem;
   padding: 2rem;
   width: 750px;
+  background-color: transparent !important;
 }
 
 .recommendation-title {
   font-size: 22px;
+  color: white;
 }
 .recommendation-subtitle {
-  font-size: 50px;
+  font-size: 68px;
   margin-top: 30px;
   margin-bottom: 55px;
   line-height: 1;
+  color: #07ffee;
+}
+.recommendation-divider {
+  font-size: 36px;
+  margin-top: 15px;
+  margin-bottom: 55px;
+  color: #07ffee;
 }
 
 .recommendation-search-bar {
   font-size: 22px;
-  border: solid 1px black;
+  color: white;
   width: 550px;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 .recommendation-search-button {
   font-size: 22px;
@@ -72,6 +83,6 @@ export default {
   padding: 3px;
   padding-left: 15px;
   padding-right: 15px;
-  background-color: lightgreen;
+  background-color: #ccff00;
 }
 </style>
