@@ -1,18 +1,30 @@
 <template>
-  <v-app>
+  <v-app style="background-color: black">
+    <NavigationMenu />
     <v-main>
-      <router-view/>
+      <div class="centered">
+        <router-view />
+      </div>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import NavigationMenu from "./views/layout/navigation/NavigationMenu.vue";
 
 export default {
-  name: 'App',
+  components: {
+    NavigationMenu,
+  },
 
-  data: () => ({
-    //
-  }),
-}
+  data: () => ({}),
+};
 </script>
+
+<style>
+.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
