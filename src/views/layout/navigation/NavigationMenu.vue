@@ -21,7 +21,12 @@
           </div>
         </button>
         <div class="nav-btn-container">
-          <button v-for="button in buttons" :key="button.label" class="nav-btn">
+          <button
+            v-for="button in buttons"
+            :key="button.label"
+            :class="button.class"
+            @click="toggleBtn(button.label)"
+          >
             {{ button.label }}
           </button>
         </div>
@@ -35,12 +40,54 @@ export default {
   data() {
     return {
       buttons: [
-        { label: "Home" },
-        { label: "Playlists" },
-        { label: "My Page" },
-        { label: "Login" },
+        { label: "Home", class: "clicked-nav-btn" },
+        { label: "Playlists", class: "nav-btn" },
+        { label: "My Page", class: "nav-btn" },
+        { label: "Login", class: "nav-btn" },
       ],
     };
+  },
+  methods: {
+    toggleBtn(label) {
+      if (label === "Home") {
+        this.buttons = [
+          { label: "Home", class: "clicked-nav-btn" },
+          { label: "Playlists", class: "nav-btn" },
+          { label: "My Page", class: "nav-btn" },
+          { label: "Login", class: "nav-btn" },
+        ];
+        if (this.$route.path !== "/") {
+          this.$router.push({ name: "home" });
+        }
+      }
+      if (label === "Playlists") {
+        this.buttons = [
+          { label: "Home", class: "nav-btn" },
+          { label: "Playlists", class: "clicked-nav-btn" },
+          { label: "My Page", class: "nav-btn" },
+          { label: "Login", class: "nav-btn" },
+        ];
+        if (this.$route.path !== "/playlist-list-page") {
+          this.$router.push({ name: "PlaylistListPage" });
+        }
+      }
+      if (label === "My Page") {
+        this.buttons = [
+          { label: "Home", class: "nav-btn" },
+          { label: "Playlists", class: "nav-btn" },
+          { label: "My Page", class: "clicked-nav-btn" },
+          { label: "Login", class: "nav-btn" },
+        ];
+      }
+      if (label === "Login") {
+        this.buttons = [
+          { label: "Home", class: "nav-btn" },
+          { label: "Playlists", class: "nav-btn" },
+          { label: "My Page", class: "nav-btn" },
+          { label: "Login", class: "clicked-nav-btn" },
+        ];
+      }
+    },
   },
 };
 </script>
@@ -50,7 +97,7 @@ export default {
   background-color: rgba(255, 255, 255, 0.2) !important;
   position: sticky !important;
   top: 0;
-  margin-top: 20px;
+  margin-top: 15px;
   z-index: 1000;
   width: 100%;
 }
@@ -58,7 +105,6 @@ export default {
 .icon-btn {
   display: flex;
   align-items: center;
-  position: static;
 }
 
 .logo-container {
@@ -89,5 +135,13 @@ export default {
     color: #ccff00;
     border-top: solid 3px #ccff00;
   }
+}
+.clicked-nav-btn {
+  font-size: 12px;
+  padding: 10px;
+  margin: 8px;
+  margin-top: 30px;
+  color: #ccff00;
+  border-top: solid 3px #ccff00;
 }
 </style>
