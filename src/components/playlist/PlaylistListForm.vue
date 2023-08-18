@@ -63,9 +63,9 @@ export default {
 
 <style>
 .playlist-list-card {
-  margin-top: 10rem;
+  margin-top: 6rem;
   padding: 18px;
-  width: 750px;
+  width: 900px;
   background-color: rgba(0, 0, 0, 0.4) !important;
 }
 .playlist-list-title {
