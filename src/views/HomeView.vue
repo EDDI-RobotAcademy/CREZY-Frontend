@@ -1,18 +1,38 @@
 <template>
-  <HelloWorld />
+  <div
+    v-if="!musicList || (Array.isArray(musicList) && musicList.length === 0)"
+  >
+    <MusicRecommendationSearchForm @submit="recommendation" />
+  </div>
+  <div v-else>
+    <MusicRecommendationForm />
+  </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import MusicRecommendationSearchForm from "@/components/music/MusicRecommendationSearchForm.vue";
+import MusicRecommendationForm from "@/components/music/MusicRecommendationForm.vue";
 
-// Components
-import HelloWorld from "../components/HelloWorld.vue";
+import { mapActions, mapState } from "vuex";
 
-export default defineComponent({
-  name: "HomeView",
+const musicModule = "musicModule";
 
+export default {
   components: {
-    HelloWorld,
+    MusicRecommendationForm,
+    MusicRecommendationSearchForm,
   },
-});
+  computed: {
+    ...mapState(musicModule, ["musicList"]),
+  },
+  methods: {
+    ...mapActions(musicModule, ["requestRecommendationToFastApi"]),
+
+    async recommendation(payload) {
+      await this.requestRecommendationToFastApi(payload);
+    },
+  },
+};
 </script>
+
+<style></style>

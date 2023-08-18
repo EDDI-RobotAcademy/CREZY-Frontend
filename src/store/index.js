@@ -1,14 +1,11 @@
-import { createStore } from 'vuex'
+import { createStore } from "vuex";
+
+import MusicModule from "./music/MusicModule";
+import PlaylistModule from "./playlist/PlaylistModule";
 
 export default createStore({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
   modules: {
-  }
-})
+    musicModule: MusicModule,
+    playlistModule: PlaylistModule,
+  },
+});
