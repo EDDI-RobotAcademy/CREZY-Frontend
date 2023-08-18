@@ -23,6 +23,9 @@
       </div>
     </v-card>
   </div>
+  <div style="margin-top: 1000px">
+    <v-card style="background-color: white">hello</v-card>
+  </div>
 </template>
 <script>
 export default {
@@ -47,7 +50,7 @@ export default {
 }
 
 .recommendation-card {
-  margin-top: 10rem;
+  margin-top: 6rem;
   padding: 2rem;
   width: 750px;
   background-color: transparent !important;
