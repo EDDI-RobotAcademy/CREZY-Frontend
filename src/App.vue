@@ -15,7 +15,11 @@
     <v-main class="main">
       <NavigationMenu style="z-index: 1" />
       <div class="centered">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <transition name="slide" mode="out-in">
+            <Component :is="Component" />
+          </transition>
+        </router-view>
       </div>
     </v-main>
   </v-app>
@@ -59,5 +63,29 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-out;
+}
+
+.slide-enter-from {
+  opacity: 0;
+  transform: translateX(100%);
+}
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: 0.3s ease-out;
 }
 </style>
