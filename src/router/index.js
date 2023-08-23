@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import playlistRoutes from "./playlist";
+import accountRoutes from "./account";
+
 
 const routes = [
   {
@@ -18,6 +20,7 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
   },
   ...playlistRoutes,
+  ...accountRoutes,
 ];
 
 const router = createRouter({
