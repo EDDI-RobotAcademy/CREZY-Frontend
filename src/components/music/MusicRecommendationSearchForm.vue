@@ -23,9 +23,6 @@
       </div>
     </v-card>
   </div>
-  <div style="margin-top: 1000px">
-    <v-card style="background-color: white">hello</v-card>
-  </div>
 </template>
 <script>
 export default {
