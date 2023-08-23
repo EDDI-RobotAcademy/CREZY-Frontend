@@ -8,6 +8,14 @@
                   :src="require('@/assets/images/blackpeoplewithheadphone.png')"
                 >
             </v-img>
+            <div class="login-icons">
+                <v-img
+                class="icon"
+                :src="require('@/assets/images/google_icon.png')"
+                height="50"
+                ></v-img>
+                
+            </div>
         </v-card>
     </v-container>
 </template>
@@ -31,4 +39,19 @@ export default {
   color: #ffffff;
 }
     
+.login-icons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.icon {
+  cursor: pointer;
+}
+
 </style>
+
+
+
+
+
