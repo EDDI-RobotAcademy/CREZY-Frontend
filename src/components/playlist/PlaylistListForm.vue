@@ -68,7 +68,7 @@ export default {
     },
     toPlaylist(playlistId) {
       this.$router.push({
-        name: "playlistReadPage",
+        name: "PlaylistReadPage",
         params: { playlistId: playlistId.toSting() },
       });
     },
