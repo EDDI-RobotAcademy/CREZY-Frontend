@@ -4,21 +4,30 @@
       <div class="playlist-list-title">Playlists</div>
       <div class="playlist-list">
         <v-row>
-          <v-col v-for="playlist in playlists" :key="playlist.id" cols="6">
+          <v-col
+            v-for="playlist in playlists"
+            :key="playlist.playlistId"
+            cols="6"
+          >
             <div
               class="image-wrapper"
               @mouseover="showDescription = true"
               @mouseout="showDescription = false"
             >
-              <v-sheet class="playlist-sheet">
+              <v-sheet
+                class="playlist-sheet"
+                @click="toPlaylist(playlist.playlistId)"
+              >
                 <v-img
                   class="mx-auto"
                   height="300"
-                  :src="getImage(playlist.thumbnail)"
+                  :src="getImage(playlist.thumbnailName)"
                   v-on="on"
                 ></v-img>
                 <div v-show="showDescription" class="image-description">
-                  <div class="description-title">{{ playlist.name }}</div>
+                  <div class="description-title">
+                    {{ playlist.playlistName }}
+                  </div>
                   <div class="description-writer">{{ playlist.writer }}</div>
                   <div class="description-counts">
                     <v-icon class="description-icons">mdi-thumb-up</v-icon
@@ -56,6 +65,12 @@ export default {
         link.substring(link.lastIndexOf("=") + 1) +
         "/mqdefault.jpg"
       );
+    },
+    toPlaylist(playlistId) {
+      this.$router.push({
+        name: "playlistReadPage",
+        params: { playlistId: playlistId.toSting() },
+      });
     },
   },
 };
