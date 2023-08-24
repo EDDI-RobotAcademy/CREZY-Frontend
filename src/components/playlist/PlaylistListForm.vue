@@ -14,7 +14,10 @@
               @mouseover="showDescription = true"
               @mouseout="showDescription = false"
             >
-              <v-sheet class="playlist-sheet">
+              <v-sheet
+                class="playlist-sheet"
+                @click="toPlaylist(playlist.playlistId)"
+              >
                 <v-img
                   class="mx-auto"
                   height="300"
@@ -62,6 +65,12 @@ export default {
         link.substring(link.lastIndexOf("=") + 1) +
         "/mqdefault.jpg"
       );
+    },
+    toPlaylist(playlistId) {
+      this.$router.push({
+        name: "playlistReadPage",
+        params: { playlistId: playlistId.toSting() },
+      });
     },
   },
 };
