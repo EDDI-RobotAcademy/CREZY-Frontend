@@ -8,7 +8,7 @@ const accountRoutes = [
     component: AccountLoginPage,
   },
   {
-    path: "/google-redirect-page",
+    path: "/login/oauth2/code/google",
     name: "GoogleRedirectPage",
     component: GoogleRedirectPage,
   },
