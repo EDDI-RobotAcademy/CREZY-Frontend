@@ -9,7 +9,7 @@
   export default {
     setup() {
       const store = useStore()
-      const requestOauthGoogleToSpring = (code)=> store.dispatch("AccountModule/requestOauthGoogleToSpring", code)
+      const requestOauthGoogleToSpring = (code)=> store.dispatch("accountModule/requestOauthGoogleToSpring", code)
       async function setRedirectData() {
         const route = useRoute()
         const code = route.query.code
