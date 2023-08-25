@@ -78,6 +78,9 @@ export default {
           { label: "My Page", class: "clicked-nav-btn" },
           { label: "Login", class: "nav-btn" },
         ];
+        if (this.$route.path !== "/my-page") {
+          this.$router.push({ name: "MyPage" });
+        }
       }
       if (label === "Login") {
         this.buttons = [
