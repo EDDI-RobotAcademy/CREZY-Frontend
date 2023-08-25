@@ -13,6 +13,7 @@
                 class="icon"
                 :src="require('@/assets/images/google_icon.png')"
                 height="50"
+                @click="onGoogleLogin"
                 ></v-img>
                 
             </div>
@@ -20,9 +21,24 @@
     </v-container>
 </template>
 <script>
+
+import { useStore } from "vuex";
+
 export default {
+
+  setup() {
     
+    const store = useStore();
+
+    return {
+
+      onGoogleLogin: () =>
+        store.dispatch("accountModule/requestGoogleOauthRedirectUrlToSpring"),
+    }
+    
+  }
 }
+
 </script>
 
 <style>
