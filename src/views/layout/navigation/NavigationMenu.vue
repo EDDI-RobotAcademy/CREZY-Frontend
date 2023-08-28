@@ -89,6 +89,9 @@ export default {
           { label: "My Page", class: "nav-btn" },
           { label: "Login", class: "clicked-nav-btn" },
         ];
+        if (this.$route.path !== "/account-login-page") {
+          this.$router.push({ name: "AccountLoginPage" });
+        }
       }
     },
   },

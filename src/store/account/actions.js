@@ -1,10 +1,29 @@
+
 import {
   REQUEST_ACCOUNT_TO_SPRING,
 } from "./mutation-types";
+import axiosInst from '@/utility/axiosInst'
+import { SET_USER } from "@/store/account/mutation-types";
 
-import axiosInst from "@/utility/axiosInst";
 
 export default {
+    
+    async requestGoogleOauthRedirectUrlToSpring() {
+        return axiosInst.springAxiosInst.get('/oauth/google')
+          .then(res=> {
+              window.location.href=res.data
+          })
+    },
+
+    async requestUserInfoGoogleToSpring(context, code) {
+        return axiosInst.springAxiosInst.get("/oauth/google-login", {params: {code: code}})
+          .then(async (res)=> {
+              console.log(res.data)
+              await context.commit(SET_USER, res.data)
+            
+          })
+    },
+  
   requestAccountToSpring({ commit }, payload) {
     const { userToken } = payload
     return axiosInst.springAxiosInst.post('account/info', { userToken })
@@ -13,4 +32,5 @@ export default {
         commit(REQUEST_ACCOUNT_TO_SPRING, resAccount.data);
       })
   },
-};
+   
+}

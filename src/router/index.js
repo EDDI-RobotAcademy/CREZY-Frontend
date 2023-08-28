@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import playlistRoutes from "./playlist";
 import accountRoutes from "./account";
 
+
 const routes = [
   {
     path: "/",
