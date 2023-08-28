@@ -67,7 +67,7 @@
     <v-card style="border-radius: 0px;" class="playlist-dialog">
       <v-card-title class="playlist-dialog-title">새 재생목록</v-card-title>
       <v-card-text>
-        <my-page-playlist-register-form v-if="showAddPlaylistDialog" @submit="" onSubmit />
+        <my-page-playlist-register-form v-if="showAddPlaylistDialog" @submit="onSubmit" />
       </v-card-text>
       <v-card-actions class="playlist-dialog-actions">
         <v-btn @click="cancelPlaylist" class="cancel-button">취소</v-btn>
@@ -78,6 +78,9 @@
   
 <script>
 import MyPagePlaylistRegisterForm from '@/components/account/MyPagePlaylistRegisterForm.vue'
+import { mapActions } from "vuex";
+
+const playlistModule = "playlistModule";
 
 export default {
   props: {
@@ -163,12 +166,14 @@ export default {
   // },
 
   methods: {
+    ...mapActions(playlistModule, ["requestPlaylistRegisterToSpring"]),
+
     addPlaylist() {
       this.showAddPlaylistDialog = true
     },
 
-    async onSubmit() {
-      // await this.requestAddPlaylistToSpring(payload)
+    async onSubmit(payload) {
+      await this.requestPlaylistRegisterToSpring(payload)
       this.showAddPlaylistDialog = false
     },
 

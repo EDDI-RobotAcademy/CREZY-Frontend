@@ -33,7 +33,7 @@ export default {
     data() {
         return {
             playlistName: '',
-            imageUrls: [],
+            thumbnailName: null,
 
             imagePreview: null,
             file: null,
@@ -57,6 +57,7 @@ export default {
 
                 reader.onload = (e) => {
                     this.imagePreview = e.target.result;
+                    this.thumbnailName = file.name;
                 };
 
                 reader.readAsDataURL(file);
@@ -70,12 +71,9 @@ export default {
             }
 
             await this.uploadAwsS3()
+            const { playlistName, thumbnailName } = this;
 
-            // const { playlistName } = this;
-
-            // this.$emit("submit", { playlistName });
-            // 추후 수정 필요
-            await this.$router.push({ name: 'PlaylistManagePage' });
+            this.$emit("submit", { playlistName, thumbnailName });
         },
 
         awsS3Config() {
@@ -121,7 +119,7 @@ export default {
             this.imagePreview = null;
             this.file = null;
             this.s3fileList = [];
-            this.imageUrls = [];
+            this.thumbnailName = null;
         },
     },
 }
