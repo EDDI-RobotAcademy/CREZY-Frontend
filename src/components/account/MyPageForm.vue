@@ -61,9 +61,24 @@
       </div>
     </div>
   </div>
+
+  <!-- 플레이리스트 생성 팝업 -->
+  <v-dialog v-model="showAddPlaylistDialog" max-width="500px">
+    <v-card style="border-radius: 0px;" class="playlist-dialog">
+      <v-card-title class="playlist-dialog-title">새 재생목록</v-card-title>
+      <v-card-text>
+        <my-page-playlist-register-form v-if="showAddPlaylistDialog" @submit="" onSubmit />
+      </v-card-text>
+      <v-card-actions class="playlist-dialog-actions">
+        <v-btn @click="cancelPlaylist" class="cancel-button">취소</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
   
 <script>
+import MyPagePlaylistRegisterForm from '@/components/account/MyPagePlaylistRegisterForm.vue'
+
 export default {
   props: {
     account: {
@@ -78,6 +93,16 @@ export default {
       type: Array,
       required: true,
     },
+  },
+
+  components: {
+    MyPagePlaylistRegisterForm
+  },
+
+  data() {
+    return {
+      showAddPlaylistDialog: false,
+    }
   },
 
   // data() {
@@ -139,11 +164,17 @@ export default {
 
   methods: {
     addPlaylist() {
-      // 팝업으로
-      // 플레이리스트 이름
-      // 플레이리스트 썸네일 지정
-      // 생성버튼 누르면 PlaylistModifyPage로 이동
+      this.showAddPlaylistDialog = true
     },
+
+    async onSubmit() {
+      // await this.requestAddPlaylistToSpring(payload)
+      this.showAddPlaylistDialog = false
+    },
+
+    cancelPlaylist() {
+      this.showAddPlaylistDialog = false
+    }
   }
 }
 
@@ -176,5 +207,26 @@ export default {
 
 .add-playlist-button {
   background-color: rgba(32, 31, 31, 0.8) !important;
+}
+
+.playlist-dialog {
+  background-color: #333;
+  padding: 10px;
+}
+
+.playlist-dialog-title {
+  font-size: 20px;
+  color: white;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.playlist-dialog-actions {
+  justify-content: center;
+}
+
+.cancel-button {
+  color: white;
+  margin-right: 90px;
 }
 </style>
