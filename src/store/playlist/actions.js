@@ -31,8 +31,9 @@ export default {
     });
   },
   requestPlaylistModifyToSpring({ commit }, payload) {
+    const userToken = localStorage.getItem("userToken")
     return axiosInst.springAxiosInst
-      .post("/playlist/modify", payload)
+      .post("/playlist/modify", payload, { headers: { Authorization: userToken } })
       .then((res) => {
         commit(REQUEST_PLAYLIST_TO_SPRING, res.data);
       });

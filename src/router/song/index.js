@@ -9,7 +9,7 @@ const playlistRoutes = [
     component: PlaylistListPage,
   },
   {
-    path: "/playlist-read-page/:playlistId",
+    path: "/playlist-read-page/:id",
     name: "PlaylistReadPage",
     components: {
       default: PlaylistReadPage,
