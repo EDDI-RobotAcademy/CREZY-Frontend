@@ -1,5 +1,6 @@
 import AccountLoginPage from "@/views/account/AccountLoginPage.vue";
 import GoogleRedirectPage from "@/views/account/oauth/GoogleRedirectPage.vue";
+import MyPage from "@/views/account/MyPage.vue";
 
 const accountRoutes = [
   {
@@ -12,6 +13,12 @@ const accountRoutes = [
     name: "GoogleRedirectPage",
     component: GoogleRedirectPage,
   },
+   {
+    path: "/my-page",
+    name: "MyPage",
+    component: MyPage,
+   },
+
 ];
 
 export default accountRoutes;
