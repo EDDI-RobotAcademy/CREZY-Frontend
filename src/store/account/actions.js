@@ -1,5 +1,5 @@
 import axiosInst from '@/utility/axiosInst'
-import { SET_ACCESS_TOKEN } from "@/store/account/mutation-types";
+import { SET_USER } from "@/store/account/mutation-types";
 
 
 export default {
@@ -11,11 +11,11 @@ export default {
           })
     },
 
-    async requestOauthGoogleToSpring(context, code) {
+    async requestUserInfoGoogleToSpring(context, code) {
         return axiosInst.springAxiosInst.get("/oauth/google-login", {params: {code: code}})
           .then(async (res)=> {
               console.log(res.data)
-              await context.commit(SET_ACCESS_TOKEN, res.data)
+              await context.commit(SET_USER, res.data)
             
           })
     },
