@@ -35,7 +35,7 @@
               border-spacing: 0 15px;
             ">
                   <tbody>
-                    <td>{{ myPlaylist.playlistName }}</td>
+                    <button @click="goToModifyPage(myPlaylist.playlistId)">{{ myPlaylist.playlistName }}</button>
                   </tbody>
                 </table>
               </div>
@@ -50,7 +50,10 @@
               border-spacing: 0 15px;
             ">
                   <tbody>
-                    <td>{{ myLikedPlaylist.playlistName }}</td>
+                    <td>
+                      <button @click="goToReadPage(myLikedPlaylist.playlistId)">{{ myLikedPlaylist.playlistName
+                      }}</button>
+                    </td>
                     <td style="position: relative; left: 40px;">{{ myLikedPlaylist.accountWriter }}</td>
                   </tbody>
                 </table>
@@ -108,63 +111,6 @@ export default {
     }
   },
 
-  // data() {
-  //   return {
-  //     account: {
-  //       nickname: "닉네임",
-  //       myPlaylistCount: 5,
-  //       myLikedPlaylistCount: 7,
-  //     },
-  //     myPlaylists: [
-  //       {
-  //         playlistName: "이름1",
-  //       },
-  //       {
-  //         playlistName: "이름2",
-  //       },
-  //       {
-  //         playlistName: "이름3",
-  //       },
-  //       {
-  //         playlistName: "이름4",
-  //       },
-  //       {
-  //         playlistName: "이름5",
-  //       },
-  //     ],
-  //     myLikedPlaylists: [
-  //       {
-  //         playlistName: "이름1",
-  //         accountWriter: "작성자1"
-  //       },
-  //       {
-  //         playlistName: "이름2",
-  //         accountWriter: "작성자2"
-  //       },
-  //       {
-  //         playlistName: "이름3",
-  //         accountWriter: "작성자3"
-  //       },
-  //       {
-  //         playlistName: "이름4",
-  //         accountWriter: "작성자4"
-  //       },
-  //       {
-  //         playlistName: "이름5",
-  //         accountWriter: "작성자5"
-  //       },
-  //       {
-  //         playlistName: "이름6",
-  //         accountWriter: "작성자6"
-  //       },
-  //       {
-  //         playlistName: "이름7",
-  //         accountWriter: "작성자7"
-  //       }
-  //     ]
-  //   }
-  // },
-
   methods: {
     ...mapActions(playlistModule, ["requestPlaylistRegisterToSpring"]),
 
@@ -179,6 +125,20 @@ export default {
 
     cancelPlaylist() {
       this.showAddPlaylistDialog = false
+    },
+
+    goToModifyPage(playlistId) {
+      this.$router.push({
+        name: "PlaylistManagePage",
+        params: { playlistId: playlistId.toString() },
+      });
+    },
+
+    goToReadPage(playlistId) {
+      this.$router.push({
+        name: "PlaylistReadPage",
+        params: { playlistId: playlistId.toString() },
+      });
     }
   }
 }
