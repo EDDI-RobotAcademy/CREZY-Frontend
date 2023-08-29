@@ -21,14 +21,20 @@ export default {
       });
   },
   requestMyPlaylistsToSpring({ commit }) {
-    return axiosInst.springAxiosInst.get("/playlist/my-playlist").then((res) => {
-      commit(REQUEST_MY_PLAYLISTS_TO_SPRING, res.data);
-    });
+    const userToken = localStorage.getItem("userToken")
+
+    return axiosInst.springAxiosInst.get("/playlist/my-playlist", { headers: { Authorization: userToken } })
+      .then((res) => {
+        commit(REQUEST_MY_PLAYLISTS_TO_SPRING, res.data);
+      });
   },
   requestMyLikedPlaylistsToSpring({ commit }) {
-    return axiosInst.springAxiosInst.get("/playlist/liked-list").then((res) => {
-      commit(REQUEST_MY_LIKED_PLAYLISTS_TO_SPRING, res.data);
-    });
+    const userToken = localStorage.getItem("userToken")
+
+    return axiosInst.springAxiosInst.get("/playlist/my-liked-playlist", { headers: { Authorization: userToken } })
+      .then((res) => {
+        commit(REQUEST_MY_LIKED_PLAYLISTS_TO_SPRING, res.data);
+      });
   },
   requestPlaylistModifyToSpring({ commit }, payload) {
     const userToken = localStorage.getItem("userToken")
