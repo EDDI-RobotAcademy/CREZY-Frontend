@@ -16,16 +16,16 @@ export default {
   },
   methods: {
     ...mapActions(playlistModule, ["requestMyPlaylistsToSpring", "requestMyLikedPlaylistsToSpring"]),
-    ...mapActions(accountModule, ["requestAccountToSpring"]),
+    ...mapActions(accountModule, ["requestAccountInfoToSpring"]),
   },
   computed: {
     ...mapState(playlistModule, ["myPlaylists", "myLikedPlaylists"]),
     ...mapState(accountModule, ["account"]),
   },
   async mounted() {
+    await this.requestAccountInfoToSpring();
     await this.requestMyPlaylistsToSpring();
     await this.requestMyLikedPlaylistsToSpring();
-    await this.requestAccountToSpring();
   },
 };
 </script>
