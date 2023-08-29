@@ -21,7 +21,7 @@ export default {
       });
   },
   requestMyPlaylistsToSpring({ commit }) {
-    return axiosInst.springAxiosInst.get("/playlist/my-list").then((res) => {
+    return axiosInst.springAxiosInst.get("/playlist/my-playlist").then((res) => {
       commit(REQUEST_MY_PLAYLISTS_TO_SPRING, res.data);
     });
   },
