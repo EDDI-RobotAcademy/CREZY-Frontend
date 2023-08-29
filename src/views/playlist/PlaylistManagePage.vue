@@ -1,6 +1,7 @@
 <template>
   <div>
-    <PlaylistManageForm v-if="playlist" :playlist="playlist" :playlistId="playlistId" @submit="onSubmit" />
+    <PlaylistManageForm v-if="playlist" :playlist="playlist" :playlistId="playlistId" @submit="onSubmit"
+      @submitPlaylist="submitPlaylist" />
   </div>
 </template>
 <script>
@@ -21,12 +22,12 @@ export default {
   },
   methods: {
     ...mapActions(playlistModule, ["requestPlaylistToSpring", "requestPlaylistModifyToSpring"]),
-    async onSubmit(payload) {
+    async submitPlaylist(payload) {
       const playlistId = this.playlistId
       console.log(playlistId)
       await this.requestPlaylistModifyToSpring({ ...payload, playlistId })
       await this.$router.push({
-        name: 'PlaylistReadPage',
+        name: 'PlaylistManagePage',
         params: { playlistId: this.playlistId }
       })
     },
