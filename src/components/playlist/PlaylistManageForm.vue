@@ -31,13 +31,13 @@
                 v-on="on" depressed>
                 <v-icon style="color: white;">mdi-dots-vertical</v-icon>
               </v-btn>
-              <div v-if="isPlaylistButton" class="plyalist-menu-wrapper">
+              <div v-if="isPlaylistButton">
                 <v-list style="background-color: rgba(0, 0, 0, 0) !important;">
                   <v-list-item @click="playlistModify" style="color: white;">
                     <v-list-item-icon>
                       <v-icon small>mdi-pencil-outline</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-content class="list-item" style="font-size: 13px;">수정</v-list-item-content>
+                    <v-list-item-content style="font-size: 13px;">수정</v-list-item-content>
                   </v-list-item>
                   <v-list-item @click="playlistDelete" style="color: white;">
                     <v-list-item-icon>
@@ -56,6 +56,11 @@
       <v-btn v-if="this.checkedSongs.length > 0" @click="openDeleteDialog" class="delete-button" rounded
         variant="outlined" color="white"><v-icon>mdi-delete</v-icon>삭제</v-btn>
       <v-btn v-else class="delete-button-invisible">삭제</v-btn>
+    </div>
+    <div v-if="showSongModificationForm" class="modal">
+      <v-card class="modal-content">
+        <PlaylistModifyForm :playlist="playlist" @submit="onSubmit" @cancel="showSongModificationForm = false" />
+      </v-card>
     </div>
     <v-row>
       <v-col cols="12">
@@ -110,9 +115,13 @@
 </template>
 
 <script>
+import PlaylistModifyForm from '@/components/playlist/PlaylistModifyForm.vue'
 import { mapActions } from "vuex";
 const playlistModule = "playlistModule";
 export default {
+  components: {
+    PlaylistModifyForm
+  },
   props: {
     playlist: {
       type: Object,
@@ -129,7 +138,10 @@ export default {
       checkedSongs: [],
       hoverIndex: null,
       confirmDeleteDialog: false,
-
+      showSongModificationForm: false,
+      awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
+      awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
+      awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
     };
   },
   methods: {
@@ -141,9 +153,14 @@ export default {
       if (!playlist.thumbnailName) {
         return require('@/assets/images/Logo_Text-removebg-preview.png')
       }
-      return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${playlist.thumbnailName}`
+      return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${this.playlist.thumbnailName}`
     },
-    async playlistShare() {
+    playlistModify() {
+      this.showSongModificationForm = true
+    },
+    onSubmit(payload) {
+      this.$emit('submitPlaylist', payload)
+      this.showSongModificationForm = false;
     },
     playlistDelete() {
       this.requestPlaylistDeleteToSpring(this.playlistId)
@@ -262,5 +279,27 @@ tr.playing .checkbox {
 
 .confirmDeleteDialog {
   background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.modal {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.modal-content {
+  position: relative;
+  width: 600px;
+  height: 450px;
+  margin: auto;
+  padding: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.8) !important;
+
 }
 </style>
