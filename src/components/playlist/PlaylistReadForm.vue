@@ -230,12 +230,14 @@ export default {
     },
 
     togglePlay() {
-      if (this.isPlaying) {
-        this.currentIframe.pauseVideo();
-      } else {
-        this.currentIframe.playVideo();
+      if (this.totalTimeText !== "0000") {
+        if (this.isPlaying) {
+          this.currentIframe.pauseVideo();
+        } else {
+          this.currentIframe.playVideo();
+        }
+        this.isPlaying = !this.isPlaying;
       }
-      this.isPlaying = !this.isPlaying;
     },
     async nextVideo() {
       this.currentIdx++;
