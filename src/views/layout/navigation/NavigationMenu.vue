@@ -25,7 +25,7 @@
             v-for="button in buttons"
             :key="button.label"
             :class="button.class"
-            @click="toggleBtn(button.label)"
+            @click="toggleBtn(button.name)"
           >
             {{ button.label }}
           </button>
@@ -40,60 +40,32 @@ export default {
   data() {
     return {
       buttons: [
-        { label: "Home", class: "clicked-nav-btn" },
-        { label: "Playlists", class: "nav-btn" },
-        { label: "My Page", class: "nav-btn" },
-        { label: "Login", class: "nav-btn" },
+        { label: "Home", class: "clicked-nav-btn", name: "home" },
+        { label: "Playlists", class: "nav-btn", name: "PlaylistListPage" },
+        { label: "My Page", class: "nav-btn", name: "MyPage" },
+        { label: "Login", class: "nav-btn", name: "AccountLoginPage" },
       ],
     };
   },
   methods: {
-    toggleBtn(label) {
-      if (label === "Home") {
-        this.buttons = [
-          { label: "Home", class: "clicked-nav-btn" },
-          { label: "Playlists", class: "nav-btn" },
-          { label: "My Page", class: "nav-btn" },
-          { label: "Login", class: "nav-btn" },
-        ];
-        if (this.$route.path !== "/") {
-          this.$router.push({ name: "home" });
-        }
-      }
-      if (label === "Playlists") {
-        this.buttons = [
-          { label: "Home", class: "nav-btn" },
-          { label: "Playlists", class: "clicked-nav-btn" },
-          { label: "My Page", class: "nav-btn" },
-          { label: "Login", class: "nav-btn" },
-        ];
-        if (this.$route.path !== "/playlist-list-page") {
-          this.$router.push({ name: "PlaylistListPage" });
-        }
-      }
-      if (label === "My Page") {
-        this.buttons = [
-          { label: "Home", class: "nav-btn" },
-          { label: "Playlists", class: "nav-btn" },
-          { label: "My Page", class: "clicked-nav-btn" },
-          { label: "Login", class: "nav-btn" },
-        ];
-        if (this.$route.path !== "/my-page") {
-          this.$router.push({ name: "MyPage" });
-        }
-      }
-      if (label === "Login") {
-        this.buttons = [
-          { label: "Home", class: "nav-btn" },
-          { label: "Playlists", class: "nav-btn" },
-          { label: "My Page", class: "nav-btn" },
-          { label: "Login", class: "clicked-nav-btn" },
-        ];
-        if (this.$route.path !== "/account-login-page") {
-          this.$router.push({ name: "AccountLoginPage" });
-        }
+    toggleBtn(currentRoute) {
+      this.buttons.forEach((button) => {
+        button.class =
+          button.name === currentRoute ? "clicked-nav-btn" : "nav-btn";
+      });
+      if (this.$route.name !== currentRoute) {
+        this.$router.push({ name: currentRoute });
       }
     },
+  },
+  watch: {
+    $route(to) {
+      this.toggleBtn(to.name);
+      console.log(to.name);
+    },
+  },
+  computed() {
+    this.toggleBtn(this.$route.name);
   },
 };
 </script>
