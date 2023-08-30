@@ -13,12 +13,14 @@
         </v-col>
         <v-row class="playlist">
           <v-col cols="6">
-            My Playlist🎵 {{ account.myPlaylistCount }}
-            <!-- My Playlist🎵 -->
+            <div style="margin-left: 50px;">
+              My Playlist🎵 {{ account.myPlaylistCount }}
+            </div>
           </v-col>
           <v-col cols="6">
-            My Favorite Playlist❤️ {{ account.myLikedPlaylistCount }}
-            <!-- My Favorite Playlist❤️ -->
+            <div style="margin-left: 50px;">
+              My Favorite Playlist❤️ {{ account.myLikedPlaylistCount }}
+            </div>
           </v-col>
         </v-row>
       </div>
@@ -30,12 +32,18 @@
                 <table style="
               color: white;
               justify-content: space-between;
-              width: 100%;
               border-collapse: separate;
               border-spacing: 0 15px;
             ">
                   <tbody>
-                    <button @click="goToModifyPage(myPlaylist.playlistId)">{{ myPlaylist.playlistName }}</button>
+                    <td>
+                      <v-img class="playlist-img" src="@/assets/images/free-icon-playlist-3567882.png"></v-img>
+                    </td>
+                    <div class="playlist-name-button">
+                      <td @click="goToModifyPage(myPlaylist.playlistId)">{{
+                        truncateText(myPlaylist.playlistName, 20) }}
+                      </td>
+                    </div>
                   </tbody>
                 </table>
               </div>
@@ -45,16 +53,20 @@
                 <table style="
               color: white;
               justify-content: space-between;
-              width: 100%;
               border-collapse: separate;
               border-spacing: 0 15px;
             ">
                   <tbody>
                     <td>
-                      <button @click="goToReadPage(myLikedPlaylist.playlistId)">{{ myLikedPlaylist.playlistName
-                      }}</button>
+                      <v-img class="playlist-img" src="@/assets/images/free-icon-playlist-3567882.png"></v-img>
                     </td>
-                    <td style="position: relative; left: 40px;">{{ myLikedPlaylist.accountWriter }}</td>
+                    <div @click="goToReadPage(myLikedPlaylist.playlistId)" style="margin-top: -10px;"
+                      class="playlist-like-card">
+                      <td>{{
+                        truncateText(myLikedPlaylist.playlistName, 15) }}</td>
+                      <td style="margin-top: 4px; margin-left: 40px; font-size: 13px;">{{
+                        myLikedPlaylist.accountWriter }}</td>
+                    </div>
                   </tbody>
                 </table>
               </div>
@@ -70,7 +82,7 @@
     <v-card style="border-radius: 0px;" class="playlist-dialog">
       <v-card-title class="playlist-dialog-title">새 재생목록</v-card-title>
       <v-card-text>
-        <my-page-playlist-register-form v-if="showAddPlaylistDialog" @submit="onSubmit" />
+        <my-page-playlist-register-form v-if="showAddPlaylistDialog" @submit="onSubmitForm" />
       </v-card-text>
       <v-card-actions class="playlist-dialog-actions">
         <v-btn @click="cancelPlaylist" class="cancel-button">취소</v-btn>
@@ -118,8 +130,9 @@ export default {
       this.showAddPlaylistDialog = true
     },
 
-    async onSubmit(payload) {
-      await this.requestPlaylistRegisterToSpring(payload)
+    async onSubmitForm(payload) {
+      const responseId = await this.requestPlaylistRegisterToSpring(payload)
+      await this.$router.push({ name: 'PlaylistManagePage', params: { playlistId: responseId } });
       this.showAddPlaylistDialog = false
     },
 
@@ -139,10 +152,20 @@ export default {
         name: "PlaylistReadPage",
         params: { playlistId: playlistId.toString() },
       });
+    },
+
+    truncateText(text, maxLength) {
+      if (!text) {
+        return "";
+      }
+
+      if (text.length > maxLength) {
+        return text.substring(0, maxLength) + '...';
+      }
+      return text;
     }
   }
 }
-
 </script>
   
 <style scoped>
@@ -175,7 +198,7 @@ export default {
 }
 
 .playlist-dialog {
-  background-color: #333;
+  background-color: rgba(0, 0, 0, 0.912) !important;
   padding: 10px;
 }
 
@@ -193,5 +216,41 @@ export default {
 .cancel-button {
   color: white;
   margin-right: 90px;
+  margin-bottom: 11px;
+}
+
+.playlist-name-button {
+  position: relative;
+  margin-top: -10px;
+  border: solid 1px white;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: normal;
+  max-width: 300px;
+  margin-left: 20px;
+  cursor: pointer;
+  height: 46px;
+  display: flex;
+}
+
+.playlist-like-card {
+  margin-top: -10px;
+  border: solid 1px white;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: normal;
+  margin-left: 20px;
+  height: 46px;
+  display: flex;
+  justify-content: space-between;
+  max-width: 300px;
+  position: relative;
+  cursor: pointer;
+}
+
+.playlist-img {
+  width: 30px;
+  margin-top: -15px;
+  position: relative;
 }
 </style>

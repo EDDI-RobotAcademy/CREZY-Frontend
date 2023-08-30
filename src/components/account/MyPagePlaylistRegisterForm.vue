@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <v-btn @click="onSubmit" rounded class="add-button">생성</v-btn>
+            <v-btn @click="onSubmitForm" rounded class="add-button">생성</v-btn>
         </v-form>
     </div>
 </template>
@@ -64,16 +64,19 @@ export default {
             }
         },
 
-        async onSubmit() {
+        async onSubmitForm() {
             if (!this.playlistName) {
                 alert('제목을 입력해주세요!');
                 return;
             }
 
-            await this.uploadAwsS3()
             const { playlistName, thumbnailName } = this;
 
             this.$emit("submit", { playlistName, thumbnailName });
+
+            if (thumbnailName !== null) {
+                this.uploadAwsS3()
+            }
         },
 
         awsS3Config() {
@@ -137,14 +140,13 @@ export default {
 
 .file-close-button {
     position: absolute;
-    top: 0;
     right: 0;
-    padding: 4px 8px;
     cursor: pointer;
     z-index: 1;
     display: flex;
-    border-top-left-radius: 0;
-    border-bottom-right-radius: 5px;
+    font-weight: 300;
+    color: black;
+    margin-top: -5px;
 }
 
 .image-container {
@@ -160,11 +162,16 @@ export default {
 
 .custom-file-upload {
     display: inline-block;
-    padding: 9px 13px;
+    /* padding: 9px 13px; */
     cursor: pointer;
     font-weight: bold;
-    background-color: white;
+    background-color: rgba(0, 0, 0, 0.912) !important;
     font-size: 15px;
+    text-align: center;
+    width: 100px;
+    border-radius: 6px;
+    color: white;
+    border: 1px solid white;
 }
 
 .image-box {
@@ -175,5 +182,6 @@ export default {
     position: absolute;
     margin-top: 20px;
     margin-left: 210px;
+    font-weight: bolder;
 }
 </style>

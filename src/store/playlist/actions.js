@@ -51,13 +51,20 @@ export default {
         this.$router.push('/my-page')
       });
   },
-  async requestPlaylistRegisterToSpring(payload) {
+  requestDeleteSelectedSongsToSpring({ commit }, payload) {
+    const songlistId = payload
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.delete("/song/delete-songIds", { params: { songlistId: songlistId } }, { headers: { Authorization: userToken } }).then((res) => {
+      commit(REQUEST_PLAYLIST_TO_SPRING, res.data);
+    });
+  },
+  async requestPlaylistRegisterToSpring({ }, payload) {
+    const { playlistName, thumbnailName } = payload
     const userToken = localStorage.getItem("userToken")
 
-    return axiosInst.springAxiosInst.post("/playlist/register", payload, { headers: { Authorization: userToken } })
+    return axiosInst.springAxiosInst.post("/playlist/register", { playlistName, thumbnailName }, { headers: { Authorization: userToken } })
       .then((res) => {
-        const playlistId = res.data;
-        router.push({ name: 'PlaylistManagePage', params: { playlistId } });
+        return res.data
       });
   },
 };
