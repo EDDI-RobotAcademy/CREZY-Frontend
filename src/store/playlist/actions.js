@@ -58,13 +58,13 @@ export default {
       commit(REQUEST_PLAYLIST_TO_SPRING, res.data);
     });
   },
-  async requestPlaylistRegisterToSpring(payload) {
+  async requestPlaylistRegisterToSpring({ }, payload) {
+    const { playlistName, thumbnailName } = payload
     const userToken = localStorage.getItem("userToken")
 
-    return axiosInst.springAxiosInst.post("/playlist/register", payload, { headers: { Authorization: userToken } })
+    return axiosInst.springAxiosInst.post("/playlist/register", { playlistName, thumbnailName }, { headers: { Authorization: userToken } })
       .then((res) => {
-        const playlistId = res.data;
-        router.push({ name: 'PlaylistManagePage', params: { playlistId } });
+        return res.data
       });
   },
 };
