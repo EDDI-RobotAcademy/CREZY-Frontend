@@ -1,7 +1,3 @@
-import {
-
-} from "./mutation-types";
-
 import axiosInst from "@/utility/axiosInst";
 
 export default {
