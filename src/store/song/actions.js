@@ -1,12 +1,11 @@
 import axiosInst from "@/utility/axiosInst";
-
 export default {
-  requestDeleteSelectedSongsToSpring({ commit }, payload) {
+  requestDeleteSelectedSongsToSpring({ }, payload) {
     const songlistId = payload
     const userToken = localStorage.getItem("userToken")
-    return axiosInst.springAxiosInst.delete("/song/delete-songIds", { params: songlistId, paramsSerializer: params => { return qs.stringify(params, { arrayFormat: 'brackets' }) } },
-      { headers: { Authorization: userToken } }).then((res) => {
-        commit(REQUEST_PLAYLIST_TO_SPRING, res.data);
+    console.log(userToken)
+    return axiosInst.springAxiosInst.delete("/song/delete-songIds", { headers: { authorization: userToken }, params: { songlistId } })
+      .then((res) => {
       });
   },
   async requestSongRegisterToSpring(_, payload) {
