@@ -27,8 +27,7 @@
       <v-col cols="7">
         <div class="playlist-player">
           <v-sheet class="song-thumbnail-sheet">
-            <v-img class="mx-auto" height="400" :src="getImage(currentIdx)">
-            </v-img>
+            <v-img class="mx-auto" height="400" :src="getImage"> </v-img>
           </v-sheet>
           <iframe
             ref="ytPlayer"
@@ -158,14 +157,6 @@ export default {
         return false;
       }
     },
-    getImage(currentIdx) {
-      const link = this.playlist.songlist[currentIdx].link;
-      return (
-        "https://img.youtube.com/vi/" +
-        link.substring(link.lastIndexOf("=") + 1) +
-        "/mqdefault.jpg"
-      );
-    },
     async initializeVideos() {
       const videoLinks = await this.playlist.songlist.map((song) => song.link);
       this.videoIds = await videoLinks.map((url) => this.extractVideoId(url));
@@ -192,6 +183,11 @@ export default {
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         window.onYouTubeIframeAPIReady = () => {
+          this.isYouTubeApiLoaded = true;
+          this.setupPlayer();
+        };
+
+        tag.onload = () => {
           this.isYouTubeApiLoaded = true;
           this.setupPlayer();
         };
@@ -239,12 +235,14 @@ export default {
     },
 
     togglePlay() {
-      if (this.isPlaying) {
-        this.currentIframe.pauseVideo();
-      } else {
-        this.currentIframe.playVideo();
+      if (this.totalTimeText !== "0000") {
+        if (this.isPlaying) {
+          this.currentIframe.pauseVideo();
+        } else {
+          this.currentIframe.playVideo();
+        }
+        this.isPlaying = !this.isPlaying;
       }
-      this.isPlaying = !this.isPlaying;
     },
     async nextVideo() {
       this.currentIdx++;
@@ -304,6 +302,20 @@ export default {
           { label: "LYRICS", class: "clicked-song-btn" },
         ];
         this.currentBtn = label;
+      }
+    },
+  },
+  computed: {
+    getImage() {
+      if (this.playlist && this.playlist.songlist) {
+        const link = this.playlist.songlist[this.currentIdx].link;
+        return (
+          "https://img.youtube.com/vi/" +
+          link.substring(link.lastIndexOf("=") + 1) +
+          "/mqdefault.jpg"
+        );
+      } else {
+        return ""; // 데이터를 아직 불러오지 않았을 때의 처리
       }
     },
   },
