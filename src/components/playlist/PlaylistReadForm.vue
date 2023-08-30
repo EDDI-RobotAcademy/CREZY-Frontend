@@ -182,6 +182,11 @@ export default {
         const firstScriptTag = document.getElementsByTagName("script")[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
+        window.onYouTubeIframeAPIReady = () => {
+          this.isYouTubeApiLoaded = true;
+          this.setupPlayer();
+        };
+
         tag.onload = () => {
           this.isYouTubeApiLoaded = true;
           this.setupPlayer();
