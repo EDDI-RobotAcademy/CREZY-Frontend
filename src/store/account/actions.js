@@ -5,7 +5,6 @@ import {
 import axiosInst from '@/utility/axiosInst'
 import { SET_ACCOUNT } from "@/store/account/mutation-types";
 
-
 export default {
   requestAccountInfoToSpring({ commit }) {
     const userToken = localStorage.getItem("userToken")
@@ -26,9 +25,9 @@ export default {
   async requestUserInfoGoogleToSpring(context, code) {
     return axiosInst.springAxiosInst.get("/oauth/google-login", { params: { code: code } })
       .then(async (res) => {
-        console.log(res.data)
         await context.commit(SET_ACCOUNT, res.data)
-
+        localStorage.setItem("userToken", res.data.userToken)
+        router.push({ name: 'Home' });
       })
   },
 }
