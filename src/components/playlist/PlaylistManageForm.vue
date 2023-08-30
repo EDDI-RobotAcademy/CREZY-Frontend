@@ -18,12 +18,17 @@
               <!-- <div style="cursor: pointer; margin-right: 10px;"><v-btn rounded variant="outlined"
                   class="playlist-modifybtn"><v-icon>mdi-pencil-outline</v-icon>재생목록수정</v-btn>
               </div> -->
-              <div style="cursor: pointer;"><v-btn rounded variant="outlined"
-                  class="playlist-modifybtn"><v-icon>mdi-pencil-outline</v-icon>노래추가</v-btn>
+              <div style="cursor: pointer;"><v-btn rounded variant="outlined" class="playlist-modifybtn"
+                  @click="songRegister"><v-icon>mdi-pencil-outline</v-icon>노래추가</v-btn>
               </div>
             </div>
           </div>
         </v-col>
+        <div v-if="showSongRegisterForm" class="modal">
+          <v-card class="modal-content">
+            <SongRegisterForm @submit="songRegisterForm" @cancelRegister="showSongRegisterForm = false" />
+          </v-card>
+        </div>
         <v-col cols="4" style="display: flex; justify-content: flex-end;">
           <v-menu offset-y v-model="isPlaylistButton">
             <template v-slot:activator="{ on, attrs }">
@@ -117,10 +122,12 @@
 <script>
 import PlaylistModifyForm from '@/components/playlist/PlaylistModifyForm.vue'
 import { mapActions } from "vuex";
+import SongRegisterForm from '../song/SongRegisterForm.vue';
 const playlistModule = "playlistModule";
 export default {
   components: {
-    PlaylistModifyForm
+    PlaylistModifyForm,
+    SongRegisterForm
   },
   props: {
     playlist: {
@@ -139,6 +146,7 @@ export default {
       hoverIndex: null,
       confirmDeleteDialog: false,
       showSongModificationForm: false,
+      showSongRegisterForm: false,
       awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
       awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
       awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
@@ -157,6 +165,13 @@ export default {
     },
     playlistModify() {
       this.showSongModificationForm = true
+    },
+    songRegister() {
+      this.showSongRegisterForm = true
+    },
+    songRegisterForm(payload) {
+      this.$emit('submitSong', payload)
+      this.showSongRegisterForm = false;
     },
     onSubmit(payload) {
       this.$emit('submitPlaylist', payload)
