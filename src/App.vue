@@ -1,7 +1,7 @@
 <template>
   <v-app class="app-container">
     <VideoBackground
-      :src="require(`@/assets/vids/vid-background.mp4`)"
+      :src="require(`@/assets/vids/vid-background2.mp4`)"
       style="
         height: 100vh;
         width: 100%;
