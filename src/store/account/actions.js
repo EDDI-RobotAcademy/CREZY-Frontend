@@ -54,4 +54,18 @@ export default {
         localStorage.setItem("userToken", res.data.userToken)
       })
   },
+
+  async requestNaverOauthRedirectUrlToSpring() {
+    return axiosInst.springAxiosInst.get('/oauth/naver')
+      .then(res => {
+        window.location.href = res.data
+      })
+  },
+  async requestUserInfoNaverToSpring(context, code) {
+    return axiosInst.springAxiosInst.get("/oauth/naver-login", { params: { code: code } })
+      .then(async (res) => {
+        await context.commit(SET_ACCOUNT, res.data)
+        localStorage.setItem("userToken", res.data.userToken)
+      })
+  },
 }
