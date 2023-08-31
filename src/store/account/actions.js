@@ -4,7 +4,6 @@ import {
 } from "./mutation-types";
 import axiosInst from '@/utility/axiosInst'
 import { SET_ACCOUNT } from "@/store/account/mutation-types";
-import router from "@/router";
 
 export default {
   requestAccountInfoToSpring({ commit }) {
@@ -28,7 +27,20 @@ export default {
       .then(async (res) => {
         await context.commit(SET_ACCOUNT, res.data)
         localStorage.setItem("userToken", res.data.userToken)
-        router.push({ name: "home" }) // 추후 Form에서 router 해결할 수 있도록 수정
+      })
+  },
+
+  async requestKakaoOauthRedirectUrlToSpring() {
+    return axiosInst.springAxiosInst.get('/oauth/kakao')
+      .then(res => {
+        window.location.href = res.data
+      })
+  },
+  async requestUserInfoKakaoToSpring(context, code) {
+    return axiosInst.springAxiosInst.get("/oauth/kakao-login", { params: { code: code } })
+      .then(async (res) => {
+        await context.commit(SET_ACCOUNT, res.data)
+        localStorage.setItem("userToken", res.data.userToken)
       })
   },
 }

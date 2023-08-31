@@ -6,7 +6,7 @@
       </v-img>
       <div class="login-icons">
         <v-img class="icon" :src="require('@/assets/images/google_icon.png')" height="50" @click="onGoogleLogin"></v-img>
-
+        <v-img class="icon" :src="require('@/assets/images/kakao_login.png')" height="50" @click="onKakaoLogin"></v-img>
       </div>
     </v-card>
   </v-container>
@@ -21,9 +21,13 @@ export default {
     const onGoogleLogin = async () => {
       await store.dispatch("accountModule/requestGoogleOauthRedirectUrlToSpring");
     };
+    const onKakaoLogin = async () => {
+      await store.dispatch("accountModule/requestKakaoOauthRedirectUrlToSpring");
+    };
 
     return {
-      onGoogleLogin
+      onGoogleLogin,
+      onKakaoLogin,
     };
   }
 }
@@ -43,12 +47,11 @@ export default {
 }
 
 .login-icons {
-  display: flex;
-  justify-content: space-around;
   margin-top: 20px;
 }
 
 .icon {
   cursor: pointer;
+  margin-top: 20px;
 }
 </style>
