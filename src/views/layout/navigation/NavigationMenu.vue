@@ -22,8 +22,8 @@
         </button>
         <div class="nav-btn-container">
           <button
-            v-for="button in buttons"
-            :key="button.label"
+            v-for="(button, index) in [...buttons, loginButton]"
+            :key="index"
             :class="button.class"
             @click="toggleBtn(button.name)"
           >
@@ -36,6 +36,11 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
+const accountModule = 'accountModule';
+
+
 export default {
   data() {
     return {
@@ -43,30 +48,57 @@ export default {
         { label: "Home", class: "clicked-nav-btn", name: "home" },
         { label: "Playlists", class: "nav-btn", name: "PlaylistListPage" },
         { label: "My Page", class: "nav-btn", name: "MyPage" },
-        { label: "Login", class: "nav-btn", name: "AccountLoginPage" },
       ],
     };
   },
+  computed: {
+    ...mapState(accountModule, ['isLoggedIn']),
+    
+
+    loginButton() {
+      if (this.isLoggedIn) {
+        return { label: "Logout", class: "nav-btn", name: "AccountLoginPage" }
+      } else {
+        return { label: "Login", class: "nav-btn", name: "AccountLoginPage" }
+      }
+    },
+  },
+  
   methods: {
+    ...mapActions(accountModule, ['requestUserLogoutToSpring']),
     toggleBtn(currentRoute) {
       this.buttons.forEach((button) => {
         button.class =
           button.name === currentRoute ? "clicked-nav-btn" : "nav-btn";
       });
+      if (this.loginButton.name === currentRoute) {
+        if (this.loginButton.label === 'Logout') {
+          this.signOut();
+        }
+        else {
+          this.isLoggedIn = !this.isLoggedIn;
+          this.loginButton.class = 'clicked-nav-btn';
+        }
+      }
       if (this.$route.name !== currentRoute) {
         this.$router.push({ name: currentRoute });
       }
     },
+    async signOut() {
+      await this.requestUserLogoutToSpring()
+      localStorage.removeItem("userToken")
+      this.$router.push("/")
+    }
   },
   watch: {
     $route(to) {
       this.toggleBtn(to.name);
-      console.log(to.name);
     },
   },
-  computed() {
+  created() {
     this.toggleBtn(this.$route.name);
-  },
+    this.isLoggedIn = this.$store.state.isLoggedIn
+  }
 };
 </script>
 
