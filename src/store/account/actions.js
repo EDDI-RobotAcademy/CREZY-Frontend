@@ -4,6 +4,7 @@ import {
 } from "./mutation-types";
 import axiosInst from '@/utility/axiosInst'
 import { SET_ACCOUNT } from "@/store/account/mutation-types";
+import router from "@/router";
 
 export default {
   requestAccountInfoToSpring({ commit }) {
@@ -27,7 +28,7 @@ export default {
       .then(async (res) => {
         await context.commit(SET_ACCOUNT, res.data)
         localStorage.setItem("userToken", res.data.userToken)
-        router.push({ name: 'Home' });
+        router.push({ name: "home" }) // 추후 Form에서 router 해결할 수 있도록 수정
       })
   },
 }
