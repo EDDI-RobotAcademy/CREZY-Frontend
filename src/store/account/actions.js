@@ -52,6 +52,9 @@ export default {
       .then(async (res) => {
         await context.commit(SET_ACCOUNT, res.data)
         localStorage.setItem("userToken", res.data.userToken)
+
+        await context.commit(SET_LOGGED_IN, true);
+
       })
   },
 
@@ -66,10 +69,13 @@ export default {
       .then(async (res) => {
         await context.commit(SET_ACCOUNT, res.data)
         localStorage.setItem("userToken", res.data.userToken)
+
+        await context.commit(SET_LOGGED_IN, true);
+
       })
   },
   async requestChangeNicknameToSpring(context, newNickname) {
-    const userToken = localStorage.getItem('userToken'); 
+    const userToken = localStorage.getItem('userToken');
     return axiosInst.springAxiosInst.get(`/account/change-nickname?userToken=${userToken}&nickname=${newNickname}`)
       .then((res) => {
         context.commit(REQUEST_ACCOUNT_TO_SPRING, res.data);
