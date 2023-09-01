@@ -35,18 +35,25 @@
                         <dl>
                             <dt>닉네임</dt>
                             <div style=" margin-bottom: 10px;">
+
                                 <dd v-if="!isChangeNickname" @click="startEditNickname">
                                     {{ account.nickname }}
+                                    <v-icon style="font-size:14px; left: 5px; bottom: 2px;">mdi-pencil</v-icon>
+
                                 </dd>
                                 <dd v-else>
+
                                     <input ref="nicknameInput" v-model="newNickname" type="text" style="color: white;" />
-                                    <v-btn class="account-modify-button" style="height: 23px;" @click="checkNickname()">
-                                        중복확인
-                                    </v-btn>
-                                    <v-btn class="account-cancel-button" style="height: 23px;"
-                                        @click="cancelChangeNickname">
-                                        취소
-                                    </v-btn>
+
+                                    <div>
+                                        <v-btn class="account-modify-button" style="height: 23px;" @click="checkNickname()">
+                                            중복확인
+                                        </v-btn>
+                                        <v-btn class="account-cancel-button" style="height: 23px;"
+                                            @click="cancelChangeNickname">
+                                            취소
+                                        </v-btn>
+                                    </div>
                                 </dd>
                             </div>
                         </dl>
@@ -148,27 +155,27 @@ export default {
                 return;
             }
 
-            const { newNickname, newProfileImageName } = this;
-
+            const newProfileImageName = this.newProfileImageName || this.account.profileImageName;
+            const newNickname = this.newNickname || this.account.nickname;
             if (newProfileImageName !== null) {
                 this.$emit("submit", { newNickname, newProfileImageName });
-                this.uploadAwsS3();
+                if (this.file) {
+                    this.uploadAwsS3();
+                }
+
             } else {
                 this.$emit("submit", { newNickname, newProfileImageName: "" });
             }
-
             this.account.nickname = newNickname;
 
             this.isChangeImage = false;
             this.isChangeNickname = false;
         },
 
-
         startEditNickname() {
             this.isChangeNickname = true;
             this.newNickname = this.account.nickname;
             this.$nextTick(() => {
-
                 this.$refs.nicknameInput.focus();
             });
         },
