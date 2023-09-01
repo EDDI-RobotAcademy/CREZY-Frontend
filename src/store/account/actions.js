@@ -75,7 +75,7 @@ export default {
       })
   },
 
-  requsetCheckNicknameToSpring({ }, payload) {
+  requestCheckNicknameToSpring({ }, payload) {
     const { newNickname } = payload
     return axiosInst.springAxiosInst.get(`/account/check-nickName/${newNickname}`)
       .then((res) => {

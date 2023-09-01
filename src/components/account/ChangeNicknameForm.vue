@@ -4,7 +4,8 @@
       <h2 class="nickname-dialog-title">닉네임</h2>
       <v-text-field v-model="newNickname" label="사용하고 싶은 닉네임을 입력하십시오" outlined class="nickname-input"></v-text-field>
       <div class="nickname-dialog-actions">
-        <v-btn @click="submit" color="black">Submit</v-btn>
+        <v-btn @click="checkNickname" color="black">중복확인</v-btn>
+        <v-btn @click="submit" color="black" :disabled = "!isNicknameAvailable" >Submit</v-btn>
       </div>
     </div>
   </div>
@@ -18,19 +19,26 @@ export default {
   setup(props, { emit }) {
     const store = useStore(); 
     const newNickname = ref("");
+    const isNicknameAvailable = ref(false);
 
     const closeModal = () => {
       emit("closeModal");
     };
 
-    const submit = async () => {
-      await store.dispatch("accountModule/requestChangeNicknameToSpring", {newNickname: newNickname.value});
-      closeModal();
-      
+    const checkNickname = async () => {
+      const res = await store.dispatch("accountModule/requestCheckNicknameToSpring", {newNickname: newNickname.value});      
+      isNicknameAvailable.value = res;
     };
 
-    return {
+    const submit = async () => {
+      await store.dispatch("accountModule/requestChangeNicknameToSpring", {newNickname: newNickname.value});
+      closeModal();      
+    };
+
+    return {      
       newNickname,
+      isNicknameAvailable,
+      checkNickname,      
       submit,
     };
   },
