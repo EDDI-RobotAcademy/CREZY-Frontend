@@ -4,8 +4,13 @@
       <div>
         <v-row class="nickname">
           <v-col cols="5">
-            {{ account.nickname }}의 MUSE
-            <!-- 닉네임의 MUSE -->
+            <div class="profile-image-container">
+              <div class="profile-image-circle">
+                <v-img @click="goToModifyAccountPage(account.accountId)" :src="getProfileImage(account.profileImageName)"
+                  width="100%" height="100%"></v-img>
+              </div>
+              <div class="profile-name">{{ account.nickname }}의 MUSE</div>
+            </div>
           </v-col>
         </v-row>
         <v-col cols="5">
@@ -163,7 +168,23 @@ export default {
         return text.substring(0, maxLength) + '...';
       }
       return text;
-    }
+    },
+
+    getProfileImage(profileImageName) {
+      if (profileImageName) {
+        (profileImageName.includes('k.kakaocdn.net'))
+        return profileImageName;
+      } else {
+        return require('@/assets/images/Logo_only_small-removebg-preview.png');
+      }
+    },
+
+    goToModifyAccountPage(accountId) {
+      this.$router.push({
+        name: "AccountModifyPage",
+        params: { accountId: accountId.toString() },
+      });
+    },
   }
 }
 </script>
@@ -252,5 +273,24 @@ export default {
   width: 30px;
   margin-top: -15px;
   position: relative;
+}
+
+.profile-image-container {
+  display: flex;
+  align-items: center;
+}
+
+.profile-image-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+.profile-image-circle v-img {
+  object-fit: cover;
 }
 </style>

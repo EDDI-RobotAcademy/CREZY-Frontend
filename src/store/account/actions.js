@@ -68,4 +68,28 @@ export default {
         localStorage.setItem("userToken", res.data.userToken)
       })
   },
+  requsetCheckNicknameToSpring({ }, payload) {
+    const { newNickname } = payload
+    return axiosInst.springAxiosInst.get(`/account/check-nickName/${newNickname}`)
+      .then((res) => {
+        if (res.data) {
+          alert('사용 가능한 닉네임입니다!')
+          return true
+        } else {
+          alert('중복된 닉네임입니다!')
+          return false
+        }
+      })
+  },
+  requestChangeNicknameToSpring({ }, payload) {
+    const userToken = localStorage.getItem("userToken")
+    const { newNickname } = payload
+
+    return axiosInst.springAxiosInst.get("/account/change-nickname", { params: { userToken: userToken, nickname: newNickname } })
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        }
+      })
+  },
 }
