@@ -56,10 +56,11 @@ export default {
     
 
     loginButton() {
+      let buttonClass = this.$route.name === "AccountLoginPage" ? "clicked-nav-btn" : "nav-btn";
       if (this.isLoggedIn) {
-        return { label: "Logout", class: "nav-btn", name: "AccountLoginPage" }
+        return { label: "Logout", class: buttonClass, name: "AccountLoginPage" }
       } else {
-        return { label: "Login", class: "nav-btn", name: "AccountLoginPage" }
+        return { label: "Login", class: buttonClass, name: "AccountLoginPage" }
       }
     },
   },
