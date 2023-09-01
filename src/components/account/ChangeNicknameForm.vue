@@ -24,7 +24,7 @@ export default {
     };
 
     const submit = async () => {
-      await store.dispatch("accountModule/requestChangeNicknameToSpring", newNickname.value);
+      await store.dispatch("accountModule/requestChangeNicknameToSpring", {newNickname: newNickname.value});
       closeModal();
       
     };
