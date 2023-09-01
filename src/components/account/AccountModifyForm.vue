@@ -103,7 +103,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(accountModule, ["requsetCheckNicknameToSpring"]),
+        ...mapActions(accountModule, ["requestCheckNicknameToSpring"]),
         getProfileImage(profileImageName) {
             if (!profileImageName) {
                 return require('@/assets/images/Logo_only_small-removebg-preview.png');
@@ -163,7 +163,7 @@ export default {
         },
 
         async checkNickname() {
-            this.isNicknamecheck = await this.requsetCheckNicknameToSpring({ newNickname: this.newNickname })
+            this.isNicknamecheck = await this.requestCheckNicknameToSpring({ newNickname: this.newNickname })
         },
 
         cancelChangeNickname() {
