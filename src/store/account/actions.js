@@ -54,4 +54,26 @@ export default {
         localStorage.setItem("userToken", res.data.userToken)
       })
   },
+
+  async requestNaverOauthRedirectUrlToSpring() {
+    return axiosInst.springAxiosInst.get('/oauth/naver')
+      .then(res => {
+        window.location.href = res.data
+      })
+  },
+  async requestUserInfoNaverToSpring(context, code) {
+    return axiosInst.springAxiosInst.get("/oauth/naver-login", { params: { code: code } })
+      .then(async (res) => {
+        await context.commit(SET_ACCOUNT, res.data)
+        localStorage.setItem("userToken", res.data.userToken)
+      })
+  },
+  async requestChangeNicknameToSpring(context, newNickname) {
+    const userToken = localStorage.getItem('userToken'); 
+    return axiosInst.springAxiosInst.get(`/account/change-nickname?userToken=${userToken}&nickname=${newNickname}`)
+      .then((res) => {
+        context.commit(REQUEST_ACCOUNT_TO_SPRING, res.data);
+        console.log(res.data);
+      })
+  },
 }

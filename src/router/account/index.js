@@ -2,7 +2,7 @@ import AccountLoginPage from "@/views/account/AccountLoginPage.vue";
 import GoogleRedirectPage from "@/views/account/oauth/GoogleRedirectPage.vue";
 import MyPage from "@/views/account/MyPage.vue";
 import KakaoRedirectPage from "@/views/account/oauth/KakaoRedirectPage.vue";
-
+import NaverRedirectPage from "@/views/account/oauth/NaverRedirectPage.vue"
 const accountRoutes = [
   {
     path: "/account-login-page",
@@ -23,6 +23,11 @@ const accountRoutes = [
     path: "/login/oauth2/code/kakao",
     name: "KakaoRedirectPage",
     component: KakaoRedirectPage,
+  },
+  {
+    path: "/login/oauth2/code/naver",
+    name: "NaverRedirectPage",
+    component: NaverRedirectPage,
   },
 ];
 

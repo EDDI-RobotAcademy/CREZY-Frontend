@@ -3,49 +3,77 @@
     <div style="display: flex; justify-content: space-between">
       <v-row>
         <v-col cols="4">
-          <v-img class="mx-auto" height="200" :src="getImage(playlist)" v-on="on"></v-img>
+          <v-img
+            class="mx-auto"
+            height="200"
+            :src="getImage(playlist)"
+            v-on="on"
+          ></v-img>
         </v-col>
         <v-col cols="4">
           <div>
             <div class="playlist-title">
               {{ playlist.playlistName }}
             </div>
-            <div class="playlist-accountWriter">{{ playlist.accountWriter }}</div>
+            <div class="playlist-accountWriter">
+              {{ playlist.accountWriter }}
+            </div>
             <div class="playlist-counts">
-              노래 {{ playlist?.songlist.length }}곡
+              노래 {{ playlist.songlist?.length }}곡
             </div>
             <div class="playlist-modify-icon">
-              <div style="cursor: pointer;"><v-btn rounded variant="outlined" class="playlist-modifybtn"
-                  @click="songRegister"><v-icon>mdi-pencil-outline</v-icon>노래추가</v-btn>
+              <div style="cursor: pointer">
+                <v-btn
+                  rounded
+                  variant="outlined"
+                  class="playlist-modifybtn"
+                  @click="songRegister"
+                  ><v-icon>mdi-pencil-outline</v-icon>노래추가</v-btn
+                >
               </div>
             </div>
           </div>
         </v-col>
         <div v-if="showSongRegisterForm" class="modal">
           <v-card class="modal-content">
-            <SongRegisterForm @submit="songRegisterForm" @cancelRegister="showSongRegisterForm = false" />
+            <SongRegisterForm
+              @submit="songRegisterForm"
+              @cancelRegister="showSongRegisterForm = false"
+            />
           </v-card>
         </div>
-        <v-col cols="4" style="display: flex; justify-content: flex-end;">
+        <v-col cols="4" style="display: flex; justify-content: flex-end">
           <v-menu offset-y v-model="isPlaylistButton">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn v-show="!isPlaylistButton" small @click="playlistButton" class="description-btn" icon v-bind="attrs"
-                v-on="on" depressed>
-                <v-icon style="color: white;">mdi-dots-vertical</v-icon>
+              <v-btn
+                v-show="!isPlaylistButton"
+                small
+                @click="playlistButton"
+                class="description-btn"
+                icon
+                v-bind="attrs"
+                v-on="on"
+                depressed
+              >
+                <v-icon style="color: white">mdi-dots-vertical</v-icon>
               </v-btn>
               <div v-if="isPlaylistButton">
-                <v-list style="background-color: rgba(0, 0, 0, 0) !important;">
-                  <v-list-item @click="playlistModify" style="color: white;">
+                <v-list style="background-color: rgba(0, 0, 0, 0) !important">
+                  <v-list-item @click="playlistModify" style="color: white">
                     <v-list-item-icon>
                       <v-icon small>mdi-pencil-outline</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-content style="font-size: 13px;">수정</v-list-item-content>
+                    <v-list-item-content style="font-size: 13px"
+                      >수정</v-list-item-content
+                    >
                   </v-list-item>
-                  <v-list-item @click="playlistDelete" style="color: white;">
+                  <v-list-item @click="playlistDelete" style="color: white">
                     <v-list-item-icon>
                       <v-icon small>mdi-delete</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-content style="font-size: 13px;">삭제</v-list-item-content>
+                    <v-list-item-content style="font-size: 13px"
+                      >삭제</v-list-item-content
+                    >
                   </v-list-item>
                 </v-list>
               </div>
@@ -56,7 +84,11 @@
     </div>
     <div v-if="showSongModificationForm" class="modal">
       <v-card class="modal-content">
-        <PlaylistModifyForm :playlist="playlist" @submit="onSubmit" @cancel="showSongModificationForm = false" />
+        <PlaylistModifyForm
+          :playlist="playlist"
+          @submit="onSubmit"
+          @cancel="showSongModificationForm = false"
+        />
       </v-card>
     </div>
     <SonglistForm :playlist="playlist" @deleteSubmit="deleteSubmit" />
@@ -64,16 +96,16 @@
 </template>
 
 <script>
-import PlaylistModifyForm from '@/components/playlist/PlaylistModifyForm.vue'
-import SonglistForm from '@/components/song/SonglistForm.vue'
+import PlaylistModifyForm from "@/components/playlist/PlaylistModifyForm.vue";
+import SonglistForm from "@/components/song/SonglistForm.vue";
 import { mapActions } from "vuex";
-import SongRegisterForm from '../song/SongRegisterForm.vue';
+import SongRegisterForm from "../song/SongRegisterForm.vue";
 const playlistModule = "playlistModule";
 export default {
   components: {
     PlaylistModifyForm,
     SongRegisterForm,
-    SonglistForm
+    SonglistForm,
   },
   props: {
     playlist: {
@@ -99,33 +131,33 @@ export default {
     ...mapActions(playlistModule, ["requestPlaylistDeleteToSpring"]),
     getImage(playlist) {
       if (!playlist || playlist.length === 0) {
-        return require('@/assets/images/Logo_Text-removebg-preview.png');
+        return require("@/assets/images/Logo_Text-removebg-preview.png");
       }
       if (!playlist.thumbnailName) {
-        return require('@/assets/images/Logo_Text-removebg-preview.png')
+        return require("@/assets/images/Logo_Text-removebg-preview.png");
       }
-      return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${this.playlist.thumbnailName}`
+      return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${this.playlist.thumbnailName}`;
     },
     playlistModify() {
-      this.showSongModificationForm = true
+      this.showSongModificationForm = true;
     },
     songRegister() {
-      this.showSongRegisterForm = true
+      this.showSongRegisterForm = true;
     },
     songRegisterForm(payload) {
-      this.$emit('submitSong', payload)
+      this.$emit("submitSong", payload);
       this.showSongRegisterForm = false;
     },
     onSubmit(payload) {
-      this.$emit('submitPlaylist', payload)
+      this.$emit("submitPlaylist", payload);
       this.showSongModificationForm = false;
     },
     playlistDelete() {
-      this.requestPlaylistDeleteToSpring(this.playlistId)
+      this.requestPlaylistDeleteToSpring(this.playlistId);
     },
 
     playlistButton() {
-      this.isPlaylistButton = !this.isPlaylistButton
+      this.isPlaylistButton = !this.isPlaylistButton;
     },
     cancelDeletion() {
       this.checkedSongs = [];
@@ -136,10 +168,10 @@ export default {
       }
     },
     deleteSubmit(payload) {
-      this.$emit("deleteSubmit", payload)
-      console.log("Sdfsf", payload)
-    }
-  }
+      this.$emit("deleteSubmit", payload);
+      console.log("Sdfsf", payload);
+    },
+  },
 };
 </script>
 
@@ -191,7 +223,6 @@ export default {
   background-color: rgba(0, 0, 0, 0) !important;
 }
 
-
 .modal {
   position: fixed;
   z-index: 9998;
@@ -203,14 +234,13 @@ export default {
 }
 
 .modal-content {
-  position: relative;
+  /* position: relative; */
   width: 600px;
-  height: 450px;
+  height: 440px;
   margin: auto;
   padding: 20px;
   top: 50%;
   transform: translateY(-50%);
   background-color: rgba(0, 0, 0, 0.8) !important;
-
 }
 </style>
