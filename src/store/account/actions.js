@@ -68,6 +68,7 @@ export default {
         localStorage.setItem("userToken", res.data.userToken)
       })
   },
+
   requsetCheckNicknameToSpring({ }, payload) {
     const { newNickname } = payload
     return axiosInst.springAxiosInst.get(`/account/check-nickName/${newNickname}`)
@@ -81,15 +82,12 @@ export default {
         }
       })
   },
-  requestChangeNicknameToSpring({ }, payload) {
-    const userToken = localStorage.getItem("userToken")
-    const { newNickname } = payload
-
-    return axiosInst.springAxiosInst.get("/account/change-nickname", { params: { userToken: userToken, nickname: newNickname } })
+  async requestChangeNicknameToSpring(context, newNickname) {
+    const userToken = localStorage.getItem('userToken'); 
+    return axiosInst.springAxiosInst.get(`/account/change-nickname?userToken=${userToken}&nickname=${newNickname}`)
       .then((res) => {
-        if (res.data) {
-          return res.data;
-        }
+        context.commit(REQUEST_ACCOUNT_TO_SPRING, res.data);
+        console.log(res.data);
       })
   },
 }
