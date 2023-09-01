@@ -27,7 +27,6 @@
 
 <script>
 import AWS from 'aws-sdk'
-// import env from '@/env'
 
 export default {
     data() {
@@ -39,10 +38,9 @@ export default {
             file: null,
             s3fileList: [],
 
-            // aws 설정 후 추가
-            awsBucketName: '',
-            awsBucketRegion: '',
-            awsIdentityPoolId: '',
+            awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
+            awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
+            awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
             s3: null,
         }
     },
