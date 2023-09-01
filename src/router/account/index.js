@@ -3,6 +3,8 @@ import GoogleRedirectPage from "@/views/account/oauth/GoogleRedirectPage.vue";
 import MyPage from "@/views/account/MyPage.vue";
 import KakaoRedirectPage from "@/views/account/oauth/KakaoRedirectPage.vue";
 import NaverRedirectPage from "@/views/account/oauth/NaverRedirectPage.vue"
+import AccountModifyPage from "@/views/account/AccountModifyPage.vue";
+
 const accountRoutes = [
   {
     path: "/account-login-page",
@@ -28,6 +30,16 @@ const accountRoutes = [
     path: "/login/oauth2/code/naver",
     name: "NaverRedirectPage",
     component: NaverRedirectPage,
+  },
+  {
+    path: "/account-modify-page/:accountId",
+    name: "AccountModifyPage",
+    components: {
+      default: AccountModifyPage,
+    },
+    props: {
+      default: true,
+    },
   },
 ];
 
