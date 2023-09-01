@@ -7,18 +7,18 @@
                     <li>
                         <dl>
                             <div>
-                                <dd v-if="!isChangeImage" @click="isChangeImage" class="profile-image-container">
+                                <dd class="profile-image-container">
                                     <div @click="clickInput" class="profile-image-circle">
                                         <input ref="file" type="file" id="modify-image" style="display: none"
                                             @change="handleFileUpload" />
                                         <v-img v-if="!imagePreview" :src="getProfileImage(account.profileImageName)"
                                             width="100" height="100"></v-img>
-                                        <v-img v-else :src="imagePreview" class="preview-image" width="100"
-                                            height="100"></v-img>
-                                        <v-icon class="profile-image-icon">mdi-pencil-circle-outline</v-icon>
+                                        <v-img v-else :src=imagePreview class='preview-image' width='100'
+                                            height='100'></v-img>
+                                        <v-icon class='profile-image-icon'>mdi-pencil-circle-outline</v-icon>
                                     </div>
                                 <dd class="delete-image-button">
-                                    <button v-if="imagePreview" @click="deleteImage">
+                                    <button v-if=isChangeImage @click.prevent.stop="deleteImage">
                                         기본 이미지로 변경
                                     </button>
                                 </dd>
@@ -50,7 +50,7 @@
                                 </dd>
                             </div>
                         </dl>
-                        <div>
+                        <div v-if="isChangeImage || isChangeNickname">
                             <v-btn class="account-save-button" @click="submitAccountInfo()">
                                 저장하기
                             </v-btn>
@@ -68,7 +68,6 @@
 <script>
 import { mapActions } from "vuex";
 import AWS from 'aws-sdk'
-// import env from '@/env'
 
 const accountModule = "accountModule";
 
@@ -95,9 +94,9 @@ export default {
 
             file: null,
             s3fileList: [],
-            awsBucketName: '',
-            awsBucketRegion: '',
-            awsIdentityPoolId: '',
+            awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
+            awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
+            awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
             s3: null,
         }
     },
@@ -105,8 +104,12 @@ export default {
     methods: {
         ...mapActions(accountModule, ["requestCheckNicknameToSpring"]),
         getProfileImage(profileImageName) {
-            if (!profileImageName) {
+            if (this.imagePreview) {
+                return this.imagePreview;
+            } else if (!profileImageName) {
                 return require('@/assets/images/Logo_only_small-removebg-preview.png');
+            } else {
+                return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${profileImageName}`;
             }
         },
 
@@ -122,6 +125,8 @@ export default {
                     reader.onload = (e) => {
                         this.imagePreview = e.target.result;
                         this.newProfileImageName = file.name;
+                        this.isChangeImage = true;
+                        this.file = file;
                     };
 
                     reader.readAsDataURL(file);
@@ -144,20 +149,26 @@ export default {
             }
 
             const { newNickname, newProfileImageName } = this;
-            this.$emit("submit", { newNickname, newProfileImageName });
 
             if (newProfileImageName !== null) {
-                this.uploadAwsS3()
+                this.$emit("submit", { newNickname, newProfileImageName });
+                this.uploadAwsS3();
+            } else {
+                this.$emit("submit", { newNickname, newProfileImageName: "" });
             }
 
-            this.account.nickname = this.newNickname;
+            this.account.nickname = newNickname;
+
+            this.isChangeImage = false;
             this.isChangeNickname = false;
         },
+
 
         startEditNickname() {
             this.isChangeNickname = true;
             this.newNickname = this.account.nickname;
             this.$nextTick(() => {
+
                 this.$refs.nicknameInput.focus();
             });
         },
@@ -175,8 +186,8 @@ export default {
         deleteImage() {
             this.imagePreview = null;
             this.file = null;
-            this.s3fileList = [];
-            this.thumbnailName = null;
+            this.newProfileImageName = null;
+            this.account.profileImageName = null;
         },
 
         awsS3Config() {
@@ -198,12 +209,14 @@ export default {
         uploadAwsS3() {
             this.awsS3Config()
 
-            if (!Array.isArray(this.file)) {
-                this.file = [this.file];
-            }
+            let files = Array.isArray(this.file) ? this.file : [this.file];
+            for (let idx = 0; idx < files.length; idx++) {
+                const file = files[idx];
 
-            for (let idx = 0; idx < this.file.length; idx++) {
-                const file = this.file[idx];
+                if (!file || !file.name) {
+                    this.profileImageName = this.account.profileImageName;
+                }
+                this.newProfileImageName = file.name;
 
                 this.s3.upload({
                     Key: file.name,
@@ -214,6 +227,9 @@ export default {
                         console.log(err)
                         return alert('업로드 중 문제 발생 (사진 파일에 문제가 있음)', err.message)
                     }
+
+                    this.newProfileImageName = data.Location;
+                    this.imagePreview = data.Location;
                 })
             }
         },

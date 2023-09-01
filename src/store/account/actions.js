@@ -97,4 +97,13 @@ export default {
         console.log(res.data);
       })
   },
+  async requestChangeProfileImageToSpring({ }, payload) {
+    const userToken = localStorage.getItem('userToken');
+    const { newProfileImageName } = payload
+
+    return axiosInst.springAxiosInst.get('/account/change-profileImage', { headers: { Authorization: userToken }, params: { profileImageName: newProfileImageName } })
+      .then((res) => {
+        console.log(res.data);
+      })
+  },
 }

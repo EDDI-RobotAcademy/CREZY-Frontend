@@ -21,9 +21,10 @@ export default {
     },
     methods: {
         ...mapActions(accountModule, ["requestAccountInfoToSpring", "requestChangeNicknameToSpring",
-            "request"]),
+            "requestChangeProfileImageToSpring"]),
         async submitAccountInfo(payload) {
             await this.requestChangeNicknameToSpring(payload)
+            await this.requestChangeProfileImageToSpring(payload)
         }
     },
     computed: {
