@@ -12,7 +12,7 @@
             </div>
             <div class="playlist-accountWriter">{{ playlist.accountWriter }}</div>
             <div class="playlist-counts">
-              노래 {{ playlist?.songlist.length }}곡
+              노래 {{ playlist.songlist?.length }}곡
             </div>
             <div class="playlist-modify-icon">
               <div style="cursor: pointer;"><v-btn rounded variant="outlined" class="playlist-modifybtn"
