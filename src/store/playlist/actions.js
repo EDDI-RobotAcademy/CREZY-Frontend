@@ -47,9 +47,6 @@ export default {
   requestPlaylistDeleteToSpring(_, playlistId) {
     const userToken = localStorage.getItem("userToken")
     return axiosInst.springAxiosInst.delete(`/playlist/${playlistId}`, { headers: { Authorization: userToken } })
-      .then((res) => {
-        this.$router.push('/my-page')
-      });
   },
   requestDeleteSelectedSongsToSpring({ commit }, payload) {
     const songlistId = payload
