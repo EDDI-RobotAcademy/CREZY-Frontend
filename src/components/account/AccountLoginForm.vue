@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card class="login-card" flat>
-      <div class="login-title">로그인</div>
+      <div class="login-title"></div>
       <v-img class="mx-auto" height="300" :src="require('@/assets/images/blackpeoplewithheadphone.png')">
       </v-img>
       <div class="login-icons">
@@ -56,6 +56,5 @@ export default {
 
 .icon {
   cursor: pointer;
-  margin-top: 20px;
 }
 </style>
