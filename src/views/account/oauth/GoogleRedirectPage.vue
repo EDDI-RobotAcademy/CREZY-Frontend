@@ -65,7 +65,6 @@ export default {
         router.push({ name: "home" });
       } else {
         console.log("신규 회원");
-        await requestUserInfoGoogleToSpring(payload);
         showModal.value = true; 
       }
     }   
