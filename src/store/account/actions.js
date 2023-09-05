@@ -25,7 +25,7 @@ export default {
 
   // 신규 유저 로그인 요청. 코드, 닉네임, 프로필이미지네임 3가지를 받아온다
   async requestUserInfoGoogleToSpring(context, payload) {
-    const { code, nickname, profileImageName } = payload;
+    const { nickname, profileImageName } = payload;
 
     // code를 쿼리 파라미터로 추가
     const reqForm = {
@@ -34,7 +34,7 @@ export default {
     };
 
     return axiosInst.springAxiosInst
-      .post(`/oauth/google-new-login?code=${code}`, reqForm)
+      .post('/oauth/google-new-login?', reqForm)
       .then(async (res) => {
         await context.commit(SET_ACCOUNT, res.data);
         localStorage.setItem("userToken", res.data.userToken);
@@ -43,11 +43,9 @@ export default {
   },
 
   // 기존 유저 로그인 요청. 코드만을 받아온다
-  async requestExistUserInfoGoogleToSpring(context, payload) {
-    const { code } = payload;
-    console.log(code);
+  async requestExistUserInfoGoogleToSpring(context) {
     return axiosInst.springAxiosInst
-      .get("/oauth/google-login", { params: { code: code } })
+      .get("/oauth/google-login")
       .then(async (res) => {
         await context.commit(SET_ACCOUNT, res.data);
         localStorage.setItem("userToken", res.data.userToken);
@@ -56,7 +54,7 @@ export default {
       });
   },
 
-  async requestUserLogoutToSpring(context, code) {
+  async requestUserLogoutToSpring(context) {
     const userToken = localStorage.getItem("userToken");
     return axiosInst.springAxiosInst
       .get("/account/logout", { params: { userToken: userToken } })
@@ -86,9 +84,10 @@ export default {
       window.location.href = res.data;
     });
   },
-  async requestUserInfoNaverToSpring(context, code) {
+
+  async requestExistUserInfoNaverToSpring(context) {
     return axiosInst.springAxiosInst
-      .get("/oauth/naver-login", { params: { code: code } })
+      .get("/oauth/naver-login")
       .then(async (res) => {
         await context.commit(SET_ACCOUNT, res.data);
         localStorage.setItem("userToken", res.data.userToken);
@@ -97,6 +96,23 @@ export default {
       });
   },
 
+  async requestUserInfoNaverToSpring(context, payload) {
+    const { nickname, profileImageName } = payload;
+    console.log(nickname)
+    // code를 쿼리 파라미터로 추가
+    const reqForm = {
+      nickname,
+      profileImageName,
+    };
+
+    return axiosInst.springAxiosInst
+      .post('/oauth/naver-new-login?', reqForm)
+      .then(async (res) => {
+        await context.commit(SET_ACCOUNT, res.data);
+        localStorage.setItem("userToken", res.data.userToken);
+        await context.commit(SET_LOGGED_IN, true);
+      });
+  },
   requestCheckNicknameToSpring({ }, payload) {
     const { newNickname } = payload;
     return axiosInst.springAxiosInst
@@ -160,5 +176,19 @@ export default {
         context.commit(SET_LOGGED_IN, false);
         alert("탈퇴 완료")
       })
+  },
+  
+  async requestCheckNaverEmailToSpring({ }, checkPayload) {
+    const { code } = checkPayload;
+    console.log(code)
+    return axiosInst.springAxiosInst
+      .get("/oauth/naver-check-exist", { params: { code: code } })
+      .then((res) => {
+        if (res.data) {
+          return true;
+        } else {
+          return false;
+        }
+      });
   },
 };
