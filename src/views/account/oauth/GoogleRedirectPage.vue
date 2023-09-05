@@ -1,9 +1,6 @@
 <template>
   <div>
-    <change-nickname-form
-      v-if="showModal"
-      ref="nicknameChangeForm"
-    />
+    <change-nickname-form v-if="showModal" ref="nicknameChangeForm" :loginType="loginType" />
   </div>
 </template>
 
@@ -17,9 +14,14 @@ export default {
   components: {
     ChangeNicknameForm,
   },
+  data() {
+    return {
+      loginType: 'Google'
+    }
+  },
   setup() {
     const store = useStore();
-    const showModal = ref(false); 
+    const showModal = ref(false);
     const router = useRouter();
 
     const requestExistUserInfoGoogleToSpring = (payload) => {
@@ -30,7 +32,7 @@ export default {
         }
       );
     };
-    
+
     const requestCheckGoogleEmailToSpring = (checkPayload) =>
       store.dispatch("accountModule/requestCheckGoogleEmailToSpring", {
         code: checkPayload,
@@ -40,19 +42,15 @@ export default {
       const route = useRoute();
       const code = route.query.code;
       const checkPayload = code;
-      // 코드를 이용해 기존, 신규 유저 판별
       const isEmailValid = await requestCheckGoogleEmailToSpring(checkPayload);
 
       if (isEmailValid) {
-        console.log("기존 회원");
-        // 코드 이용해서 기존회원 정보 받아오기
         await requestExistUserInfoGoogleToSpring(checkPayload);
         router.push({ name: "home" });
       } else {
-        console.log("신규 회원");
-        showModal.value = true; 
+        showModal.value = true;
       }
-    }   
+    }
 
     onMounted(() => {
       setRedirectData();
@@ -60,7 +58,7 @@ export default {
 
     return {
       requestExistUserInfoGoogleToSpring,
-      showModal, 
+      showModal,
     };
   },
 };
