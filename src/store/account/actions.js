@@ -68,14 +68,40 @@ export default {
       window.location.href = res.data;
     });
   },
-  async requestUserInfoKakaoToSpring(context, code) {
+  async requestExistUserInfoKakaoToSpring(context) {
     return axiosInst.springAxiosInst
-      .get("/oauth/kakao-login", { params: { code: code } })
+      .get("/oauth/kakao-login")
       .then(async (res) => {
         await context.commit(SET_ACCOUNT, res.data);
         localStorage.setItem("userToken", res.data.userToken);
-
         await context.commit(SET_LOGGED_IN, true);
+      });
+  },
+  async requestUserInfoKakaoToSpring(context, payload) {
+    const { nickname, profileImageName } = payload;
+    const reqForm = {
+      nickname,
+      profileImageName
+    }
+    console.log(nickname)
+    return axiosInst.springAxiosInst
+      .post("/oauth/kakao-new-login", reqForm)
+      .then(async (res) => {
+        await context.commit(SET_ACCOUNT, res.data);
+        localStorage.setItem("userToken", res.data.userToken);
+        await context.commit(SET_LOGGED_IN, true);
+      });
+  },
+  async requestCheckKaKaoEmailToSpring({ }, checkPayload) {
+    const { code } = checkPayload;
+    return axiosInst.springAxiosInst
+      .get("/oauth/kakao-check-exist", { params: { code: code } })
+      .then((res) => {
+        if (res.data) {
+          return true;
+        } else {
+          return false;
+        }
       });
   },
 
