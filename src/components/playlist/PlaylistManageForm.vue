@@ -3,12 +3,7 @@
     <div style="display: flex; justify-content: space-between">
       <v-row>
         <v-col cols="4">
-          <v-img
-            class="mx-auto"
-            height="200"
-            :src="getImage(playlist)"
-            v-on="on"
-          ></v-img>
+          <v-img class="mx-auto" height="200" :src="getImage(playlist)" v-on="on"></v-img>
         </v-col>
         <v-col cols="4">
           <div>
@@ -23,38 +18,22 @@
             </div>
             <div class="playlist-modify-icon">
               <div style="cursor: pointer">
-                <v-btn
-                  rounded
-                  variant="outlined"
-                  class="playlist-modifybtn"
-                  @click="songRegister"
-                  ><v-icon>mdi-pencil-outline</v-icon>노래추가</v-btn
-                >
+                <v-btn rounded variant="outlined" class="playlist-modifybtn"
+                  @click="songRegister"><v-icon>mdi-pencil-outline</v-icon>노래추가</v-btn>
               </div>
             </div>
           </div>
         </v-col>
         <div v-if="showSongRegisterForm" class="modal">
           <v-card class="modal-content">
-            <SongRegisterForm
-              @submit="songRegisterForm"
-              @cancelRegister="showSongRegisterForm = false"
-            />
+            <SongRegisterForm @submit="songRegisterForm" @cancelRegister="showSongRegisterForm = false" />
           </v-card>
         </div>
         <v-col cols="4" style="display: flex; justify-content: flex-end">
           <v-menu offset-y v-model="isPlaylistButton">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-show="!isPlaylistButton"
-                small
-                @click="playlistButton"
-                class="description-btn"
-                icon
-                v-bind="attrs"
-                v-on="on"
-                depressed
-              >
+              <v-btn v-show="!isPlaylistButton" small @click="playlistButton" class="description-btn" icon v-bind="attrs"
+                v-on="on" depressed>
                 <v-icon style="color: white">mdi-dots-vertical</v-icon>
               </v-btn>
               <div v-if="isPlaylistButton">
@@ -63,17 +42,13 @@
                     <v-list-item-icon>
                       <v-icon small>mdi-pencil-outline</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-content style="font-size: 13px"
-                      >수정</v-list-item-content
-                    >
+                    <v-list-item-content style="font-size: 13px">수정</v-list-item-content>
                   </v-list-item>
                   <v-list-item @click="playlistDelete" style="color: white">
                     <v-list-item-icon>
                       <v-icon small>mdi-delete</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-content style="font-size: 13px"
-                      >삭제</v-list-item-content
-                    >
+                    <v-list-item-content style="font-size: 13px">삭제</v-list-item-content>
                   </v-list-item>
                 </v-list>
               </div>
@@ -84,11 +59,7 @@
     </div>
     <div v-if="showSongModificationForm" class="modal">
       <v-card class="modal-content">
-        <PlaylistModifyForm
-          :playlist="playlist"
-          @submit="onSubmit"
-          @cancel="showSongModificationForm = false"
-        />
+        <PlaylistModifyForm :playlist="playlist" @submit="onSubmit" @cancel="showSongModificationForm = false" />
       </v-card>
     </div>
     <SonglistForm :playlist="playlist" @deleteSubmit="deleteSubmit" />
@@ -154,6 +125,7 @@ export default {
     },
     playlistDelete() {
       this.requestPlaylistDeleteToSpring(this.playlistId);
+      this.$router.push({ name: "MyPage" })
     },
 
     playlistButton() {
