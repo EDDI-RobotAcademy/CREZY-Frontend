@@ -1,33 +1,67 @@
 <template>
-  <div></div>
+  <div>
+    <change-nickname-form v-if="showModal" ref="nicknameChangeForm" :loginType="loginType" />
+  </div>
 </template>
-  
+
 <script>
-import { useRoute, useRouter } from "vue-router";
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
+import ChangeNicknameForm from "@/components/account/ChangeNicknameForm.vue";
+import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
+
 export default {
-  setup() {
-    const store = useStore()
-    const router = useRouter()
-
-    const requestUserInfoNaverToSpring = (code) => store.dispatch("accountModule/requestUserInfoNaverToSpring", code)
-    async function setRedirectData() {
-      const route = useRoute()
-      const code = route.query.code
-      await requestUserInfoNaverToSpring(code)
-
-      router.push({ name: "home" })
-    }
-    onMounted(() => {
-      setRedirectData()
-    }
-    )
+  components: {
+    ChangeNicknameForm,
+  },
+  data() {
     return {
-      requestUserInfoNaverToSpring
+      loginType: 'Naver'
     }
-  }
-}
+  },
+  setup() {
+    const store = useStore();
+    const showModal = ref(false);
+    const router = useRouter();
+
+    const requestExistUserInfoNaverToSpring = (payload) => {
+      return store.dispatch(
+        "accountModule/requestExistUserInfoNaverToSpring",
+        {
+          code: payload,
+        }
+      );
+    };
+
+    const requestCheckNaverEmailToSpring = (checkPayload) =>
+      store.dispatch("accountModule/requestCheckNaverEmailToSpring", {
+        code: checkPayload,
+      });
+
+    async function setRedirectData() {
+      const route = useRoute();
+      const code = route.query.code;
+      const checkPayload = code;
+      const isEmailValid = await requestCheckNaverEmailToSpring(checkPayload);
+
+      if (isEmailValid) {
+        await requestExistUserInfoNaverToSpring(checkPayload);
+        router.push({ name: "home" });
+      } else {
+        showModal.value = true;
+      }
+    }
+
+    onMounted(() => {
+      setRedirectData();
+    });
+
+    return {
+      requestExistUserInfoNaverToSpring,
+      showModal,
+    };
+  },
+};
 </script>
-  
+
 <style scoped></style>
