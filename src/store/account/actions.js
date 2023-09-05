@@ -97,7 +97,7 @@ export default {
       });
   },
 
-  requestCheckNicknameToSpring({}, payload) {
+  requestCheckNicknameToSpring({ }, payload) {
     const { newNickname } = payload;
     return axiosInst.springAxiosInst
       .get(`/account/check-nickName/${newNickname}`)
@@ -111,7 +111,7 @@ export default {
         }
       });
   },
-  async requestChangeNicknameToSpring({}, payload) {
+  async requestChangeNicknameToSpring({ }, payload) {
     const userToken = localStorage.getItem("userToken");
     const { newNickname } = payload;
 
@@ -124,7 +124,7 @@ export default {
       });
   },
 
-  async requestChangeProfileImageToSpring({}, payload) {
+  async requestChangeProfileImageToSpring({ }, payload) {
     const userToken = localStorage.getItem("userToken");
     const { newProfileImageName } = payload;
 
@@ -139,7 +139,7 @@ export default {
   },
 
   // 로그인이전 사용 코드를 이용 기존회원인지, 신규회원인지를 판별한다.
-  async requestCheckGoogleEmailToSpring({}, checkPayload) {
+  async requestCheckGoogleEmailToSpring({ }, checkPayload) {
     const { code } = checkPayload;
     return axiosInst.springAxiosInst
       .get("/oauth/google-check-exist", { params: { code: code } })
@@ -151,5 +151,14 @@ export default {
         }
       });
   },
-  
+  requestWithdrawAccountToSpring(context,) {
+    const userToken = localStorage.getItem('userToken');
+
+    return axiosInst.springAxiosInst.delete("/account/withdraw", { headers: { Authorization: userToken } })
+      .then((res) => {
+        localStorage.removeItem('userToken')
+        context.commit(SET_LOGGED_IN, false);
+        alert("탈퇴 완료")
+      })
+  },
 };
