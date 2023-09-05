@@ -1,4 +1,3 @@
-
 import {
   REQUEST_ACCOUNT_TO_SPRING,
   SET_ACCOUNT,
@@ -24,19 +23,35 @@ export default {
     });
   },
 
+  // 신규 유저 로그인 요청. 코드, 닉네임, 프로필이미지네임 3가지를 받아온다
   async requestUserInfoGoogleToSpring(context, payload) {
-    const { code, nickname, profileImage } = payload;
+    const { code, nickname, profileImageName } = payload;
 
+    // code를 쿼리 파라미터로 추가
     const reqForm = {
       nickname,
-      profileImage,
+      profileImageName,
     };
 
     return axiosInst.springAxiosInst
-      .post("/oauth/google-login", reqForm, { params: { code: code } })
+      .post(`/oauth/google-new-login?code=${code}`, reqForm)
       .then(async (res) => {
         await context.commit(SET_ACCOUNT, res.data);
         localStorage.setItem("userToken", res.data.userToken);
+        await context.commit(SET_LOGGED_IN, true);
+      });
+  },
+
+  // 기존 유저 로그인 요청. 코드만을 받아온다
+  async requestExistUserInfoGoogleToSpring(context, payload) {
+    const { code } = payload;
+    console.log(code);
+    return axiosInst.springAxiosInst
+      .get("/oauth/google-login", { params: { code: code } })
+      .then(async (res) => {
+        await context.commit(SET_ACCOUNT, res.data);
+        localStorage.setItem("userToken", res.data.userToken);
+
         await context.commit(SET_LOGGED_IN, true);
       });
   },
@@ -120,6 +135,20 @@ export default {
       })
       .then((res) => {
         console.log(res.data);
+      });
+  },
+
+  // 로그인이전 사용 코드를 이용 기존회원인지, 신규회원인지를 판별한다.
+  async requestCheckGoogleEmailToSpring({}, checkPayload) {
+    const { code } = checkPayload;
+    return axiosInst.springAxiosInst
+      .get("/oauth/google-check-exist", { params: { code: code } })
+      .then((res) => {
+        if (res.data) {
+          return true;
+        } else {
+          return false;
+        }
       });
   },
   
