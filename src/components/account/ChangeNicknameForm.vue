@@ -5,7 +5,7 @@
       <v-text-field v-model="newNickname" label="사용하고 싶은 닉네임을 입력하십시오" outlined class="nickname-input"></v-text-field>
       <div class="nickname-dialog-actions">
         <v-btn @click="checkNickname" color="black">중복확인</v-btn>
-        <v-btn @click="submit" color="black" :disabled = "!isNicknameAvailable" >Submit</v-btn>
+        <v-btn @click="submit" color="black" :disabled="!isNicknameAvailable">Submit</v-btn>
         <v-btn @click="closeModal" color="white">가입취소</v-btn>
       </div>
     </div>
@@ -13,13 +13,27 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { useStore } from "vuex"; 
+import { ref, defineProps } from "vue";
+import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 
 export default {
-  setup() {
-    const store = useStore(); 
+  props: {
+    loginType: {
+      type: String
+    }
+  },
+  setup(props) {
+    // const props = defineProps({
+    //   loginType: {
+    //     type: String,
+    //     required: true,
+    //   },
+    // });
+
+
+    // const loginType = 'Naver'
+    const store = useStore();
     const newNickname = ref("");
     const isNicknameAvailable = ref(false);
     const isModalOpen = ref(true);
@@ -27,16 +41,25 @@ export default {
     const route = useRoute();
     const code = route.query.code;
 
-    const payload = {
-        code,
-        nickname: null,
-        profileImageName: null,
-      };
-
     const requestUserInfoGoogleToSpring = (payload) => {
-      const { code, nickname, profileImageName } = payload;
+      const { nickname, profileImageName } = payload;
       return store.dispatch("accountModule/requestUserInfoGoogleToSpring", {
-        code,
+        nickname,
+        profileImageName,
+      });
+    };
+
+    const requestUserInfoKakaoToSpring = (payload) => {
+      const { nickname, profileImageName } = payload;
+      return store.dispatch("accountModule/requestUserInfoKakaoToSpring", {
+        nickname,
+        profileImageName,
+      });
+    };
+
+    const requestUserInfoNaverToSpring = (payload) => {
+      const { nickname, profileImageName } = payload;
+      return store.dispatch("accountModule/requestUserInfoNaverToSpring", {
         nickname,
         profileImageName,
       });
@@ -46,27 +69,36 @@ export default {
     const closeModal = () => {
       isModalOpen.value = false;
       router.push({ name: "home" });
-      
+
     };
 
     const checkNickname = async () => {
-      const res = await store.dispatch("accountModule/requestCheckNicknameToSpring", {newNickname: newNickname.value});      
+      const res = await store.dispatch("accountModule/requestCheckNicknameToSpring", { newNickname: newNickname.value });
       isNicknameAvailable.value = res;
     };
 
     const submit = async () => {
-      await requestUserInfoGoogleToSpring(code);
-      await store.dispatch("accountModule/requestChangeNicknameToSpring", {newNickname: newNickname.value});  
+      if (props.loginType === 'Google') {
+        await requestUserInfoGoogleToSpring({ nickname: newNickname.value, profileImageName: null });
+      }
+      if (props.loginType === 'Naver') {
+        await requestUserInfoNaverToSpring({ nickname: newNickname.value, profileImageName: null });
+      }
+      if (props.loginType === 'Kakao') {
+        await requestUserInfoKakaoToSpring({ nickname: newNickname.value, profileImageName: null });
+      }
+
+      // await store.dispatch("accountModule/requestChangeNicknameToSpring", { newNickname: newNickname.value });
       closeModal();
     };
 
-    
-    return {      
+
+    return {
       newNickname,
       isNicknameAvailable,
-      checkNickname,      
+      checkNickname,
       submit,
-      isModalOpen, 
+      isModalOpen,
       closeModal,
     };
   },
