@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 
@@ -24,15 +24,6 @@ export default {
     }
   },
   setup(props) {
-    // const props = defineProps({
-    //   loginType: {
-    //     type: String,
-    //     required: true,
-    //   },
-    // });
-
-
-    // const loginType = 'Naver'
     const store = useStore();
     const newNickname = ref("");
     const isNicknameAvailable = ref(false);
@@ -85,6 +76,7 @@ export default {
         await requestUserInfoNaverToSpring({ nickname: newNickname.value, profileImageName: null });
       }
       if (props.loginType === 'Kakao') {
+        console.log(newNickname.value)
         await requestUserInfoKakaoToSpring({ nickname: newNickname.value, profileImageName: null });
       }
 
