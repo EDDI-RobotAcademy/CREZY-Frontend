@@ -366,7 +366,9 @@ export default {
     },
   },
   mounted() {
-    this.loadYouTubeApi();
+    if (localStorage.getItem("userToken") !== null) {
+      this.loadYouTubeApi();
+    }
   },
 };
 </script>
