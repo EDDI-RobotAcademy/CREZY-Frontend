@@ -139,8 +139,6 @@ export default {
         await context.commit(SET_LOGGED_IN, true);
       });
   },
-
-
   requestCheckNicknameToSpring({ }, payload) {
     const { newNickname } = payload;
     return axiosInst.springAxiosInst
@@ -195,7 +193,17 @@ export default {
         }
       });
   },
+  requestWithdrawAccountToSpring(context,) {
+    const userToken = localStorage.getItem('userToken');
 
+    return axiosInst.springAxiosInst.delete("/account/withdraw", { headers: { Authorization: userToken } })
+      .then((res) => {
+        localStorage.removeItem('userToken')
+        context.commit(SET_LOGGED_IN, false);
+        alert("탈퇴 완료")
+      })
+  },
+  
   async requestCheckNaverEmailToSpring({ }, checkPayload) {
     const { code } = checkPayload;
     console.log(code)
@@ -209,5 +217,4 @@ export default {
         }
       });
   },
-
 };

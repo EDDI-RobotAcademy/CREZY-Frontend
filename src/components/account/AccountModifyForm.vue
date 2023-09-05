@@ -1,6 +1,6 @@
 <template>
     <div class="account-modify-card">
-        <v-form @submit.prevent="onSubmit" ref="form">
+        <v-form @submitAccountInfo.prevent="onSubmit" ref="form">
             <h2 class="account-modify-title">회원 정보</h2>
             <div class="account-modify-bigbox">
                 <ul class="account-modify-table">
@@ -65,8 +65,8 @@
                     </li>
                 </ul>
                 <div>
-                    <dd>회원을 탈퇴하시겠어요?</dd>
-                    <button @click="accountWithdrawal" class="withdrawal-button">회원탈퇴</button>
+                    <dd class="withdrawal-letter">회원을 탈퇴하시겠어요?</dd>
+                    <button class="withdrawal-button" @click="withdrawSubmit">회원탈퇴</button>
                 </div>
             </div>
         </v-form>
@@ -158,13 +158,13 @@ export default {
             const newProfileImageName = this.newProfileImageName || this.account.profileImageName;
             const newNickname = this.newNickname || this.account.nickname;
             if (newProfileImageName !== null) {
-                this.$emit("submit", { newNickname, newProfileImageName });
+                this.$emit("submitAccountInfo", { newNickname, newProfileImageName });
                 if (this.file) {
                     this.uploadAwsS3();
                 }
 
             } else {
-                this.$emit("submit", { newNickname, newProfileImageName: "" });
+                this.$emit("submitAccountInfo", { newNickname, newProfileImageName: "" });
             }
             this.account.nickname = newNickname;
 
@@ -240,7 +240,32 @@ export default {
                 })
             }
         },
-    },
+
+        async withdrawSubmit() {
+            this.$emit("withdrawAccount")
+            if (this.file) {
+                this.deleteAwsS3();
+            }
+        },
+
+        async deleteAwsS3() {
+            if (this.account.profileImageName) {
+                this.awsS3Config();
+
+                this.s3.deleteObject({
+                    Bucket: this.awsBucketName,
+                    Key: this.account.profileImageName
+                }, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                        alert('프로필 이미지 삭제 중 문제 발생', err.message);
+                    } else {
+                        console.log('프로필 이미지 삭제 완료');
+                    }
+                });
+            }
+        }
+    }
 }
 </script>
 <style>
@@ -325,10 +350,19 @@ export default {
     cursor: pointer;
 }
 
+.withdrawal-letter {
+    min-width: auto;
+    font-size: 13px;
+    color: gray;
+    margin-top: 10px;
+}
+
 .withdrawal-button {
     min-width: auto;
     font-size: 12px;
     color: gray;
+    margin-top: -20px;
+    float: right;
 }
 
 .image-container {

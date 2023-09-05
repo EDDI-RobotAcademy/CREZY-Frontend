@@ -1,6 +1,6 @@
 <template>
     <div>
-        <AccountModifyForm :account="account" @submit="submitAccountInfo" />
+        <AccountModifyForm :account="account" @submitAccountInfo="submitAccountInfo" @withdrawAccount="withdrawAccount" />
     </div>
 </template>
 <script>
@@ -21,14 +21,21 @@ export default {
     },
     methods: {
         ...mapActions(accountModule, ["requestAccountInfoToSpring", "requestChangeNicknameToSpring",
-            "requestChangeProfileImageToSpring"]),
+            "requestChangeProfileImageToSpring", "requestWithdrawAccountToSpring"]),
         async submitAccountInfo(payload) {
             await this.requestChangeNicknameToSpring(payload)
             await this.requestChangeProfileImageToSpring(payload)
+        },
+        async withdrawAccount() {
+            if (confirm('정말로 탈퇴하시겠습니까?')) {
+                await this.$router.push({ name: "home", })
+
+                await this.requestWithdrawAccountToSpring();
+            }
         }
     },
     computed: {
-        ...mapState(accountModule, ["account"]),
+        ...mapState(accountModule, ["account", 'isLoggedIn']),
     },
     async mounted() {
         await this.requestAccountInfoToSpring();
