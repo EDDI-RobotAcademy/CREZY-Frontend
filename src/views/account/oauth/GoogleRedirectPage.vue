@@ -22,15 +22,6 @@ export default {
     const showModal = ref(false); 
     const router = useRouter();
 
-    const requestUserInfoGoogleToSpring = (payload) => {
-      const { code, nickname, profileImageName } = payload;
-      return store.dispatch("accountModule/requestUserInfoGoogleToSpring", {
-        code,
-        nickname,
-        profileImageName,
-      });
-    };
-    
     const requestExistUserInfoGoogleToSpring = (payload) => {
       return store.dispatch(
         "accountModule/requestExistUserInfoGoogleToSpring",
@@ -52,12 +43,6 @@ export default {
       // 코드를 이용해 기존, 신규 유저 판별
       const isEmailValid = await requestCheckGoogleEmailToSpring(checkPayload);
 
-      const payload = {
-        code,
-        nickname: null,
-        profileImageName: null,
-      };
-
       if (isEmailValid) {
         console.log("기존 회원");
         // 코드 이용해서 기존회원 정보 받아오기
@@ -75,7 +60,6 @@ export default {
 
     return {
       requestExistUserInfoGoogleToSpring,
-      requestUserInfoGoogleToSpring,
       showModal, 
     };
   },
