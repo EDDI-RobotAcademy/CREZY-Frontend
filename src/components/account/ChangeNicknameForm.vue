@@ -1,11 +1,12 @@
 <template>
-  <div class="nickname-dialog-background">
+  <div class="nickname-dialog-background" v-if="isModalOpen">
     <div class="nickname-dialog">
       <h2 class="nickname-dialog-title">닉네임</h2>
       <v-text-field v-model="newNickname" label="사용하고 싶은 닉네임을 입력하십시오" outlined class="nickname-input"></v-text-field>
       <div class="nickname-dialog-actions">
         <v-btn @click="checkNickname" color="black">중복확인</v-btn>
         <v-btn @click="submit" color="black" :disabled = "!isNicknameAvailable" >Submit</v-btn>
+        <v-btn @click="closeModal" color="white">가입취소</v-btn>
       </div>
     </div>
   </div>
@@ -14,15 +15,38 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex"; 
+import { useRouter, useRoute } from "vue-router";
 
 export default {
-  setup(props, { emit }) {
+  setup() {
     const store = useStore(); 
     const newNickname = ref("");
     const isNicknameAvailable = ref(false);
+    const isModalOpen = ref(true);
+    const router = useRouter();
+    const route = useRoute();
+    const code = route.query.code;
+
+    const payload = {
+        code,
+        nickname: null,
+        profileImageName: null,
+      };
+
+    const requestUserInfoGoogleToSpring = (payload) => {
+      const { code, nickname, profileImageName } = payload;
+      return store.dispatch("accountModule/requestUserInfoGoogleToSpring", {
+        code,
+        nickname,
+        profileImageName,
+      });
+    };
+
 
     const closeModal = () => {
-      emit("closeModal");
+      isModalOpen.value = false;
+      router.push({ name: "home" });
+      
     };
 
     const checkNickname = async () => {
@@ -31,15 +55,19 @@ export default {
     };
 
     const submit = async () => {
-      await store.dispatch("accountModule/requestChangeNicknameToSpring", {newNickname: newNickname.value});
-      closeModal();      
+      await requestUserInfoGoogleToSpring(code);
+      await store.dispatch("accountModule/requestChangeNicknameToSpring", {newNickname: newNickname.value});  
+      closeModal();
     };
 
+    
     return {      
       newNickname,
       isNicknameAvailable,
       checkNickname,      
       submit,
+      isModalOpen, 
+      closeModal,
     };
   },
 };
