@@ -3,12 +3,31 @@
     <div style="display: flex; justify-content: space-between">
       <v-row>
         <v-col cols="7">
-          <div class="playlist-read-title">{{ playlist.playlistName }}</div>
-          <div class="playlist-read-writer">
-            by {{ playlist.accountWriter }}
+          <div style="justify-content: space-between; display: flex;">
+            <div class="playlist-read-title">{{ playlist.playlistName }}</div>
+          </div>
+
+          <div class="playlist-read-actions">
+            <div class="playlist-read-writer">
+              by {{ playlist.accountWriter }}
+            </div>
+            <div class="action-btn-container" align="center">
+              <button @click="toggleLike">
+                <v-icon v-if="isPlaylistLiked">mdi-heart</v-icon>
+                <v-icon v-else>mdi-heart-outline</v-icon>
+
+              </button>
+              <div style="font-size: 18px; margin-top: 3px; margin-left: 5px;">
+                {{ playlistLikes }}
+              </div>
+            </div>
           </div>
         </v-col>
         <v-col cols="5">
+          <div style="float: right;">
+              <!-- <v-icon class="action-btn" style="color: white;">mdi-alert-box</v-icon> -->
+              🚨
+            </div>
           <div class="song-btn-container">
             <button
               v-for="button in songButtons"
@@ -110,6 +129,14 @@ export default {
       type: Object,
       required: true,
     },
+    isPlaylistLiked: {
+      type: Boolean,
+      required: true,
+    },
+    playlistLikes: {
+      type: String,
+      required: true
+    }
   },
   data() {
     return {
@@ -148,8 +175,8 @@ export default {
     }
   },
   methods: {
-    async checkIsPlaylistLiked() {
-      console.log("checkIsPlaylistLiked");
+    async getSongs() {
+      console.log("getSongs");
 
       if (this.playlist.songlist) {
         this.initializeVideos();
@@ -304,6 +331,16 @@ export default {
         this.currentBtn = label;
       }
     },
+    async toggleLike() {
+      if(this.isPlaylistLiked) {
+        const isLike = false
+        this.$emit("like", isLike);
+      }
+      else {
+        const isLike = true
+        this.$emit("like", isLike);
+      }
+    }
   },
   computed: {
     getImage() {
@@ -324,7 +361,7 @@ export default {
     playlist: {
       immediate: true,
       async handler() {
-        await this.checkIsPlaylistLiked();
+        await this.getSongs();
       },
     },
   },
@@ -346,6 +383,20 @@ export default {
   padding-top: 20px;
   padding-left: 20px;
   font-size: 32px;
+  color: #ccff00;
+}
+
+.playlist-read-actions{
+  display: flex;
+  justify-content: space-between;
+}
+
+.action-btn{
+  margin-right: 12px;
+}
+
+.action-btn-container{
+  display: flex;
   color: #ccff00;
 }
 
