@@ -18,6 +18,7 @@ export default {
       .get(`/playlist/${playlistId}`)
       .then((res) => {
         commit(REQUEST_PLAYLIST_TO_SPRING, res.data);
+        return res.data.likes;
       });
   },
   requestMyPlaylistsToSpring({ commit }) {
@@ -63,5 +64,29 @@ export default {
       .then((res) => {
         return res.data
       });
+  },
+  checkIsPlaylistLikedToSpring({}, playlistId) {
+    const userToken = localStorage.getItem("userToken")
+
+    return axiosInst.springAxiosInst.post(`/playlist/check-liked/${playlistId}`, { playlistId }, { headers: { Authorization: userToken } })
+      .then((res) => {
+        return res.data
+      })
+  },
+  requestLikePlaylistToSpring({}, playlistId) {
+    const userToken = localStorage.getItem("userToken")
+
+    return axiosInst.springAxiosInst.post(`/playlist/like-playlist/${playlistId}`, { playlistId }, { headers: { Authorization: userToken } })
+      .then((res) => {
+        return res.data
+      })
+  },
+  requestUnlikePlaylistToSpring({}, playlistId) {
+    const userToken = localStorage.getItem("userToken")
+
+    return axiosInst.springAxiosInst.post(`/playlist/unlike-playlist/${playlistId}`, { playlistId }, { headers: { Authorization: userToken } })
+      .then((res) => {
+        return res.data
+      })
   },
 };
