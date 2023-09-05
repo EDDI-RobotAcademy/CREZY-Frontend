@@ -15,7 +15,7 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex"; 
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 export default {
   setup() {
@@ -23,8 +23,25 @@ export default {
     const newNickname = ref("");
     const isNicknameAvailable = ref(false);
     const isModalOpen = ref(true);
-    
     const router = useRouter();
+    const route = useRoute();
+    const code = route.query.code;
+
+    const payload = {
+        code,
+        nickname: null,
+        profileImageName: null,
+      };
+
+    const requestUserInfoGoogleToSpring = (payload) => {
+      const { code, nickname, profileImageName } = payload;
+      return store.dispatch("accountModule/requestUserInfoGoogleToSpring", {
+        code,
+        nickname,
+        profileImageName,
+      });
+    };
+
 
     const closeModal = () => {
       isModalOpen.value = false;
@@ -38,10 +55,12 @@ export default {
     };
 
     const submit = async () => {
+      await requestUserInfoGoogleToSpring(code);
       await store.dispatch("accountModule/requestChangeNicknameToSpring", {newNickname: newNickname.value});  
       closeModal();
     };
 
+    
     return {      
       newNickname,
       isNicknameAvailable,
