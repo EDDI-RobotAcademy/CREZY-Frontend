@@ -35,11 +35,11 @@
             <v-col cols="6">
               <div v-for="(myPlaylist, index) in myPlaylists" :key="index">
                 <table style="
-              color: white;
-              justify-content: space-between;
-              border-collapse: separate;
-              border-spacing: 0 15px;
-            ">
+                color: white;
+                justify-content: space-between;
+                border-collapse: separate;
+                border-spacing: 0 15px;
+              ">
                   <tbody>
                     <td>
                       <v-img class="playlist-img" src="@/assets/images/free-icon-playlist-3567882.png"></v-img>
@@ -56,11 +56,11 @@
             <v-col cols="6">
               <div v-for="(myLikedPlaylist, index) in myLikedPlaylists" :key="index">
                 <table style="
-              color: white;
-              justify-content: space-between;
-              border-collapse: separate;
-              border-spacing: 0 15px;
-            ">
+                color: white;
+                justify-content: space-between;
+                border-collapse: separate;
+                border-spacing: 0 15px;
+              ">
                   <tbody>
                     <td>
                       <v-img class="playlist-img" src="@/assets/images/free-icon-playlist-3567882.png"></v-img>
@@ -95,7 +95,7 @@
     </v-card>
   </v-dialog>
 </template>
-  
+    
 <script>
 import MyPagePlaylistRegisterForm from '@/components/account/MyPagePlaylistRegisterForm.vue'
 import { mapActions } from "vuex";
@@ -125,6 +125,9 @@ export default {
   data() {
     return {
       showAddPlaylistDialog: false,
+      awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
+      awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
+      awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
     }
   },
 
@@ -171,11 +174,10 @@ export default {
     },
 
     getProfileImage(profileImageName) {
-      if (profileImageName) {
-        (profileImageName.includes('k.kakaocdn.net'))
-        return profileImageName;
-      } else {
+      if (!profileImageName) {
         return require('@/assets/images/Logo_only_small-removebg-preview.png');
+      } else {
+        return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${profileImageName}`;
       }
     },
 
@@ -188,7 +190,7 @@ export default {
   }
 }
 </script>
-  
+    
 <style scoped>
 .nickname {
   padding: 20px;
