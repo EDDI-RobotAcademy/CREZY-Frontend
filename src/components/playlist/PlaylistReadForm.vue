@@ -102,7 +102,7 @@
                 v-for="(song, index) in playlist.songlist"
                 :key="index"
                 @click="playSong(index)"
-                :class="{ playing: index === currentIdx }"
+                 :class="{ playing: index === currentIdx, 'not-playing': index !== currentIdx }"
                 style="cursor: pointer"
               >
                 <td style="padding-right: 10px">{{ index + 1 }}</td>
@@ -385,7 +385,8 @@ export default {
   padding-top: 20px;
   padding-left: 20px;
   font-size: 32px;
-  color: #ccff00;
+  color:  #ccff00;
+
 }
 
 .playlist-read-actions{
@@ -399,13 +400,15 @@ export default {
 
 .action-btn-container{
   display: flex;
-  color: #ccff00;
+  color: #f1484e;
+
 }
 
 .playlist-read-writer {
   padding-left: 20px;
   font-size: 22px;
-  color: #ccff00;
+  color: #11c979;
+
 }
 
 .playlist {
@@ -483,14 +486,14 @@ export default {
 }
 
 .song-btn {
-  color: white;
+  color: #9b9797;
   margin: 20px;
   width: 100%;
 }
 .clicked-song-btn {
-  color: #999;
+  color:  #ffffff;
   margin: 20px;
-  border-bottom: #999 solid 1px;
+  border-bottom: #f9f9f7 solid 1px;
   width: 100%;
 }
 
@@ -532,6 +535,9 @@ export default {
 }
 
 .playing {
-  color: #999;
+  color: #ffffff;
+}
+.not-playing {
+  color:  #9b9797;
 }
 </style>
