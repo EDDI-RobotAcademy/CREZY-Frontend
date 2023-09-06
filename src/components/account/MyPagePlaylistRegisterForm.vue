@@ -178,7 +178,7 @@ export default {
 
 .add-button {
     position: absolute;
-    margin-top: 20px;
+    margin-bottom: 12px;
     margin-left: 210px;
     font-weight: bolder;
 }
