@@ -3,15 +3,41 @@
     <div class="my-page-title">
       <div>
         <v-row class="nickname">
-          <v-col cols="5">
-            <div class="profile-image-container">
-              <div class="profile-image-circle">
-                <v-img @click="goToModifyAccountPage(account.accountId)" :src="getProfileImage(account.profileImageName)"
-                  width="100%" height="100%"></v-img>
-              </div>
-              <div class="profile-name">{{ account.nickname }}의 MUSE</div>
+          <div class="profile-image-container">
+            <div class="profile-image-circle">
+              <v-img @click="goToModifyAccountPage(account.accountId)" :src="getProfileImage(account.profileImageName)"
+                width="100%" height="100%"></v-img>
             </div>
+            <div class="profile-name">{{ account.nickname }}의 MUSE</div>
+          </div>
+
+          <v-col class="my-page-menu-icon" style="display: flex; justify-content: flex-end;">
+            <v-menu offset-y v-model="isMyPageMenuButton">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn v-show="!isMyPageMenuButton" class="my-page-menu-button" small @click="myPageMenuButton" icon
+                  v-bind="attrs" v-on="on" depressed>
+                  <v-icon style="color: white;">mdi-dots-vertical</v-icon>
+                </v-btn>
+                <div v-if="isMyPageMenuButton" class="menu-list">
+                  <v-list style="background-color: rgba(0, 0, 0, 0) !important">
+                    <v-list-item @click="goToModifyAccountPage(account.accountId)" style="color: white">
+                      <v-list-item-icon>
+                        <v-icon style="font-size: 25px;  margin-right: 5px;">mdi-account-edit</v-icon>
+                      </v-list-item-icon>
+                      <v-list-item-content style="font-size: 13px">회원수정</v-list-item-content>
+                    </v-list-item>
+                    <v-list-item @click="goToCustomerServicePage" style="color: white; margin-top: -15px;">
+                      <v-list-item-icon>
+                        <v-icon style="font-size: 25px; margin-right: 5px; ">mdi-account-question</v-icon>
+                      </v-list-item-icon>
+                      <v-list-item-content style="font-size: 13px">문의하기</v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </div>
+              </template>
+            </v-menu>
           </v-col>
+
         </v-row>
         <v-col cols="5">
           <v-btn rounded @click="addPlaylist()" class="add-playlist-button">✛ 새 재생목록</v-btn>
@@ -128,6 +154,8 @@ export default {
       awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
       awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
       awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
+
+      isMyPageMenuButton: false
     }
   },
 
@@ -187,6 +215,14 @@ export default {
         params: { accountId: accountId.toString() },
       });
     },
+
+    myPageMenuButton() {
+      this.isMyPageMenuButton = !this.isMyPageMenuButton
+    },
+
+    goToCustomerServicePage() {
+      this.$router.push({ name: "CustomerServicePage" });
+    }
   }
 }
 </script>
@@ -294,5 +330,20 @@ export default {
 
 .profile-image-circle v-img {
   object-fit: cover;
+}
+
+.my-page-menu-icon {
+  margin-top: -20px;
+  margin-right: -20px;
+  position: relative;
+  height: 48px;
+}
+
+.my-page-menu-button {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.menu-list {
+  position: absolute;
 }
 </style>
