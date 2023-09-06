@@ -1,7 +1,8 @@
 <template>
   <v-app class="app-container">
     <VideoBackground
-      :src="currentVideoBackground"
+      v-if="!isAdmin"
+      :src="require(`@/assets/vids/vid-background2_1080.mp4`)"
       style="
         height: 100vh;
         width: 100%;
@@ -39,17 +40,20 @@ export default {
 
   data: () => ({
     currentNavComponent: null,
-    currentVideoBackground: null,
+    // currentVideoBackground: null,
+    isAdmin: null,
   }),
   watch: {
     $route(to) {
       // 라우트 변경 시 네비게이션 및 배경을 설정합니다.
       if (to.path.startsWith('/admin')) {
         this.currentNavComponent = AdminNavigation;
-        this.currentVideoBackground = 'none'
+        // this.currentVideoBackground = require(`@/assets/vids/vid-background.mp4`);
+        this.isAdmin = true
       } else {
         this.currentNavComponent = NavigationMenu;
-        this.currentVideoBackground = require(`@/assets/vids/vid-background2_1080.mp4`);
+        // this.currentVideoBackground = require(`@/assets/vids/vid-background2_1080.mp4`);
+        this.isAdmin = false
       }
     },
   },
