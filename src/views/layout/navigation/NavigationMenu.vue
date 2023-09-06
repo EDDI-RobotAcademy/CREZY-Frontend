@@ -9,7 +9,7 @@
               height="55"
               width="55"
               contain
-              @click="test"
+              @click="goHome"
             ></v-img>
             <v-img
               style="margin-left: -55px"
@@ -17,6 +17,7 @@
               height="100"
               width="270"
               contain
+              @click="goHome"
             ></v-img>
           </div>
         </button>
@@ -67,6 +68,9 @@ export default {
   
   methods: {
     ...mapActions(accountModule, ['requestUserLogoutToSpring']),
+    goHome() {
+      this.$router.push('/');
+    },
     toggleBtn(currentRoute) {
       this.buttons.forEach((button) => {
         button.class =
@@ -105,7 +109,7 @@ export default {
 
 <style>
 .nav-bar {
-  background-color: rgba(255, 255, 255, 0.2) !important;
+  background-color: transparent !important;
   position: sticky !important;
   top: 0;
   margin-top: 15px;
