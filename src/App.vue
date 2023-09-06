@@ -1,7 +1,7 @@
 <template>
   <v-app class="app-container">
     <VideoBackground
-      :src="require(`@/assets/vids/vid-background2_1080.mp4`)"
+      :src="currentVideoBackground"
       style="
         height: 100vh;
         width: 100%;
@@ -11,9 +11,10 @@
       "
     >
     </VideoBackground>
-
+    <Component :is="currentNavComponent"/>
     <v-main class="main">
-      <NavigationMenu style="z-index: 1" />
+      <!-- <NavigationMenu style="z-index: 1" /> -->
+
       <div class="centered">
         <router-view v-slot="{ Component }">
           <transition name="slide" mode="out-in">
@@ -27,6 +28,7 @@
 
 <script>
 import NavigationMenu from "./views/layout/navigation/NavigationMenu.vue";
+import AdminNavigation from "./views/layout/navigation/AdminNavigation.vue"
 import VideoBackground from "vue-responsive-video-background-player";
 
 export default {
@@ -35,7 +37,22 @@ export default {
     VideoBackground,
   },
 
-  data: () => ({}),
+  data: () => ({
+    currentNavComponent: null,
+    currentVideoBackground: null,
+  }),
+  watch: {
+    $route(to) {
+      // 라우트 변경 시 네비게이션 및 배경을 설정합니다.
+      if (to.path.startsWith('/admin')) {
+        this.currentNavComponent = AdminNavigation;
+        this.currentVideoBackground = 'none'
+      } else {
+        this.currentNavComponent = NavigationMenu;
+        this.currentVideoBackground = require(`@/assets/vids/vid-background2_1080.mp4`);
+      }
+    },
+  },
 };
 </script>
 
@@ -44,6 +61,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
+  background-color: #26292E;
 }
 .main {
   padding-bottom: 150px;
@@ -51,6 +69,7 @@ export default {
   overflow: auto;
   height: 100%;
 
+  /* --v-layout-left: 0px !important; */
   --v-layout-top: 0px !important;
   -ms-overflow-style: none; /* 인터넷 익스플로러 */
   scrollbar-width: none; /* 파이어폭스 */
