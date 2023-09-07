@@ -3,12 +3,12 @@
     <AdminLoginForm/>
   </div>
   <div v-else>
-    <AdminMainForm/>
+    <AdminDashboardForm/>
   </div>
 </template>
 
 <script>
-import AdminMainForm from "@/components/admin/AdminMainForm.vue"
+import AdminDashboardForm from "@/components/admin/AdminDashboardForm.vue"
 import AdminLoginForm from "@/components/admin/AdminLoginForm.vue"
 
 export default {
@@ -19,7 +19,7 @@ export default {
   },
   components: {
     AdminLoginForm,
-    AdminMainForm
+    AdminDashboardForm
   } 
 }
 </script>

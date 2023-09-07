@@ -16,9 +16,16 @@
     <v-main class="main">
       <!-- <NavigationMenu style="z-index: 1" /> -->
 
-      <div class="centered">
+      <div class="centered" v-if="!isAdmin">
         <router-view v-slot="{ Component }">
           <transition name="slide" mode="out-in">
+            <Component :is="Component" />
+          </transition>
+        </router-view>
+      </div>
+      <div v-else>
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out">
             <Component :is="Component" />
           </transition>
         </router-view>
