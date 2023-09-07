@@ -17,20 +17,26 @@
                     <button @click="showInquiryForm">1:1 문의</button>
                 </div>
                 <div :class="{ 'active-navi': isCheckMyAnswer }" class="customer-service-navi-button">
-                    <button @click="showMyQuestion">내 답변 확인</button>
+                    <button @click="showMyQuestion">나의 문의 내역</button>
                 </div>
             </ul>
         </div>
         <FrequentlyAskedQuestionsForm v-if="isFreuntlyAskedQuestions" />
+        <InquiryRegisterForm v-if="isOneOnOneInquiry" @inquirySubmit="onInquirySubmit" />
+        <InquiryListForm v-if="isCheckMyAnswer" />
     </div>
 </template>
 
 <script>
-import FrequentlyAskedQuestionsForm from "@/components/service/FrequentlyAskedQuestionsForm.vue";
+import FrequentlyAskedQuestionsForm from "@/components/inquiry/FrequentlyAskedQuestionsForm.vue";
+import InquiryRegisterForm from "@/components/inquiry/InquiryRegisterForm.vue";
+import InquiryListForm from "@/components/inquiry/InquiryListForm.vue";
 
 export default {
     components: {
         FrequentlyAskedQuestionsForm,
+        InquiryRegisterForm,
+        InquiryListForm,
     },
 
     data() {
@@ -63,7 +69,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .customer-service-card {
     margin-top: 6rem;
     padding: 18px;
