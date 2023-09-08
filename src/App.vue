@@ -25,7 +25,7 @@
       </div>
       <div v-else>
         <router-view v-slot="{ Component }">
-          <transition name="fade" mode="out">
+          <transition name="fade" mode="out-in">
             <Component :is="Component" />
           </transition>
         </router-view>

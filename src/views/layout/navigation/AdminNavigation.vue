@@ -20,7 +20,7 @@
       </v-list-item>
 
       <v-list nav dense>
-        <v-list-item v-for="(link, index) in links" :key="link.index" @click="handleNav(link.text)" :class="link.class">
+        <v-list-item v-for="(link, index) in links" :key="link.index" @click="handleNav(link.route)" :class="link.class">
         <v-list-item-action>
             <v-icon>
             {{ link.icon }}
@@ -60,7 +60,7 @@ export default {
       navigation_drawer: true,
       links: [
         { icon: "mdi-developer-board", text: "Dashboard", class: "clicked-nav-drawer-item", route: "AdminMainPage"},
-        { icon: "mdi-music-box-multiple", text: "Playlists", class: "nav-drawer-items", route: ""},
+        { icon: "mdi-music-box-multiple", text: "Playlists", class: "nav-drawer-items", route: "AdminOverallPlaylistPage"},
         { icon: "mdi-account-box-multiple-outline", text: "Accounts", class: "nav-drawer-items", route: ""},
         { icon: "mdi-music-circle-outline", text: "Songs", class: "nav-drawer-items", route: ""},
         { icon: "mdi-alert-circle-outline", text: "Reports", class: "nav-drawer-items", route: ""}

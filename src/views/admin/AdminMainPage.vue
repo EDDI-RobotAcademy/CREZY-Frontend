@@ -14,7 +14,7 @@ import AdminLoginForm from "@/components/admin/AdminLoginForm.vue"
 export default {
   data(){
     return {
-      adminLogin: false
+      adminLogin: true
     }
   },
   components: {
