@@ -31,6 +31,9 @@
 import FrequentlyAskedQuestionsForm from "@/components/inquiry/FrequentlyAskedQuestionsForm.vue";
 import InquiryRegisterForm from "@/components/inquiry/InquiryRegisterForm.vue";
 import InquiryListForm from "@/components/inquiry/InquiryListForm.vue";
+// import { mapActions } from "vuex";
+
+// const InquiryModule = "InquiryModule";
 
 export default {
     components: {
@@ -48,6 +51,8 @@ export default {
     },
 
     methods: {
+        // ...mapActions(InquiryModule, ["requestInquiryRegisterToSpring"]),
+
         showFreuntlyAskedQuestions() {
             this.isFreuntlyAskedQuestions = true;
             this.isOneOnOneInquiry = false;
@@ -65,6 +70,11 @@ export default {
             this.isOneOnOneInquiry = false;
             this.isCheckMyAnswer = true;
         },
+
+        async onInquirySubmit() {
+            // await this.requestInquiryRegisterToSpring(payload)
+            //   await this.$router.push({ name: '' });
+        }
     },
 }
 </script>

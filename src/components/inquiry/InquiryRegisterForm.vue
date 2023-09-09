@@ -2,7 +2,7 @@
     <v-form @inquirySubmit.prevent="onInquirySubmit" ref="form">
         <div class="inquiry-reigister-table">
             <div class="inquiry-register-select">
-                <v-select variant="outlined" v-model="inquirySelect" :items="['재생목록', '계정', '노래', 'UI', '서비스']"
+                <v-select variant="outlined" v-model="inquirySelect" :items="['재생목록 문의', '계정 문의', '노래 문의', '서비스 이용 문의']"
                     label="문의유형"></v-select>
             </div>
             <div class="inquiry-register-title">
@@ -15,15 +15,24 @@
                 <label class="upload-image" for="file-selector">
                     <v-icon>mdi-camera</v-icon>
                     <span>사진 첨부</span>
-                    <input type="file" id="file-selector" ref="file" style="display: none" @change="handleFileUpload" />
+                    <input type="file" id="file-selector" ref="file" style="display: none" @change="handleFileUpload"
+                        multiple />
                 </label>
                 <div class="preview-image-container">
-                    <div v-for="(image, index) in imagePreviews" :key="index" class="preview-container">
-                        <img :src="image" class="preview-image" />
-                        <div class="preview-close-button" @click="deleteImage(index)">x</div>
+                    <div class="image-list">
+                        <div v-for="(image, index) in imagePreviews" :key="index" class="preview-container">
+                            <div class="image-wrapper">
+                                <img :src="image" class="preview-image" />
+                                <div class="preview-close-button" @click="deleteImage(index)">x</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="image-rules">
+            - 사진 용량은 사진 한 장당 최대 10MB 까지 등록이 가능합니다.<br>
+            - 사진은 최대 3장까지 등록이 가능합니다.
         </div>
         <div class="inquiry-register-button">
             <v-btn @click="onInquirySubmit" rounded style="color: black;">등록</v-btn>
@@ -37,6 +46,7 @@ export default {
             inquirySelect: '',
             inquiryTitle: '',
             inquiryContent: '',
+            inquiryImageName: null,
 
             imagePreviews: [],
             files: [],
@@ -62,6 +72,7 @@ export default {
 
                     reader.onload = (e) => {
                         this.imagePreviews.push(e.target.result);
+                        this.inquiryImageName = file.name;
                     };
 
                     reader.readAsDataURL(file);
@@ -89,8 +100,12 @@ export default {
         uploadAwsS3() {
             this.awsS3Config()
 
-            for (let idx = 0; idx < this.files.length; idx++) {
-                const file = this.files[idx];
+            if (!Array.isArray(this.file)) {
+                this.file = [this.file];
+            }
+
+            for (let idx = 0; idx < this.file.length; idx++) {
+                const file = this.file[idx];
 
                 this.s3.upload({
                     Key: file.name,
@@ -108,6 +123,26 @@ export default {
         deleteImage(index) {
             this.imagePreviews.splice(index, 1);
             this.files.splice(index, 1);
+            this.inquiryImageName = null;
+        },
+
+        async onInquirySubmit() {
+            if (!this.inquirySelect) {
+                alert('문의 유형을 선택해주세요!');
+                return;
+            }
+            if (!this.inquiryTitle) {
+                alert('제목을 입력해주세요!');
+                return;
+            }
+
+            const { inquirySelect, inquiryTitle, inquiryContent, inquiryImageName } = this;
+
+            this.$emit("inquirySubmit", { inquirySelect, inquiryTitle, inquiryContent, inquiryImageName });
+
+            if (inquiryImageName !== null) {
+                this.uploadAwsS3()
+            }
         },
     },
 }
@@ -117,7 +152,7 @@ export default {
     margin-top: 40px;
     margin-left: 100px;
     width: 650px;
-    height: 600px;
+    height: 650px;
     background-color: rgba(201, 201, 201, 0.25);
     border: 1px white solid;
     border-radius: 10px;
@@ -161,26 +196,30 @@ export default {
 }
 
 .preview-image-container {
-    width: 100px;
-    height: 100%;
     overflow: hidden;
-    gap: 10px;
-    margin-left: 80px;
+    margin-left: 120px;
     margin-top: -100px;
-    gap: 10px;
 }
 
 .preview-image {
-    width: 100px;
-    height: 100%;
+    width: 98px;
+    height: 98px;
+}
+
+.image-list {
+    display: flex;
+    flex-direction: row;
+}
+
+.image-wrapper {
+    position: relative;
 }
 
 .preview-container {
     border: 1px solid white;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 20px;
 }
 
 .preview-close-button {
@@ -188,14 +227,26 @@ export default {
     top: 5px;
     right: 5px;
     cursor: pointer;
-    background-color: white;
-    border-radius: 50%;
     padding: 2px;
     width: 16px;
     height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1;
+}
+
+.image-rules {
+    margin-bottom: 100px;
+    margin-top: -60px;
+    margin-left: 250px;
+    text-align: left;
+    font-size: 12px;
+}
+
+.inquiry-register-button {
+    margin-top: -40px;
+    margin-bottom: 30px;
 }
 </style>
 
