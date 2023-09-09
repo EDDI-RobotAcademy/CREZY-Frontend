@@ -2,7 +2,7 @@
     <v-form @inquirySubmit.prevent="onInquirySubmit" ref="form">
         <div class="inquiry-reigister-table">
             <div class="inquiry-register-select">
-                <v-select variant="outlined" v-model="inquirySelect" :items="['재생목록 문의', '계정 문의', '노래 문의', '서비스 이용 문의']"
+                <v-select variant="outlined" v-model="inquiryType" :items="['재생목록 문의', '계정 문의', '노래 문의', '서비스 이용 문의']"
                     label="문의유형"></v-select>
             </div>
             <div class="inquiry-register-title">
@@ -43,7 +43,7 @@
 export default {
     data() {
         return {
-            inquirySelect: '',
+            inquiryType: '',
             inquiryTitle: '',
             inquiryContent: '',
             inquiryImageName: null,
@@ -127,7 +127,7 @@ export default {
         },
 
         async onInquirySubmit() {
-            if (!this.inquirySelect) {
+            if (!this.inquiryType) {
                 alert('문의 유형을 선택해주세요!');
                 return;
             }
@@ -136,9 +136,9 @@ export default {
                 return;
             }
 
-            const { inquirySelect, inquiryTitle, inquiryContent, inquiryImageName } = this;
+            const { inquiryType, inquiryTitle, inquiryContent, inquiryImageName } = this;
 
-            this.$emit("inquirySubmit", { inquirySelect, inquiryTitle, inquiryContent, inquiryImageName });
+            this.$emit("inquirySubmit", { inquiryType, inquiryTitle, inquiryContent, inquiryImageName });
 
             if (inquiryImageName !== null) {
                 this.uploadAwsS3()

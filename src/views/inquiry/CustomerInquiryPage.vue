@@ -23,7 +23,7 @@
         </div>
         <FrequentlyAskedQuestionsForm v-if="isFreuntlyAskedQuestions" />
         <InquiryRegisterForm v-if="isOneOnOneInquiry" @inquirySubmit="onInquirySubmit" />
-        <InquiryListForm v-if="isCheckMyAnswer" />
+        <InquiryListForm v-if="isCheckMyAnswer" :inquiries="inquiries" />
     </div>
 </template>
 
@@ -31,9 +31,9 @@
 import FrequentlyAskedQuestionsForm from "@/components/inquiry/FrequentlyAskedQuestionsForm.vue";
 import InquiryRegisterForm from "@/components/inquiry/InquiryRegisterForm.vue";
 import InquiryListForm from "@/components/inquiry/InquiryListForm.vue";
-// import { mapActions } from "vuex";
+// import { mapActions, mapState } from "vuex";
 
-// const InquiryModule = "InquiryModule";
+// const inquiryModule = "inquiryModule";
 
 export default {
     components: {
@@ -51,7 +51,7 @@ export default {
     },
 
     methods: {
-        // ...mapActions(InquiryModule, ["requestInquiryRegisterToSpring"]),
+        // ...mapActions(inquiryModule, ["requestInquiryRegisterToSpring", "requestInquiryListToSpring"]),
 
         showFreuntlyAskedQuestions() {
             this.isFreuntlyAskedQuestions = true;
@@ -73,9 +73,13 @@ export default {
 
         async onInquirySubmit() {
             // await this.requestInquiryRegisterToSpring(payload)
-            //   await this.$router.push({ name: '' });
+            await this.showMyQuestion()
         }
     },
+
+    // computed: {
+    //     ...mapState(inquiryModule, ["inquiries"]),
+    // },
 }
 </script>
 
