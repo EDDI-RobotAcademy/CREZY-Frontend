@@ -63,7 +63,7 @@ export default {
         { icon: "mdi-music-box-multiple", text: "Playlists", class: "nav-drawer-items", route: "AdminOverallPlaylistPage"},
         { icon: "mdi-account-box-multiple-outline", text: "Accounts", class: "nav-drawer-items", route: "AdminOverallAccountsPage"},
         { icon: "mdi-music-circle-outline", text: "Songs", class: "nav-drawer-items", route: ""},
-        { icon: "mdi-alert-circle-outline", text: "Reports", class: "nav-drawer-items", route: ""}
+        { icon: "mdi-alert-circle-outline", text: "Reports", class: "nav-drawer-items", route: "AdminOverallReportsPage"}
       ]
     }
   },
