@@ -24,17 +24,22 @@
           </div>
         </v-col>
         <v-col cols="5">
-          <div style="float: right;">
-              <!-- <v-icon class="action-btn" style="color: white;">mdi-alert-box</v-icon> -->
-              🚨
-            </div>
+              <div style="display: flex; justify-content: flex-end; cursor: pointer;">
+                <v-btn rounded class="report-btn" @click="reportAccountAndPlaylist()">
+                  🚨
+                </v-btn>
+              </div>
+        </v-col>
+        <!-- <div v-if="showReportAccountPlaylistForm" class="modal">
+          <v-card class="modal-content">
+            <ReportAccountPlaylistForm @submit="ReportAccountPlaylistForm"
+              @cancelRegister="showReportAccountPlaylistForm = false" />
+          </v-card>
+        </div> -->
+        <v-col cols="4" style="display: flex; justify-content: flex-end">
           <div class="song-btn-container">
-            <button
-              v-for="button in songButtons"
-              :key="button.label"
-              :class="button.class"
-              @click="toggleBtn(button.label)"
-            >
+            <button v-for="button in songButtons" :key="button.label" :class="button.class"
+              @click="toggleBtn(button.label)">
               {{ button.label }}
             </button>
           </div>
@@ -48,13 +53,7 @@
           <v-sheet class="song-thumbnail-sheet">
             <v-img class="mx-auto" height="400" :src="getImage"> </v-img>
           </v-sheet>
-          <iframe
-            ref="ytPlayer"
-            frameborder="0"
-            allow="autoplay"
-            width="0"
-            height="0"
-          ></iframe>
+          <iframe ref="ytPlayer" frameborder="0" allow="autoplay" width="0" height="0"></iframe>
           <div class="controls-container">
             <button style="color: white" @click="previousVideo()">
               <v-icon>mdi-skip-previous</v-icon>
@@ -68,16 +67,8 @@
             </button>
           </div>
           <div class="progress-container">
-            <input
-              id="progress-bar"
-              type="range"
-              min="0"
-              max="100"
-              value="0"
-              step="0.1"
-              @change="seekVideo"
-              @input="seekVideo"
-            />
+            <input id="progress-bar" type="range" min="0" max="100" value="0" step="0.1" @change="seekVideo"
+              @input="seekVideo" />
             <div style="color: white">
               <span>{{ currentTimeText }}</span>
               <span> / </span>
@@ -88,23 +79,16 @@
       </v-col>
       <v-col cols="5">
         <div class="playlist-table" v-if="currentBtn === 'LIST'">
-          <table
-            style="
+          <table style="
               color: white;
               justify-content: space-between;
               width: 100%;
               border-collapse: separate;
               border-spacing: 0 15px;
-            "
-          >
+            ">
             <tbody>
-              <tr
-                v-for="(song, index) in playlist.songlist"
-                :key="index"
-                @click="playSong(index)"
-                 :class="{ playing: index === currentIdx, 'not-playing': index !== currentIdx }"
-                style="cursor: pointer"
-              >
+              <tr v-for="(song, index) in playlist.songlist" :key="index" @click="playSong(index)"
+                :class="{ playing: index === currentIdx, 'not-playing': index !== currentIdx }" style="cursor: pointer">
                 <td style="padding-right: 10px">{{ index + 1 }}</td>
                 <td>{{ song.title }}</td>
                 <td align="end">{{ song.singer }}</td>
@@ -112,17 +96,27 @@
             </tbody>
           </table>
         </div>
-        <div
-          class="lyrics"
-          v-html="playlist.songlist[currentIdx].lyrics"
-          v-if="currentBtn === 'LYRICS'"
-        ></div>
+        <div class="lyrics" v-html="playlist.songlist[currentIdx].lyrics" v-if="currentBtn === 'LYRICS'"></div>
       </v-col>
     </v-row>
   </div>
+  <!-- 계정 & 플레이리스트 신고 생성 팝업 -->
+    <v-dialog v-model="showReportAccountPlaylistDialog" max-width="500px">
+      <v-card style="border-radius: 0px;" class="report-dialog">
+        <v-card-title class="report-dialog-title">계정 & 플레이리스트 신고</v-card-title>
+        <v-card-text>
+          <ReportAccountPlaylistForm v-if="showReportAccountPlaylistDialog" @submit="onSubmitReportForm" />
+        </v-card-text>
+        <v-card-actions class="report-dialog-actions">
+          <v-btn @click="cancelReportAccountPlalist" class="cancel-button">취소</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script>
+import ReportAccountPlaylistForm from '@/components/report/ReportAccountPlaylistForm.vue'
+
 export default {
   props: {
     playlist: {
@@ -138,8 +132,13 @@ export default {
       required: true
     }
   },
+  components: {
+    ReportAccountPlaylistForm
+  }
+  ,
   data() {
     return {
+      showReportAccountPlaylistDialog: false,
       currentBtn: "LIST",
       currentIdx: 0,
 
@@ -175,6 +174,20 @@ export default {
     }
   },
   methods: {
+    async onSubmitReportForm(payload) {
+      // 신고 폼 전달 작성
+    },
+    cancelReportAccountPlalist() {
+      console.log('신고 폼이 제출되었습니다:');
+      // console.log('신고 폼이 제출되었습니다:', payload);
+      this.showReportAccountPlaylistDialog = false;
+    },
+
+    reportAccountAndPlaylist() {
+      this.showReportAccountPlaylistDialog = true
+      console.log('계정 또는 플레이리스트가 신고되었습니다')
+    },
+
     async getSongs() {
       console.log("getSongs");
 
@@ -188,9 +201,8 @@ export default {
       const videoLinks = await this.playlist.songlist.map((song) => song.link);
       this.videoIds = await videoLinks.map((url) => this.extractVideoId(url));
 
-      this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${
-        this.videoIds[this.currentIdx]
-      }?autoplay=0&mute=0&enablejsapi=1`;
+      this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[this.currentIdx]
+        }?autoplay=0&mute=0&enablejsapi=1`;
 
       this.setupPlayer();
     },
@@ -332,7 +344,7 @@ export default {
       }
     },
     async toggleLike() {
-      if(this.isPlaylistLiked) {
+      if (this.isPlaylistLiked) {
         const isLike = false
         this.$emit("like", isLike);
       }
@@ -374,6 +386,10 @@ export default {
 </script>
 
 <style>
+.report-btn {
+  background-color: transparent !important;
+}
+
 .playlist-read-card {
   margin-top: 6rem;
   padding: 18px;
@@ -385,20 +401,20 @@ export default {
   padding-top: 20px;
   padding-left: 20px;
   font-size: 32px;
-  color:  #ccff00;
+  color: #ccff00;
 
 }
 
-.playlist-read-actions{
+.playlist-read-actions {
   display: flex;
   justify-content: space-between;
 }
 
-.action-btn{
+.action-btn {
   margin-right: 12px;
 }
 
-.action-btn-container{
+.action-btn-container {
   display: flex;
   color: #f1484e;
 
@@ -424,21 +440,27 @@ export default {
 .playlist-table::-webkit-scrollbar {
   width: 8px;
 }
+
 .playlist-table::-webkit-scrollbar-track {
   display: none;
 }
+
 .playlist-table::-webkit-scrollbar-corner {
   display: none;
 }
+
 .playlist-table::-webkit-scrollbar-horizontal {
   display: none;
 }
+
 .playlist-table:not(:hover)::-webkit-scrollbar-thumb {
   background: transparent;
 }
+
 .playlist-table:hover::-webkit-scrollbar-thumb {
   background: #888;
 }
+
 .playlist-table::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
@@ -453,21 +475,27 @@ export default {
 .lyrics::-webkit-scrollbar {
   width: 8px;
 }
+
 .lyrics::-webkit-scrollbar-track {
   display: none;
 }
+
 .lyrics::-webkit-scrollbar-corner {
   display: none;
 }
+
 .lyrics::-webkit-scrollbar-horizontal {
   display: none;
 }
+
 .lyrics:not(:hover)::-webkit-scrollbar-thumb {
   background: transparent;
 }
+
 .lyrics:hover::-webkit-scrollbar-thumb {
   background: #888;
 }
+
 .lyrics::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
@@ -490,8 +518,9 @@ export default {
   margin: 20px;
   width: 100%;
 }
+
 .clicked-song-btn {
-  color:  #ffffff;
+  color: #ffffff;
   margin: 20px;
   border-bottom: #f9f9f7 solid 1px;
   width: 100%;
@@ -537,7 +566,27 @@ export default {
 .playing {
   color: #ffffff;
 }
+
 .not-playing {
-  color:  #9b9797;
+  color: #9b9797;
 }
+/* 신고폼 스타일 시작 */
+.report-dialog {
+  background-color: #3a3838; /* 다이얼로그 배경색 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+.report-dialog-title {
+  color: #ffffff;
+  font-size: 18px; /* 다이얼로그 제목 폰트 크기 */
+  font-weight: bold; /* 다이얼로그 제목 폰트 굵기 */
+}
+
+.report-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  color: white;
+}
+
+/* 신고폼 스타일 끝 */
 </style>
