@@ -3,9 +3,19 @@
     <div class="nickname-dialog">
       <h2 class="nickname-dialog-title">프로필 설정</h2>      
       <div class="profile-image-container">
-        <v-img class="profile-image" :src="getProfileImage()" alt="프로필 사진"></v-img>
+        <label for="profile-image-upload">
+          <v-img class="profile-image" :src="getProfileImage()" alt="프로필 사진"></v-img>
+        </label>
+        <input
+          id="profile-image-upload"
+          type="file"
+          style="display: none;"
+          @change="handleFileUpload"
+        />
+        <dd class="delete-image-button" >
+          <button v-if=isChangeImage @click.prevent.stop="deleteImage">기본 이미지로 변경</button>
+        </dd>
       </div>
-      <v-file-input v-model="file" label="프로필 사진 업로드" outlined class="profile-image-input" @change="handleFileUpload"></v-file-input>
       <v-text-field v-model="newNickname" label="사용하고 싶은 닉네임을 입력하십시오" outlined class="nickname-input"></v-text-field>
       <div class="nickname-dialog-actions">
         <v-btn @click="checkNickname" color="black">중복확인</v-btn>
@@ -40,9 +50,9 @@ export default {
     
     const imagePreview = ref(null);
     const newProfileImageName = ref(null);
+    const isChangeImage = ref(false);
     const file = ref(null);
     const s3fileList = ref([]);
-
     let s3 = null;
     const awsBucketName = process.env.VUE_APP_AWS_BUCKET_NAME;
     const awsBucketRegion = process.env.VUE_APP_AWS_BUCKET_REGION;
@@ -92,8 +102,16 @@ export default {
         }        
     };  
 
+    const deleteImage = () => {
+      imagePreview.value = null;
+      file.value = null;
+      newProfileImageName.value = null;     
+      isChangeImage.value = false;    
+    };      
+
     const handleFileUpload = (event) => {
       const selectedFile = event.target.files[0];
+      isChangeImage.value = true;  
       if (selectedFile) {
         console.log("이미지 읽어오기!!");
         const reader = new FileReader();
@@ -186,6 +204,8 @@ export default {
       closeModal,
       handleFileUpload,
       uploadAwsS3,      
+      deleteImage,
+      isChangeImage,
     };
   },
 };
