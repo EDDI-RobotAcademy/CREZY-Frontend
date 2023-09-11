@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 100px;">
+  <div>
     <v-row>
       <v-col cols="6">
           <v-card style=" background-color: #292E37; margin: 15px; padding: 15px">

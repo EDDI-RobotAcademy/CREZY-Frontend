@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 100px"> 
+  <div> 
     <v-row style="margin: 15px;">
       <v-col cols="8">
         <v-row>

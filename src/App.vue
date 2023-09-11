@@ -1,7 +1,6 @@
 <template>
-  <v-app class="app-container">
+  <v-app class="app-container" v-if="!isAdmin">
     <VideoBackground
-      v-if="!isAdmin"
       :src="require(`@/assets/vids/vid-background2_1080.mp4`)"
       style="
         height: 100vh;
@@ -16,14 +15,19 @@
     <v-main class="main">
       <!-- <NavigationMenu style="z-index: 1" /> -->
 
-      <div class="centered" v-if="!isAdmin">
+      <div class="centered">
         <router-view v-slot="{ Component }">
           <transition name="slide" mode="out-in">
             <Component :is="Component" />
           </transition>
         </router-view>
       </div>
-      <div v-else>
+    </v-main>
+  </v-app>
+  <v-app class="admin-container" v-else>
+    <Component :is="currentNavComponent"/>
+    <v-main>
+      <div>
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <Component :is="Component" />
@@ -72,8 +76,13 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-color: #26292E;
 }
+
+.admin-container{
+  background-color: #26292E;
+  padding-bottom: 150px;
+}
+
 .main {
   padding-bottom: 150px;
   z-index: 1;
@@ -89,6 +98,8 @@ export default {
 .main::-webkit-scrollbar {
   display: none; /* 크롬, 사파리, 오페라, 엣지 */
 }
+
+
 .centered {
   display: flex;
   flex-direction: column;
