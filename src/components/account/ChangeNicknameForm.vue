@@ -1,7 +1,11 @@
 <template>
   <div class="nickname-dialog-background" v-if="isModalOpen">
     <div class="nickname-dialog">
-      <h2 class="nickname-dialog-title">닉네임</h2>
+      <h2 class="nickname-dialog-title">프로필 설정</h2>      
+      <div class="profile-image-container">
+        <v-img class="profile-image" :src="getProfileImage()" alt="프로필 사진"></v-img>
+      </div>
+      <v-file-input v-model="file" label="프로필 사진 업로드" outlined class="profile-image-input" @change="handleFileUpload"></v-file-input>
       <v-text-field v-model="newNickname" label="사용하고 싶은 닉네임을 입력하십시오" outlined class="nickname-input"></v-text-field>
       <div class="nickname-dialog-actions">
         <v-btn @click="checkNickname" color="black">중복확인</v-btn>
@@ -13,9 +17,11 @@
 </template>
 
 <script>
+
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
+import AWS from 'aws-sdk';
 
 export default {
   props: {
@@ -31,6 +37,16 @@ export default {
     const router = useRouter();
     const route = useRoute();
     const code = route.query.code;
+    
+    const imagePreview = ref(null);
+    const newProfileImageName = ref(null);
+    const file = ref(null);
+    const s3fileList = ref([]);
+
+    let s3 = null;
+    const awsBucketName = process.env.VUE_APP_AWS_BUCKET_NAME;
+    const awsBucketRegion = process.env.VUE_APP_AWS_BUCKET_REGION;
+    const awsIdentityPoolId = process.env.VUE_APP_AWS_IDENTITY_POOLID;
 
     const requestUserInfoGoogleToSpring = (payload) => {
       const { nickname, profileImageName } = payload;
@@ -66,36 +82,115 @@ export default {
     const checkNickname = async () => {
       const res = await store.dispatch("accountModule/requestCheckNicknameToSpring", { newNickname: newNickname.value });
       isNicknameAvailable.value = res;
-    };
+    };   
+
+    const getProfileImage = () => {    
+        if (imagePreview.value) {
+            return imagePreview.value;
+        } else {
+            return require('@/assets/images/Logo_only_small-removebg-preview.png');
+        }        
+    };  
+
+    const handleFileUpload = (event) => {
+      const selectedFile = event.target.files[0];
+      if (selectedFile) {
+        console.log("이미지 읽어오기!!");
+        const reader = new FileReader();
+        console.log("Blob 값도 맞다!");
+
+        reader.onload = (e) => {
+          imagePreview.value = e.target.result;
+          newProfileImageName.value = selectedFile.name;
+          file.value = selectedFile;
+          console.log(file.value);
+        };
+
+        reader.readAsDataURL(selectedFile);
+      } else {
+        console.log("파일 못읽음");
+      }
+    };     
+
+      const awsS3Config = () => {
+            AWS.config.update({
+                region: awsBucketRegion,
+                credentials: new AWS.CognitoIdentityCredentials({
+                    IdentityPoolId: awsIdentityPoolId
+                })
+            });
+
+            s3 = new AWS.S3({
+                apiVersion: '2006-03-01',
+                params: {
+                    Bucket: awsBucketName
+                }
+            });
+        };
+
+        const uploadAwsS3 = () => {                   
+          const selectedFile = file.value;
+          console.log(selectedFile)     
+          if (selectedFile) {
+            newProfileImageName.value = selectedFile.name;
+            s3.upload({
+              Key: selectedFile.name,
+              Body: selectedFile,
+              ACL: 'public-read'
+            }, (err, data) => {
+              if (err) {
+                console.log(err);
+                alert('업로드 중 문제 발생 (사진 파일에 문제가 있음)', err.message);
+                return;
+              }         
+              newProfileImageName.value = data.Location;
+              imagePreview.value = data.Location;            
+            });
+          } else {
+            console.log("이미지를 선택하세요");
+          }
+        };
+
+
 
     const submit = async () => {
-      if (props.loginType === 'Google') {
-        await requestUserInfoGoogleToSpring({ nickname: newNickname.value, profileImageName: null });
-      }
-      if (props.loginType === 'Naver') {
-        await requestUserInfoNaverToSpring({ nickname: newNickname.value, profileImageName: null });
-      }
-      if (props.loginType === 'Kakao') {
-        console.log(newNickname.value)
-        await requestUserInfoKakaoToSpring({ nickname: newNickname.value, profileImageName: null });
-      }
+      awsS3Config();
+      if (newProfileImageName !== null) {
 
-      // await store.dispatch("accountModule/requestChangeNicknameToSpring", { newNickname: newNickname.value });
-      closeModal();
+        if (props.loginType === 'Google') {
+          await requestUserInfoGoogleToSpring({ nickname: newNickname.value, profileImageName: newProfileImageName.value });
+          uploadAwsS3();           
+        }
+        if (props.loginType === 'Naver') {
+          await requestUserInfoNaverToSpring({ nickname: newNickname.value, profileImageName: newProfileImageName.value });
+          uploadAwsS3();   
+        }
+        if (props.loginType === 'Kakao') {
+          console.log(newNickname.value)
+          await requestUserInfoKakaoToSpring({ nickname: newNickname.value, profileImageName: newProfileImageName.value });
+          uploadAwsS3();   
+        }
+      } else {
+        console.log("이미지를 넣으시오")
+      }        
+       closeModal();
     };
-
 
     return {
       newNickname,
       isNicknameAvailable,
       checkNickname,
+      getProfileImage,
       submit,
       isModalOpen,
       closeModal,
+      handleFileUpload,
+      uploadAwsS3,      
     };
   },
 };
 </script>
+
 
 <style scoped>
 .nickname-dialog-background {
@@ -122,7 +217,7 @@ export default {
 
 .nickname-dialog-title {
   font-size: 18px;
-  margin-bottom: 16px;
+  margin-bottom: 16px;  
 }
 
 .nickname-input {
@@ -134,5 +229,20 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-top: 24px;
+}
+.profile-image-container {
+  width: 120px;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  display: block;
+}
+.profile-image {
+  width: 100px;
+  height: auto;
+  border-radius: 50%;
+  background-color: black;
+  margin-bottom: 16px;
 }
 </style>
