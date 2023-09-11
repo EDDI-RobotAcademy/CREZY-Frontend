@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import playlistRoutes from "./playlist";
 import accountRoutes from "./account";
-import serviceRoutes from "./service";
+import inquiryRoutes from "./inquiry";
 import adminRoutes from "./admin";
 
 const routes = [
@@ -22,7 +22,7 @@ const routes = [
   },
   ...playlistRoutes,
   ...accountRoutes,
-  ...serviceRoutes,
+  ...inquiryRoutes,
   ...adminRoutes
 ];
 

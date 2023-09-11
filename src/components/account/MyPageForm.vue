@@ -30,7 +30,7 @@
                       <v-list-item-icon>
                         <v-icon style="font-size: 25px; margin-right: 5px; ">mdi-account-question</v-icon>
                       </v-list-item-icon>
-                      <v-list-item-content style="font-size: 13px">문의하기</v-list-item-content>
+                      <v-list-item-content style="font-size: 13px">1 : 1 문의</v-list-item-content>
                     </v-list-item>
                   </v-list>
                 </div>
@@ -221,7 +221,7 @@ export default {
     },
 
     goToCustomerServicePage() {
-      this.$router.push({ name: "CustomerServicePage" });
+      this.$router.push({ name: "CustomerInquiryPage" });
     }
   }
 }
