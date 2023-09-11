@@ -98,15 +98,15 @@
           <v-divider></v-divider>
 
           <div>
-            <table class="overall-playlist-table" style="margin-bottom: 100px">
-              <tr class="overall-playlist-table-header" style="margin-bottom: 100px">
+            <table class="overall-playlist-table">
+              <tr class="overall-playlist-table-header">
                 <th style="width: 100px;"></th>
                 <th align="start">index</th>
                 <th align="start">title</th>
                 <th align="start">creater</th>
                 <th align="end">likes</th>
                 <th align="end">songs</th>
-                <th align="end">created date</th>
+                <th align="end" style="padding-right: 25px">created date</th>
               </tr>
               <tr class="overall-playlist-table-row" v-for="(playlist, index) in playlists" @click="toManage(playlist.playlistId)">
                 <td>
@@ -120,7 +120,7 @@
                 <td align="start">{{ playlist.writer }}</td>
                 <td align="end">{{ playlist.likeCount }}</td>
                 <td align="end">{{ playlist.songCount }}</td>
-                <td align="end">{{ playlist.createDate }}</td>
+                <td align="end" style="padding-right: 25px">{{ playlist.createDate }}</td>
               </tr>
             </table>
           </div>
@@ -288,7 +288,8 @@ export default {
 
 .overall-playlist-table {
   width: 100%; 
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 15px;
 }
 
 .overall-playlist-table-header{
@@ -297,7 +298,6 @@ export default {
 }
 
 .overall-playlist-table-row {
-  margin: 50px !important; 
   background-color: #485463;
   color: white; 
   height: 100px; 
@@ -319,12 +319,14 @@ export default {
   height: 50px; 
   width: 3px; 
   background-color: #EA78B3;
+  border-radius: 5px;
 }
 
 .yes-song-marker {
   height: 50px; 
   width: 3px; 
   background-color: #7AE5A8;
+  border-radius: 5px;
 }
 
 
