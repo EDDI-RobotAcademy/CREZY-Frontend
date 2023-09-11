@@ -1,5 +1,6 @@
 import AdminMainPage from "@/views/admin/AdminMainPage.vue"
 import AdminOverallPlaylistPage from "@/views/admin/playlist/AdminOverallPlaylistPage.vue"
+import AdminOverallAccountsPage from "@/views/admin/account/AdminOverallAccountsPage.vue"
 
 const adminRoutes = [
   {
@@ -12,6 +13,11 @@ const adminRoutes = [
     name: "AdminOverallPlaylistPage",
     component: AdminOverallPlaylistPage,
   },
+  {
+    path: "/admin/overall-accounts",
+    name: "AdminOverallAccountsPage",
+    component: AdminOverallAccountsPage
+  }
 ]
 
 export default adminRoutes
