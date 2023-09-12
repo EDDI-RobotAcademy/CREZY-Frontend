@@ -46,12 +46,17 @@
       </v-col>
       <v-col cols="4">
         <v-card class="overall-playlist-calendar-card">
-          <v-date-picker
-            class="overall-playlist-calendar"
-            show-adjacent-months
-            color="rgb(75, 192, 192)"
-            elevation="4"
-          ></v-date-picker>
+          <DatePicker 
+            v-model="searchDate" 
+            transparent 
+            borderless 
+            :is-dark="true" 
+            expanded 
+            :rows="2"
+            :step="1"
+            :color="selectedColor"
+            :max-date="new Date()"
+            :initial-page-position="2"/>
         </v-card>
       </v-col>
     </v-row>     
@@ -169,13 +174,16 @@ ChartJS.register(
   Legend
 )
 
-import { VDatePicker } from 'vuetify/labs/VDatePicker'
+import { Calendar, DatePicker } from 'v-calendar';
+import 'v-calendar/style.css';
+
 import AdminParticularAccountDetailForm from "@/components/admin/account/AdminParticularAccountDetailForm.vue"
 
 export default {
   components: {
     Line,
-    VDatePicker,
+    DatePicker,
+    Calendar,
     AdminParticularAccountDetailForm
   },
   data() {
@@ -188,6 +196,10 @@ export default {
       chooseAccountCategory: false,
       selectedCategory: 'recent',
       accountCategories: [ 'recent', 'blacklisted', '1 warning', '2 warnings'],
+
+      selectedColor: 'teal',
+      searchDate: new Date(),
+      formattedDate: '',
 
       accountsData: {
         labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
@@ -233,6 +245,19 @@ export default {
     },
     selectCategory(selectedCategory) {
       this.selectedCategory = selectedCategory
+    },
+    formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
+  },
+  watch: {
+    searchDate(newValue) {
+      this.formattedDate = this.formatDate(newValue);
+      // 아래 스프링으로 전달하는 매서드 연결
+      alert(this.formattedDate)
     },
   }
 }

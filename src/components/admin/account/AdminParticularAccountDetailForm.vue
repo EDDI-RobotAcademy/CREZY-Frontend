@@ -244,6 +244,6 @@ export default {
   z-index: 999;
   width: 95%;
   text-align: center;
-  top: -10;
+  top: 128px;
 }
 </style>

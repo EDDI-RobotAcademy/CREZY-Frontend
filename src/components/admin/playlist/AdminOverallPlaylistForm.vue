@@ -41,17 +41,22 @@
           </v-col>
         </v-row>
         <v-card class="overall-playlist-graph">
-          <Line :data="playlistData" :options="playlistOptions"/>
+          <Line :data="playlistData" :options="playlistOptions" />
         </v-card>
       </v-col>
       <v-col cols="4">
         <v-card class="overall-playlist-calendar-card">
-          <v-date-picker
-            class="overall-playlist-calendar"
-            show-adjacent-months
-            color="rgb(75, 192, 192)"
-            elevation="4"
-          ></v-date-picker>
+          <DatePicker 
+            v-model="searchDate" 
+            transparent 
+            borderless 
+            :is-dark="true" 
+            expanded 
+            :rows="2"
+            :step="1"
+            :color="selectedColor"
+            :max-date="new Date()"
+            :initial-page-position="2"/>
         </v-card>
       </v-col>
     </v-row>  
@@ -153,12 +158,14 @@ ChartJS.register(
   Legend
 )
 
-import { VDatePicker } from 'vuetify/labs/VDatePicker'
+import { Calendar, DatePicker } from 'v-calendar';
+import 'v-calendar/style.css';
 
 export default {
   components: {
     Line,
-    VDatePicker
+    DatePicker,
+    Calendar
   },
   data() {
     return{ 
@@ -195,6 +202,10 @@ export default {
         }
       },
 
+      selectedColor: 'teal',
+      searchDate: new Date(),
+      formattedDate: '',
+
       playlists: [
         { playlistId: 1, title: "이름 1", writer: "생성자1", likeCount: 3, songCount: 5, createDate: "23-09-01" },
         { playlistId: 3, title: "이름 3", writer: "생성자3", likeCount: 0, songCount: 0, createDate: "23-09-01" },
@@ -213,7 +224,20 @@ export default {
     },
     toManage(playlistId) {
       alert(playlistId + "번 선택!")
-    }
+    },
+    formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
+  },
+  watch: {
+    searchDate(newValue) {
+      this.formattedDate = this.formatDate(newValue);
+      // 아래 스프링으로 전달하는 매서드 연결
+      alert(this.formattedDate)
+    },
   }
 }
 </script>
@@ -240,9 +264,6 @@ export default {
 .overall-playlist-calendar-card{
   background-color: #292E37; 
   padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .overall-playlist-calendar{
@@ -278,6 +299,7 @@ export default {
   background-color: #212630 !important; 
   position: absolute; 
   width: 300px;
+  top: 82px;
 
 }
 
