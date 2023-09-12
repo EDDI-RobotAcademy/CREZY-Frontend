@@ -146,8 +146,8 @@ export default {
                 alert('문의 유형을 선택해주세요!');
                 return;
             }
-            if (!this.inquiryTitle) {
-                alert('제목을 입력해주세요!');
+            if (!this.inquiryContent) {
+                alert('내용을 입력해주세요!');
                 return;
             }
 

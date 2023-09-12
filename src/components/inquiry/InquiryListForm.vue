@@ -20,14 +20,14 @@
             </thead>
             <tbody>
                 <tr v-if="!inquiries || (Array.isArray(inquiries) && inquiries.length === 0)">
-                    최근 6개월 간 문의하신 내역이 없습니다.
+                    <td colspan="4">최근 6개월 간 문의하신 내역이 없습니다.</td>
                 </tr>
-                <tr v-for="inquiry in sortedInquiries" :key="inquiry.inquiryId">
-                    <td>{{ inquiry.inquiryType }}</td>
+                <tr v-for="inquiry in inquiries" :key="inquiry.inquiryId">
+                    <td>{{ mapToKoreanInquiryType(inquiry.inquiryCategoryType.inquiryCategory) }}</td>
                     <td style="font-weight: bold;">{{ inquiry.inquiryTitle }}</td>
-                    <td>{{ inquiry.inquiryDate }}</td>
-                    <td :style="inquiry.inquiryStatus === '답변예정' ? 'color: gray;' : 'color: white;'">{{
-                        inquiry.inquiryStatus }}</td>
+                    <td>{{ inquiry.createInquiryDate }}</td>
+                    <td :style="inquiryStatus === '답변예정' ? 'color: gray;' : 'color: white;'">{{
+                        inquiryStatus }}</td>
                 </tr>
             </tbody>
         </table>
@@ -37,34 +37,29 @@
 <script>
 
 export default {
-    // props: {
-    //     inquiries: {
-    //         type: Array,
-    //         required: true,
-    //     },
-    // },
+    props: {
+        inquiries: {
+            type: Array,
+            required: true,
+        },
+    },
     data() {
         return {
-            inquiries: [
-                { inquiryType: '서비스 이용 문의', inquiryTitle: '탈퇴 버튼이 안보여요 ㅡㅡ', inquiryDate: '2023.09.01', inquiryStatus: '답변예정' },
-                { inquiryType: '노래 문의', inquiryTitle: '플레이리스트에 노래 추가가 안돼요', inquiryDate: '2023.09.09', inquiryStatus: '답변완료' },
-                { inquiryType: '서비스 이용 문의', inquiryTitle: '테스트 제목 1', inquiryDate: '2023.09.09', inquiryStatus: '답변예정' },
-                { inquiryType: '서비스 이용 문의', inquiryTitle: '테스트 제목 1', inquiryDate: '2023.09.09', inquiryStatus: '답변예정' },
-                { inquiryType: '서비스 이용 문의', inquiryTitle: '테스트 제목 1', inquiryDate: '2023.09.05', inquiryStatus: '답변예정' },
-                { inquiryType: '서비스 이용 문의', inquiryTitle: '테스트 제목 1', inquiryDate: '2023.09.09', inquiryStatus: '답변예정' },
-                { inquiryType: '서비스 이용 문의', inquiryTitle: '테스트 제목 1', inquiryDate: '2023.09.09', inquiryStatus: '답변완료' },
-                { inquiryType: '서비스 이용 문의', inquiryTitle: '테스트 제목 1', inquiryDate: '2023.09.09', inquiryStatus: '답변예정' },
-                { inquiryType: '서비스 이용 문의', inquiryTitle: '테스트 제목 1', inquiryDate: '2023.09.09', inquiryStatus: '답변예정' },
-            ]
+            inquiryStatus: '답변예정'
+
         };
     },
 
-    computed: {
-        sortedInquiries() {
-            return this.inquiries.slice().sort((a, b) => {
-                return new Date(b.inquiryDate) - new Date(a.inquiryDate);
-            });
-        }
+    methods: {
+        mapToKoreanInquiryType(englishType) {
+            const typeMap = {
+                "ACCOUNT": "계정 문의",
+                "SONG": "노래 문의",
+                "SERVICE": "서비스 이용 문의",
+                "PLAYLIST": "재생목록 문의",
+            };
+            return typeMap[englishType] || englishType;
+        },
     },
 };
 </script>
