@@ -65,10 +65,12 @@ export default {
             this.isCheckMyAnswer = false;
         },
 
-        showMyQuestion() {
+        async showMyQuestion() {
             this.isFreuntlyAskedQuestions = false;
             this.isOneOnOneInquiry = false;
             this.isCheckMyAnswer = true;
+
+            await this.requestInquiryListToSpring()
         },
 
         async onInquirySubmit(payload) {
@@ -77,9 +79,9 @@ export default {
         }
     },
 
-    // computed: {
-    //     ...mapState(inquiryModule, ["inquiries"]),
-    // },
+    computed: {
+        ...mapState(inquiryModule, ["inquiries"]),
+    },
 }
 </script>
 
