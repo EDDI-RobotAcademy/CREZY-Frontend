@@ -28,7 +28,7 @@
 
 <script>
 
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 import AWS from 'aws-sdk';
@@ -57,6 +57,12 @@ export default {
     const awsBucketName = process.env.VUE_APP_AWS_BUCKET_NAME;
     const awsBucketRegion = process.env.VUE_APP_AWS_BUCKET_REGION;
     const awsIdentityPoolId = process.env.VUE_APP_AWS_IDENTITY_POOLID;
+
+    watch(newNickname, async (changedNickname) => {
+      if (changedNickname !== newNickname) {
+        isNicknameAvailable.value = false
+      }
+    })
 
     const requestUserInfoGoogleToSpring = (payload) => {
       const { nickname, profileImageName } = payload;
