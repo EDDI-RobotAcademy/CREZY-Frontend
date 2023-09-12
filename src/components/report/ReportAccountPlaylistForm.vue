@@ -127,7 +127,7 @@ export default {
       const reportData = {
         reportedCategoryType: this.reportedCategoryType,
         reportContent: this.reportContent === '기타' ? '기타 ' + this.otherDetails : this.reportContent,
-        playlistId: this.playlistId // 신고하는 플레이리스트 ID 추가
+        reportedPlaylistId: this.playlistId // 신고하는 플레이리스트 ID 추가
       };
       console.log('신고 정보를 서버에 제출:', reportData);
 
