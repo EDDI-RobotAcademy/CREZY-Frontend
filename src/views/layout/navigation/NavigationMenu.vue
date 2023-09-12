@@ -92,7 +92,9 @@ export default {
     async signOut() {
       await this.requestUserLogoutToSpring()
       localStorage.removeItem("userToken")
-      this.$router.push("/")
+      localStorage.removeItem("nickname")
+      localStorage.removeItem("roleType")
+      await this.$router.push("/")
     }
   },
   watch: {
