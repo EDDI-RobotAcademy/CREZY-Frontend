@@ -102,7 +102,7 @@
   </div>
   <div>
     <v-card-actions class="custom-submit-button">
-      <v-btn @click="onSubmitReportForm" class="submit">제출</v-btn>
+      <v-btn :disabled="!isFormValid" @click="onSubmitReportForm" class="submit">제출</v-btn>
     </v-card-actions>
   </div>
 </template>
@@ -140,6 +140,12 @@ export default {
       
     },
   },
+
+  computed: {
+      isFormValid() {
+        return this.reportedCategoryType && this.reportContent;
+      }
+  }
 };
 </script>
 
