@@ -33,6 +33,19 @@
         </v-list-item-content>
         </v-list-item>
       </v-list>
+
+      <v-list class="logout-btn-container" nav dense>
+        <v-list-item class="logout-btn" @click="logout">
+          <v-list-item-action>
+            <v-icon>mdi-logout-variant</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>
+            Logout
+            </v-list-item-title>
+        </v-list-item-content>
+        </v-list-item>
+      </v-list>
     </v-navigation-drawer>
 
     <v-app-bar flat app class="admin-nav-bar">
@@ -45,7 +58,7 @@
           대충 페이지 제목
         </div>
         <div style="color: white; margin-right: 50px;">
-          대충 프로필
+          어서 오세요 {{ nickname }}님
         </div>
       </div>
     </v-app-bar>
@@ -53,7 +66,12 @@
 
   </nav>
 </template>
+
 <script>
+import { mapState, mapActions } from 'vuex';
+
+const accountModule = 'accountModule';
+
 export default {
   data() {
     return {
@@ -68,6 +86,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions(accountModule, ['requestUserLogoutToSpring']),
+
     handleNav(currentRoute) {
       this.links.forEach((link) => {
         link.class = 
@@ -76,6 +96,13 @@ export default {
       if (this.$route.name !== currentRoute) {
         this.$router.push({ name: currentRoute });
       }
+    },
+    async logout() {
+      await this.requestUserLogoutToSpring()
+      localStorage.removeItem("userToken")
+      localStorage.removeItem("nickname")
+      localStorage.removeItem("roleType")
+      await this.$router.push({ name: "home" })
     }
   },
   watch: {
@@ -85,6 +112,15 @@ export default {
   },
   created() {
     this.handleNav(this.$route.name);
+  },
+  computed: {
+    ...mapState(accountModule, ['isLoggedIn']),
+
+    nickname() {
+      if (this.isLoggedIn) {
+        return localStorage.getItem('nickname')
+      }
+    }
   }
 }
 </script>
@@ -132,6 +168,17 @@ export default {
   color: white;
   padding: 20px;
   margin-bottom: 20px !important;
+}
+
+.logout-btn-container {
+  position: absolute; 
+  bottom: 24px; 
+  width: 100%;
+}
+
+.logout-btn {
+  color: white;
+  padding: 20px;
 }
     
 </style>

@@ -11,8 +11,8 @@
       <v-text-field
         variant="outlined"
         prepend-inner-icon="mdi-account"
-        v-model="username"
-        label="Username"
+        v-model="email"
+        label="Email"
         class="login-text-field"
         required>
       </v-text-field>
@@ -26,6 +26,7 @@
         required>
       </v-text-field>
       <v-btn
+        @click="adminLogin"
         class="login-btn">
         login
       </v-btn>
@@ -37,8 +38,14 @@
 export default {
   data() {
     return {
-      username: '',
+      email: '',
       password: ''
+    }
+  },
+  methods: {
+    adminLogin() {
+      const { email, password } = this
+      this.$emit("login", { email, password });
     }
   }
 }
