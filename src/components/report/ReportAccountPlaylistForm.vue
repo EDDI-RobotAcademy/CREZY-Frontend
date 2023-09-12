@@ -6,18 +6,18 @@
         <label for="reportedCategoryType" class="font-color">신고 대상 선택</label>
       </div>
       <div class="custom-radio-group">
-        <input type="radio" id="reportAccount" value="account" v-model="reportedCategoryType" class="custom-radio" />
+        <input type="radio" id="reportAccount" value="ACCOUNT" v-model="reportedCategoryType" class="custom-radio" />
         <label for="reportAccount" class="custom-radio-label">계정</label>
       </div>
 
       <div class="custom-radio-group">
-        <input type="radio" id="reportPlaylist" value="playlist" v-model="reportedCategoryType" class="custom-radio" />
+        <input type="radio" id="reportPlaylist" value="PLAYLIST" v-model="reportedCategoryType" class="custom-radio" />
         <label for="reportPlaylist" class="custom-radio-label">플레이리스트</label>
       </div>
     </div>
 
     <!-- 선택한 대상에 따른 신고 유형 -->
-    <div class="custom-section" v-if="reportedCategoryType === 'account'">
+    <div class="custom-section" v-if="reportedCategoryType === 'ACCOUNT'">
       <div class="custom-label">
         <label for="reportContent" class="font-color">신고 유형</label>
       </div>
@@ -59,7 +59,7 @@
     </div>
 
     <!-- 플레이리스트 신고 목록 -->
-    <div v-if="reportedCategoryType === 'playlist'">
+    <div v-if="reportedCategoryType === 'PLAYLIST'">
       <div class="custom-label">
         <label for="reportContent" class="font-color">신고 유형</label>
       </div>
