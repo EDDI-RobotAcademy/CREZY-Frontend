@@ -270,6 +270,7 @@ export default {
     align-items: center;
     justify-content: center;
     z-index: 1;
+    color: black;
 }
 
 .image-rules {
