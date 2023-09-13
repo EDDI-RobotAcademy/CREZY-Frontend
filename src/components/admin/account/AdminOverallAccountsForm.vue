@@ -10,7 +10,7 @@
                   New Today
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ newToday }}
+                  {{ accountsStatus.todayAccount }}
                 </div>
               </div>
             </v-card>
@@ -22,7 +22,7 @@
                   Percentage
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ percentage }}
+                  {{ accountsStatus.increaseRate }}%
                 </div>
               </div>
             </v-card>
@@ -34,7 +34,7 @@
                   Total
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ totalNum }}
+                  {{ accountsStatus.totalAccount }}
                 </div>
               </div>
             </v-card>
@@ -127,16 +127,16 @@
             <tr class="overall-playlist-table-row" @click="forManage(account.accountId)">
               <td>
                 <div class="overall-playlist-song-marker-container">
-                  <div v-if="account.warningCount === 3" class="three-warning-account-marker"></div>
-                  <div v-if="account.warningCount === 2" class="two-warning-account-marker"></div>
-                  <div v-if="account.warningCount === 1" class="one-warning-account-marker"></div>
-                  <div v-if="account.warningCount === 0" class="no-warning-account-marker"></div>
+                  <div v-if="account.warningCounts === 3" class="three-warning-account-marker"></div>
+                  <div v-if="account.warningCounts === 2" class="two-warning-account-marker"></div>
+                  <div v-if="account.warningCounts === 1" class="one-warning-account-marker"></div>
+                  <div v-if="account.warningCounts === 0" class="no-warning-account-marker"></div>
                 </div>
               </td>
               <td>{{ index + 1 }}</td>
               <td align="start">{{ account.nickname }}</td>
-              <td align="end">{{ account.playlistCount }}</td>
-              <td align="end">{{ account.songCount }}</td>
+              <td align="end">{{ account.playlistCounts }}</td>
+              <td align="end">{{ account.songCounts }}</td>
               <td align="end" style="padding-right: 25px">{{ account.createDate }}</td>
             </tr>
             <tr v-if="selectedAccountId === account.accountId">
@@ -180,37 +180,35 @@ import 'v-calendar/style.css';
 import AdminParticularAccountDetailForm from "@/components/admin/account/AdminParticularAccountDetailForm.vue"
 
 export default {
+  extends: Line,
   components: {
     Line,
     DatePicker,
     Calendar,
     AdminParticularAccountDetailForm
   },
+
+  props: {
+    accountsStatus: {
+      type: Object,
+      required: true
+    },
+    accounts: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return{ 
-      newToday: 12,
-      percentage: "71%",
-      totalNum: 64,
-
       selectedAccountId: '',
       chooseAccountCategory: false,
       selectedCategory: 'recent',
       accountCategories: [ 'recent', 'blacklisted', '1 warning', '2 warnings'],
 
       selectedColor: 'teal',
-      searchDate: new Date(),
+      searchDate: '',
       formattedDate: '',
 
-      accountsData: {
-        labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
-        datasets: [
-          {
-            data: [18, 12, 3, 5, 7, 7, 12],
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)'
-          }
-        ]
-      },
       accountsOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -225,14 +223,6 @@ export default {
           },
         }
       },
-
-      accounts: [
-        { accountId: 1, nickname: "이름 1", playlistCount: 3, songCount: 31, createDate: "23-09-01", warningCount: 0 },
-        { accountId: 3, nickname: "이름 3", playlistCount: 7, songCount: 74, createDate: "23-09-01", warningCount: 0 },
-        { accountId: 4, nickname: "이름 4", playlistCount: 2, songCount: 8, createDate: "23-09-04", warningCount: 1 },
-        { accountId: 6, nickname: "이름 6", playlistCount: 0, songCount: 0, createDate: "23-09-07", warningCount: 3 },
-        { accountId: 7, nickname: "이름 7", playlistCount: 1, songCount: 11, createDate: "23-09-07", warningCount: 2 },
-      ]
     }
   },
   methods: {
@@ -252,13 +242,38 @@ export default {
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
     },
+    getStatus(targetDate) {
+      const date = targetDate
+      this.$emit("getStatus", { date });
+    },
   },
   watch: {
     searchDate(newValue) {
       this.formattedDate = this.formatDate(newValue);
-      // 아래 스프링으로 전달하는 매서드 연결
-      alert(this.formattedDate)
+      this.getStatus(this.formattedDate)
     },
+  },
+  async mounted() {
+    this.searchDate = new Date()
+    const targetDate = this.formatDate(this.searchDate)
+    await this.getStatus(targetDate)
+  },
+  computed: {
+    accountsData() {
+      const accountsData = {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)'
+          }
+        ]
+      }
+      accountsData.labels = this.accountsStatus.accountDateList;
+      accountsData.datasets[0].data = this.accountsStatus.accountCounts;
+      return accountsData
+    }
   }
 }
 </script>

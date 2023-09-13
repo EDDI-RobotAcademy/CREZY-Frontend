@@ -11,10 +11,9 @@
       "
     >
     </VideoBackground>
-    <Component :is="currentNavComponent"/>
+    
     <v-main class="main">
-      <!-- <NavigationMenu style="z-index: 1" /> -->
-
+      <Component :is="currentNavComponent"/>
       <div class="centered">
         <router-view v-slot="{ Component }">
           <transition name="slide" mode="out-in">
