@@ -5,11 +5,10 @@ import axiosInst from "@/utility/axiosInst"
 
 export default {
   requestReportAccountAndPlaylistToSpring({ }, payload) {
-    const { reportedCategoryType, reportContent, reportedPlaylistId } = payload
+    const { reportedCategoryType, reportContent, reportedId } = payload
     const userToken = localStorage.getItem("userToken")
-    console.log(reportedPlaylistId)
 
-    return axiosInst.springAxiosInst.post("/report/register-report", { reportedCategoryType, reportContent, reportedPlaylistId }, { headers: { Authorization: userToken } })
+    return axiosInst.springAxiosInst.post("/report/register-report", { reportedCategoryType, reportContent, reportedId }, { headers: { Authorization: userToken } })
       .then((res) => {
         return res.data
       })
