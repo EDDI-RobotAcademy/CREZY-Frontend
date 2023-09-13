@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="inquiry-modify-delete-button"
-                    :style="selectedInquiry.inquiryImageNames.length > 0 ? 'margin-top:30px;' : 'margin-top:0px;'">
+                    :style="selectedInquiry.inquiryImageNames && selectedInquiry.inquiryImageNames.length > 0 ? 'margin-top:30px;' : 'margin-top:0px;'">
                     <button style="margin-right: 20px;">수정</button>
                     <span>│</span>
                     <button style="margin-left: 20px;">삭제</button>
@@ -40,10 +40,6 @@ export default {
         }
     },
     props: {
-        inquiry: {
-            type: Object,
-            required: true,
-        },
         selectedInquiry: {
             type: Object,
             required: true,
