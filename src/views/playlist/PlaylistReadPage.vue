@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PlaylistReadForm :playlist="playlist" :isPlaylistLiked="isPlaylistLiked" @like="toggleLike" :playlistLikes="playlistLikes"/>
+    <PlaylistReadForm :playlist="playlist" :playlistId="playlistId" :isPlaylistLiked="isPlaylistLiked" @like="toggleLike" :playlistLikes="playlistLikes"/>
   </div>
 </template>
 <script>

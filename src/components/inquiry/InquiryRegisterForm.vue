@@ -1,9 +1,23 @@
 <template>
     <v-form @inquirySubmit.prevent="onInquirySubmit" ref="form">
+
         <div class="inquiry-reigister-table">
             <div class="inquiry-register-select">
-                <v-select variant="outlined" v-model="inquiryType" :items="['재생목록 문의', '계정 문의', '노래 문의', '서비스 이용 문의']"
-                    label="문의유형"></v-select>
+                <v-text-field label="문의 유형을 선택하세요" variant="outlined" append-inner-icon="mdi-menu-down-outline"
+                    @click="chooseInquiryCategory = !chooseInquiryCategory" readonly
+                    @click:append-inner="chooseInquiryCategory = !chooseInquiryCategory"
+                    v-model="inquiryType"></v-text-field>
+                <v-menu v-model="chooseInquiryCategory">
+                    <template v-slot:activator="{ on }">
+                        <v-list class="inquiry-category-selection-field" v-if="chooseInquiryCategory">
+                            <v-list-item class="inquiry-category-selection" v-for="inquiryCategory in inquiryCategories"
+                                @click="selectCategory(inquiryCategory)">
+                                <v-list-item-title style="font-size: 15px">{{ inquiryCategory
+                                }}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </template>
+                </v-menu>
             </div>
             <div class="inquiry-register-title">
                 <v-text-field variant="outlined" type="text" v-model="inquiryTitle" label="제목을 입력하세요" />
@@ -46,7 +60,7 @@ export default {
             inquiryType: '',
             inquiryTitle: '',
             inquiryContent: '',
-            inquiryImageName: null,
+            inquiryImageNames: [],
 
             imagePreviews: [],
             files: [],
@@ -56,6 +70,9 @@ export default {
             awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
             awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
             s3: null,
+
+            chooseInquiryCategory: false,
+            inquiryCategories: ["재생목록 문의", "계정 문의", "노래 문의", "서비스 이용 문의"],
         }
     },
 
@@ -72,12 +89,11 @@ export default {
 
                     reader.onload = (e) => {
                         this.imagePreviews.push(e.target.result);
-                        this.inquiryImageName = file.name;
+                        this.files.push(file.name);
                     };
 
                     reader.readAsDataURL(file);
                 }
-                this.files = this.files.concat(Array.from(files).slice(0, remainingSlots));
             }
         },
 
@@ -97,26 +113,25 @@ export default {
             });
         },
 
-        uploadAwsS3() {
-            this.awsS3Config()
+        uploadAwsS3(fileName) {
+            this.awsS3Config();
 
-            if (!Array.isArray(this.file)) {
-                this.file = [this.file];
-            }
+            for (let i = 0; i < this.$refs.file.files.length; i++) {
+                const file = this.$refs.file.files[i];
 
-            for (let idx = 0; idx < this.file.length; idx++) {
-                const file = this.file[idx];
-
-                this.s3.upload({
-                    Key: file.name,
-                    Body: file,
-                    ACL: 'public-read'
-                }, (err, data) => {
-                    if (err) {
-                        console.log(err)
-                        return alert('업로드 중 문제 발생 (사진 파일에 문제가 있음)', err.message)
-                    }
-                })
+                if (file.name === fileName) {
+                    this.s3.upload({
+                        Key: fileName,
+                        Body: file,
+                        ACL: 'public-read'
+                    }, (err, data) => {
+                        if (err) {
+                            console.log(err);
+                            return alert('업로드 중 문제 발생 (사진 파일에 문제가 있음)', err.message);
+                        }
+                    });
+                    break;
+                }
             }
         },
 
@@ -131,17 +146,38 @@ export default {
                 alert('문의 유형을 선택해주세요!');
                 return;
             }
-            if (!this.inquiryTitle) {
-                alert('제목을 입력해주세요!');
+            if (!this.inquiryContent) {
+                alert('내용을 입력해주세요!');
                 return;
             }
 
-            const { inquiryType, inquiryTitle, inquiryContent, inquiryImageName } = this;
+            const { inquiryTitle, inquiryContent } = this;
 
-            this.$emit("inquirySubmit", { inquiryType, inquiryTitle, inquiryContent, inquiryImageName });
+            let mappedInquiryType = this.mapToEnglishInquiryType(this.inquiryType);
 
-            if (inquiryImageName !== null) {
-                this.uploadAwsS3()
+            this.$emit("inquirySubmit", { inquiryCategoryType: mappedInquiryType, inquiryTitle, inquiryContent, inquiryImageNames: this.files });
+
+            if (this.files.length > 0) {
+                for (const fileName of this.files) {
+                    this.uploadAwsS3(fileName);
+                }
+            }
+        },
+
+        selectCategory(inquiryType) {
+            this.inquiryType = inquiryType
+        },
+
+        mapToEnglishInquiryType(koreanType) {
+            switch (koreanType) {
+                case "계정 문의":
+                    return "ACCOUNT";
+                case "노래 문의":
+                    return "SONG";
+                case "서비스 이용 문의":
+                    return "SERVICE";
+                default:
+                    return "PLAYLIST";
             }
         },
     },
@@ -247,6 +283,19 @@ export default {
 .inquiry-register-button {
     margin-top: -40px;
     margin-bottom: 30px;
+}
+
+.inquiry-category-selection-field {
+    bottom: 25px;
+    align-items: center;
+    max-height: 200px;
+    overflow-y: hidden;
+    border-radius: 3px !important;
+    padding: 0;
+}
+
+.inquiry-category-selection {
+    border-bottom: 1px solid;
 }
 </style>
 

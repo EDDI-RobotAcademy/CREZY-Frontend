@@ -30,12 +30,7 @@
                 </v-btn>
               </div>
         </v-col>
-        <!-- <div v-if="showReportAccountPlaylistForm" class="modal">
-          <v-card class="modal-content">
-            <ReportAccountPlaylistForm @submit="ReportAccountPlaylistForm"
-              @cancelRegister="showReportAccountPlaylistForm = false" />
-          </v-card>
-        </div> -->
+        
         <v-col cols="4" style="display: flex; justify-content: flex-end">
           <div class="song-btn-container">
             <button v-for="button in songButtons" :key="button.label" :class="button.class"
@@ -105,7 +100,7 @@
       <v-card style="border-radius: 0px;" class="report-dialog">
         <v-card-title class="report-dialog-title">계정 & 플레이리스트 신고</v-card-title>
         <v-card-text>
-          <ReportAccountPlaylistForm v-if="showReportAccountPlaylistDialog" @submit="onSubmitReportForm" />
+          <ReportAccountPlaylistForm v-if="showReportAccountPlaylistDialog" :playlistId="playlistId" @submit="onSubmitReportForm" />
         </v-card-text>
         <v-card-actions class="report-dialog-actions">
           <v-btn @click="cancelReportAccountPlalist" class="cancel-button">취소</v-btn>
@@ -116,6 +111,9 @@
 
 <script>
 import ReportAccountPlaylistForm from '@/components/report/ReportAccountPlaylistForm.vue'
+import { mapActions } from 'vuex';
+
+const reportModule = "reportModule"
 
 export default {
   props: {
@@ -128,6 +126,10 @@ export default {
       required: true,
     },
     playlistLikes: {
+      type: String,
+      required: true
+    },
+    playlistId: {
       type: String,
       required: true
     }
@@ -174,12 +176,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions(reportModule, ["requestReportAccountAndPlaylistToSpring"]),
+
     async onSubmitReportForm(payload) {
       // 신고 폼 전달 작성
+      const reportId = await this.requestReportAccountAndPlaylistToSpring(payload)
+      await this.$router.push({name: 'PlaylistReadPage', params: { reportId: reportId }})
+      this.showReportAccountPlaylistDialog = false
+      console.log('신고 폼이 제출되었습니다:', payload);
+
     },
     cancelReportAccountPlalist() {
-      console.log('신고 폼이 제출되었습니다:');
-      // console.log('신고 폼이 제출되었습니다:', payload);
       this.showReportAccountPlaylistDialog = false;
     },
 

@@ -31,9 +31,9 @@
 import FrequentlyAskedQuestionsForm from "@/components/inquiry/FrequentlyAskedQuestionsForm.vue";
 import InquiryRegisterForm from "@/components/inquiry/InquiryRegisterForm.vue";
 import InquiryListForm from "@/components/inquiry/InquiryListForm.vue";
-// import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 
-// const inquiryModule = "inquiryModule";
+const inquiryModule = "inquiryModule";
 
 export default {
     components: {
@@ -51,7 +51,7 @@ export default {
     },
 
     methods: {
-        // ...mapActions(inquiryModule, ["requestInquiryRegisterToSpring", "requestInquiryListToSpring"]),
+        ...mapActions(inquiryModule, ["requestInquiryRegisterToSpring", "requestInquiryListToSpring"]),
 
         showFreuntlyAskedQuestions() {
             this.isFreuntlyAskedQuestions = true;
@@ -65,21 +65,23 @@ export default {
             this.isCheckMyAnswer = false;
         },
 
-        showMyQuestion() {
+        async showMyQuestion() {
             this.isFreuntlyAskedQuestions = false;
             this.isOneOnOneInquiry = false;
             this.isCheckMyAnswer = true;
+
+            await this.requestInquiryListToSpring()
         },
 
-        async onInquirySubmit() {
-            // await this.requestInquiryRegisterToSpring(payload)
+        async onInquirySubmit(payload) {
+            await this.requestInquiryRegisterToSpring(payload)
             await this.showMyQuestion()
         }
     },
 
-    // computed: {
-    //     ...mapState(inquiryModule, ["inquiries"]),
-    // },
+    computed: {
+        ...mapState(inquiryModule, ["inquiries"]),
+    },
 }
 </script>
 

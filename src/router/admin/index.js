@@ -2,6 +2,7 @@ import AdminMainPage from "@/views/admin/AdminMainPage.vue"
 import AdminOverallPlaylistPage from "@/views/admin/playlist/AdminOverallPlaylistPage.vue"
 import AdminOverallAccountsPage from "@/views/admin/account/AdminOverallAccountsPage.vue"
 import AdminOverallReportsPage from "@/views/admin/report/AdminOverallReportsPage.vue"
+import AdminOverallInquiriesPage from "@/views/admin/inquiry/AdminOverallInquiriesPage.vue"
 
 const adminRoutes = [
   {
@@ -23,6 +24,11 @@ const adminRoutes = [
     path: "/admin/overall-reports",
     name: "AdminOverallReportsPage",
     component: AdminOverallReportsPage
+  },
+  {
+    path: "/admin/overall-inquiries",
+    name: "AdminOverallInquiriesPage",
+    component: AdminOverallInquiriesPage
   },
 ]
 
