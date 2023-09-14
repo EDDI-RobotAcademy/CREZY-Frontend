@@ -7,8 +7,10 @@ import SongModule from "./song/SongModule"
 import ReportModule from "./report/ReportModule";
 import InquiryModule from "./inquiry/InquiryModule"
 import AdminAccountModule from "./admin/account/AdminAccountModule";
+import AdminPlaylistModule from "./admin/playlist/AdminPlaylistModule";
 
 import createPersistedState from 'vuex-persistedstate';
+
 
 export default createStore({
   modules: {
@@ -18,7 +20,8 @@ export default createStore({
     songModule: SongModule,
     reportModule: ReportModule,
     inquiryModule: InquiryModule,
-    adminAccountModule: AdminAccountModule
+    adminAccountModule: AdminAccountModule,
+    adminPlaylistModule: AdminPlaylistModule
   },
   plugins: [
     createPersistedState({
