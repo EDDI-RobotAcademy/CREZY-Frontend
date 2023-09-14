@@ -12,6 +12,7 @@ export default {
     const userToken = localStorage.getItem("userToken")
     return axiosInst.springAxiosInst.post("/song/register", payload, { headers: { Authorization: userToken } })
       .then((res) => {
+        return res.data
       });
   },
 };

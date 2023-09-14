@@ -3,6 +3,7 @@ import AdminOverallPlaylistPage from "@/views/admin/playlist/AdminOverallPlaylis
 import AdminOverallAccountsPage from "@/views/admin/account/AdminOverallAccountsPage.vue"
 import AdminOverallReportsPage from "@/views/admin/report/AdminOverallReportsPage.vue"
 import AdminOverallInquiriesPage from "@/views/admin/inquiry/AdminOverallInquiriesPage.vue"
+import AdminParticularPlaylistPage from "@/views/admin/playlist/AdminParticularPlaylistDetailPage.vue"
 
 const adminRoutes = [
   {
@@ -29,6 +30,21 @@ const adminRoutes = [
     path: "/admin/overall-inquiries",
     name: "AdminOverallInquiriesPage",
     component: AdminOverallInquiriesPage
+  },
+  // {
+  //   path: "/admin/particular-playlist/:playlistId",
+  //   name: "AdminParticularPlaylistPage",
+  //   components: {
+  //     default: AdminParticularPlaylistPage,
+  //   },
+  //   props: {
+  //     default: true
+  //   }
+  // },
+  {
+    path: "/admin/particular-playlist",
+    name: "AdminParticularPlaylistPage",
+    component: AdminParticularPlaylistPage,
   },
 ]
 

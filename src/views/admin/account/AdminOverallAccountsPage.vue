@@ -28,6 +28,7 @@ export default {
   data() {
     return {
       currentPage: 1,
+      warningCounts: 0,
     }
   },
   components: {
@@ -38,8 +39,7 @@ export default {
       'requestAccountsStatusToSpring', 
       'requestAccountListForAdminToSpring', 
       'requestAccountListTotalToSpring',
-      'requestBlacklistAccountToSpring',
-      'requestBlacklistAccountListTotalToSpring',
+      'requestCategoryAccountListToSpring',
       'requestAccountInfoForAdminToSpring'
     ]),
 
@@ -48,19 +48,40 @@ export default {
       await this.requestAccountsStatusToSpring(date)
     },
     async getPaginatedAccounts() {
-      const currentPage = this.currentPage
-      await this.requestAccountListForAdminToSpring(currentPage)
+      if (this.warningCounts > 0) {
+        const warningCounts = this.warningCounts
+        const page = this.currentPage
+        await this.requestCategoryAccountListToSpring({warningCounts, page})
+      }
+      else {
+        const currentPage = this.currentPage
+        await this.requestAccountListForAdminToSpring(currentPage)
+      }
     },
     async getCategorizedAccountList(selectedCategory) {
-      console.log("from page: " + selectedCategory)
       this.currentPage = 1
       if (selectedCategory === "recent") {
+        this.warningCounts = 0
         await this.requestAccountListForAdminToSpring(this.currentPage)
         await this.requestAccountListTotalToSpring()
       }
-      if ( selectedCategory === "blacklisted") {
-        await this.requestBlacklistAccountToSpring(this.currentPage)
-        await this.requestBlacklistAccountListTotalToSpring()
+      if (selectedCategory === "blacklisted") {
+        this.warningCounts = 3
+        const warningCounts = this.warningCounts
+        const page = this.currentPage
+        await this.requestCategoryAccountListToSpring({warningCounts, page})
+      }
+      if (selectedCategory === "1 warning") {
+        this.warningCounts = 2
+        const warningCounts = this.warningCounts
+        const page = this.currentPage
+        await this.requestCategoryAccountListToSpring({warningCounts, page})
+      }
+      if (selectedCategory === "2 warnings") {
+        this.warningCounts = 1
+        const warningCounts = this.warningCounts
+        const page = this.currentPage
+        await this.requestCategoryAccountListToSpring({warningCounts, page})
       }
     },
     async getAccountInfo(selectedAccountId) {

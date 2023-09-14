@@ -10,7 +10,7 @@
                   New Today
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ newToday }}
+                  {{ playlistsStatus.todayPlaylist }}
                 </div>
               </div>
             </v-card>
@@ -22,7 +22,7 @@
                   Percentage
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ percentage }}
+                  {{ playlistsStatus.increaseRate }}%
                 </div>
               </div>
             </v-card>
@@ -34,7 +34,7 @@
                   Total
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ totalNum }}
+                  {{ playlistsStatus.totalPlaylist }}
                 </div>
               </div>
             </v-card>
@@ -116,15 +116,15 @@
               <tr class="overall-playlist-table-row" v-for="(playlist, index) in playlists" @click="toManage(playlist.playlistId)">
                 <td>
                   <div class="overall-playlist-song-marker-container">
-                    <div v-if="playlist.songCount === 0" class="no-song-marker"></div>
+                    <div v-if="playlist.songCounts === 0" class="no-song-marker"></div>
                     <div v-else class="yes-song-marker"></div>
                   </div>
                 </td>
                 <td>{{ index + 1 }}</td>
-                <td align="start">{{ playlist.title }}</td>
-                <td align="start">{{ playlist.writer }}</td>
-                <td align="end">{{ playlist.likeCount }}</td>
-                <td align="end">{{ playlist.songCount }}</td>
+                <td align="start">{{ playlist.playlistName }}</td>
+                <td align="start">{{ playlist.accountName }}</td>
+                <td align="end">{{ playlist.likeCounts }}</td>
+                <td align="end">{{ playlist.songCounts }}</td>
                 <td align="end" style="padding-right: 25px">{{ playlist.createDate }}</td>
               </tr>
             </table>
@@ -167,26 +167,23 @@ export default {
     DatePicker,
     Calendar
   },
+
+  props: {
+    playlistsStatus: {
+      type: Object,
+      required: true
+    },
+    playlists: {
+      type: Array,
+      required: true,
+    }
+  },
   data() {
     return{ 
-      newToday: 8,
-      percentage: "14%",
-      totalNum: 91,
-
       playlistCategories: ["recent", "trending", "empty"],
       choosePlaylistCategory: false,
       selectedCategory: 'recent',
 
-      playlistData: {
-        labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
-        datasets: [
-          {
-            data: [12, 15, 3, 22, 11, 7, 8],
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)'
-          }
-        ]
-      },
       playlistOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -203,24 +200,19 @@ export default {
       },
 
       selectedColor: 'teal',
-      searchDate: new Date(),
+      searchDate: '',
       formattedDate: '',
 
-      playlists: [
-        { playlistId: 1, title: "이름 1", writer: "생성자1", likeCount: 3, songCount: 5, createDate: "23-09-01" },
-        { playlistId: 3, title: "이름 3", writer: "생성자3", likeCount: 0, songCount: 0, createDate: "23-09-01" },
-        { playlistId: 4, title: "이름 4", writer: "생성자4", likeCount: 2, songCount: 8, createDate: "23-09-04" },
-        { playlistId: 6, title: "이름 6", writer: "생성자6", likeCount: 0, songCount: 11, createDate: "23-09-07" },
-        { playlistId: 7, title: "이름 7", writer: "생성자7", likeCount: 32, songCount: 11, createDate: "23-09-07" },
-      ]
     }
   },
   methods: {
     onClick() {
       alert("yay")
     },
-    selectCategory(selectedCategory) {
-      this.selectedCategory = selectedCategory
+    selectCategory(category) {
+      this.selectedCategory = category
+      const selectedCategory = category
+      this.$emit("switchCategory", selectedCategory)
     },
     toManage(playlistId) {
       alert(playlistId + "번 선택!")
@@ -231,13 +223,39 @@ export default {
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
     },
+    getStatus(targetDate) {
+      const date = targetDate
+      this.$emit("getStatus", { date });
+    },
   },
   watch: {
     searchDate(newValue) {
       this.formattedDate = this.formatDate(newValue);
-      // 아래 스프링으로 전달하는 매서드 연결
-      alert(this.formattedDate)
+      this.getStatus(this.formattedDate)
     },
+  },
+  async mounted() {
+    this.searchDate = new Date()
+    const targetDate = this.formatDate(this.searchDate)
+    await this.getStatus(targetDate)
+    await this.selectCategory(this.selectedCategory)
+  },
+  computed: {
+    playlistData() {
+      const playlistData = {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)'
+          }
+        ]
+      }
+      playlistData.labels = this.playlistsStatus.playlistDateList;
+      playlistData.datasets[0].data = this.playlistsStatus.playlistCounts;
+      return playlistData
+    }
   }
 }
 </script>
