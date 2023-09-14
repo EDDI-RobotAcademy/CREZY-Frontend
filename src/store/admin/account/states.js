@@ -1,5 +1,6 @@
 export default {
     accountsStatus: {},
     accountList: [],
-    accountListCount: 0
+    accountListCount: 0,
+    accountInfo: {},
   };
