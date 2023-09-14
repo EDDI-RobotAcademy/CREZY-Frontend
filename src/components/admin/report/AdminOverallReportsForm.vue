@@ -4,49 +4,49 @@
       <v-col cols="12">
         <v-row>
           <v-col cols="3" >
-            <v-card class="overall-playlist-stat-card">
+            <v-card class="overall-playlist-stat-card" @click="selectedStatusType = 'APPROVE'">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
                   승인된 신고 개수
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ newToday }}
+                  {{ approveReports }}
                 </div>
               </div>
             </v-card>
           </v-col>
           <v-col cols="3" >
-            <v-card class="overall-playlist-stat-card">
+            <v-card class="overall-playlist-stat-card" @click="selectedStatusType = 'RETURN'">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
                   반려된 신고 개수
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ percentage }}
+                  {{ returnReports }}
                 </div>
               </div>
             </v-card>
           </v-col>
           <v-col cols="3" >
-            <v-card class="overall-playlist-stat-card">
+            <v-card class="overall-playlist-stat-card" @click="selectedStatusType = null">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
                   총 신고 개수
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ totalNum }}
+                  {{ totalReports }}
                 </div>
               </div>
             </v-card>
           </v-col>
           <v-col cols="3" >
-            <v-card class="overall-playlist-stat-card">
+            <v-card class="overall-playlist-stat-card" @click="selectedStatusType = 'HOLDON'">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
                   처리할 신고 개수
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ totalNum }}
+                  {{ holdonReports }}
                 </div>
               </div>
             </v-card>
@@ -61,30 +61,21 @@
         <div class="admin-overall-playlist-list-title" align="start">
           Reports
         </div>
-        <div style="width: 400px; margin-left: 80px">
-          <v-text-field 
-            class="admin-playlist-search-field"
-            variant="outlined"
-            append-inner-icon="mdi-magnify"
-            single-line
-            hide-details
-            @click:append-inner="onClick"
-          ></v-text-field>
-        </div>
+        
         <div style="width: 300px; ">
           <v-text-field
             variant="outlined"
             append-inner-icon="mdi-menu-down-outline"
-            @click:append-inner="chooseAccountCategory = !chooseAccountCategory"
+            @click:append-inner="chooseReportCategory = !chooseReportCategory"
             readonly
             class="admin-playlist-search-field"
             v-model="selectedCategory"
           ></v-text-field>
-          <v-menu v-model="chooseAccountCategory">
+          <v-menu v-model="chooseReportCategory">
             <template v-slot:activator="{ on }">
-              <v-list class="admin-playlist-category-select-field" v-if="chooseAccountCategory">
-                <v-list-item class="admin-playlist-category-selection" v-for="accountCategory in accountCategories" @click="selectCategory(accountCategory)">
-                  <v-list-item-title style="font-size: 13px">{{ accountCategory }}</v-list-item-title>
+              <v-list class="admin-playlist-category-select-field" v-if="chooseReportCategory">
+                <v-list-item class="admin-playlist-category-selection" v-for="reportCategory in reportCategories" @click="selectCategory(reportCategory)">
+                  <v-list-item-title style="font-size: 13px">{{ reportCategory }}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </template>
@@ -97,6 +88,15 @@
 
       <div>
         <table class="overall-playlist-table">
+          <tr class="accounts-table-picker-container">
+            <td colspan="6" align="end">
+              <div>
+                <v-icon style="color: #1f3ad6; font-size: 46px;">mdi-circle-small</v-icon> 승인
+                <v-icon style="color: #ec0000; font-size: 46px">mdi-circle-small</v-icon> 반려
+                <v-icon style="color: #fffffa; font-size: 46px">mdi-circle-small</v-icon> 보류
+              </div>
+            </td>
+          </tr>
           
           <tr class="overall-playlist-table-header">
             <th style="width: 100px;"></th>
@@ -107,9 +107,16 @@
               register date
             </th>
           </tr>
-          <template v-for="(report, index) in reportList">
-            <tr class="overall-playlist-table-row" >   
-              <th style="width: 100px;"></th>           
+          <template v-for="(report, index) in filteredReportList">
+            <tr class="overall-playlist-table-row" > 
+              <td>
+                <div class="overall-playlist-song-marker-container">
+                  <div v-if="report.reportStatusType === 'APPROVE'" class="approve-report-marker"></div>
+                  <div v-if="report.reportStatusType === 'RETURN'" class="return-report-marker"></div>
+                  <div v-if="report.reportStatusType === 'HOLDON'" class="holdon-report-marker"></div>
+                </div>
+              </td>  
+                      
               <td align="start">{{ index + 1 }}</td>
               <td align="start">{{ report.reportContent }}</td>
               <td align="end">{{ report.reportedCategoryType }}</td>
@@ -129,13 +136,10 @@ export default {
   
   data() {
     return{ 
-      newToday: 4,
-      percentage: 12,
-      totalNum: 64,
-
-      chooseAccountCategory: false,
+      chooseReportCategory: false,
       selectedCategory: '전체',
-      accountCategories: [ '전체', '계정', '플레이리스트', '노래'],
+      reportCategories: [ '전체', '계정', '플레이리스트', '노래'],
+      selectedStatusType: null,
 
      
      
@@ -154,6 +158,63 @@ export default {
     },
       
   },
+  computed: {
+
+    approveReports() {
+      return this.reportList.filter(report => report.reportStatusType === 'APPROVE').length;
+    },
+    returnReports() {
+      return this.reportList.filter(report => report.reportStatusType === 'RETURN').length;
+    },
+    holdonReports() {
+      return this.reportList.filter(report => report.reportStatusType === 'HOLDON').length;
+    },
+    totalReports() {
+      return this.returnReports + this.approveReports + this.holdonReports
+    },
+
+  
+
+    filteredReportList() {
+      if (this.selectedCategory === '전체') {
+        if (this.selectedStatusType === null) {
+          return this.reportList;
+        } else {
+          return this.reportList.filter(report => report.reportStatusType === this.selectedStatusType);
+        }
+      } else if (this.selectedCategory === '계정') {
+        if (this.selectedStatusType === null) {
+          return this.reportList.filter(report => report.reportedCategoryType === 'ACCOUNT');
+        } else {
+          return this.reportList.filter(
+            report => report.reportedCategoryType === 'ACCOUNT' && report.reportStatusType === this.selectedStatusType
+          );
+        }
+      } else if (this.selectedCategory === '플레이리스트') {
+        if (this.selectedStatusType === null) {
+          return this.reportList.filter(report => report.reportedCategoryType === 'PLAYLIST');
+        } else {
+          return this.reportList.filter(
+            report => report.reportedCategoryType === 'PLAYLIST' && report.reportStatusType === this.selectedStatusType
+          );
+        }
+      } else if (this.selectedCategory === '노래') {
+        if (this.selectedStatusType === null) {
+          return this.reportList.filter(report => report.reportedCategoryType === 'SONG');
+        } else {
+          return this.reportList.filter(
+            report => report.reportedCategoryType === 'SONG' && report.reportStatusType === this.selecte
+          );
+
+        }
+      }
+    },
+    updateSelectedStatusAndCategory(statusType) {
+        this.selectedStatusType = statusType;
+        this.selectedCategory = '전체';
+  },
+  },
+
   mounted() {
       
   }
@@ -167,28 +228,24 @@ export default {
   color: #5F6871; 
 }
 
-.three-warning-account-marker {
+.approve-report-marker {
   height: 50px; 
   width: 3px; 
-  background-color: #0f0606;
+  background-color: #1f3ad6;
   border-radius: 5px;
 }
-.two-warning-account-marker {
+.return-report-marker {
   height: 50px; 
   width: 3px; 
-  background-color: #EA78B3;
+  background-color: #ec0000;
   border-radius: 5px;
 }
-.one-warning-account-marker {
+.holdon-report-marker {
   height: 50px; 
   width: 3px; 
-  background-color: #dee57a;
+  background-color: #fffffa;
   border-radius: 5px;
 }
-.no-warning-account-marker {
-  height: 50px; 
-  width: 3px; 
-  background-color: #7AE5A8;
-  border-radius: 5px;
-}
+
+
 </style>

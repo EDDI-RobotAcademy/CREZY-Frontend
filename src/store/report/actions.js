@@ -17,7 +17,7 @@ export default {
   async requestReportListToSpring({ commit }, payload = {}) {
     const userToken = localStorage.getItem('userToken');
     const { pageNum = 1 } = payload;
-        return axiosInst.springAxiosInst.get(`/report/list?page=${pageNum}`, { headers: { Authorization: userToken } }).then((res) => {
+        return axiosInst.springAxiosInst.get(`/admin-report/list?page=${pageNum}`, { headers: { Authorization: userToken } }).then((res) => {
           commit(REQUEST_REPORTLIST_TO_SPRING, res.data);
         });
   },
