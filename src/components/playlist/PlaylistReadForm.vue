@@ -24,14 +24,11 @@
           </div>
         </v-col>
         <v-col cols="5">
-              <div style="display: flex; justify-content: flex-end; cursor: pointer;">
-                <v-btn rounded class="report-btn" @click="reportAccountAndPlaylist()">
-                  🚨
-                </v-btn>
-              </div>
-        </v-col>
-        
-        <v-col cols="4" style="display: flex; justify-content: flex-end">
+          <div style="display: flex; justify-content: flex-end; cursor: pointer;">
+            <v-btn flat rounded class="report-btn" @click="reportAccountAndPlaylist()">
+              🚨
+            </v-btn>
+          </div>
           <div class="song-btn-container">
             <button v-for="button in songButtons" :key="button.label" :class="button.class"
               @click="toggleBtn(button.label)">
@@ -87,6 +84,13 @@
                 <td style="padding-right: 10px">{{ index + 1 }}</td>
                 <td>{{ song.title }}</td>
                 <td align="end">{{ song.singer }}</td>
+                <td>
+                  <div style="display: flex; justify-content: flex-end; cursor: pointer;">
+                    <v-btn rounded flat class="report-btn" @click.stop="reportSong(song.songId)">
+                      ⚑
+                    </v-btn>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -96,21 +100,36 @@
     </v-row>
   </div>
   <!-- 계정 & 플레이리스트 신고 생성 팝업 -->
-    <v-dialog v-model="showReportAccountPlaylistDialog" max-width="500px">
-      <v-card style="border-radius: 0px;" class="report-dialog">
-        <v-card-title class="report-dialog-title">계정 & 플레이리스트 신고</v-card-title>
-        <v-card-text>
-          <ReportAccountPlaylistForm v-if="showReportAccountPlaylistDialog" :playlistId="playlistId" @submit="onSubmitReportForm" />
-        </v-card-text>
-        <v-card-actions class="report-dialog-actions">
-          <v-btn @click="cancelReportAccountPlalist" class="cancel-button">취소</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+  <v-dialog v-model="showReportAccountPlaylistDialog" max-width="500px">
+    <v-card style="border-radius: 0px;" class="report-dialog">
+      <v-card-title class="report-dialog-title">계정 & 플레이리스트 신고</v-card-title>
+      <v-card-text>
+        <ReportAccountPlaylistForm v-if="showReportAccountPlaylistDialog" :playlistId="playlistId"
+          @submit="onSubmitReportAccountPlaylistForm" />
+      </v-card-text>
+      <v-card-actions class="report-dialog-actions">
+        <v-btn @click="cancelReportAccountPlalist" class="cancel-button">취소</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- 노래 신고 생성 팝업 -->
+  <v-dialog v-model="showReportSongDialog" max-width="500px">
+    <v-card style="border-radius: 0px;" class="report-dialog">
+      <v-card-title class="report-dialog-title">노래 신고</v-card-title>
+      <v-card-text>
+        <ReportSongForm v-if="showReportSongDialog" :songId="songId" @submit="onSubmitReportSongForm" />
+      </v-card-text>
+      <v-card-actions class="report-dialog-actions">
+        <v-btn @click="cancelReportAccountPlalist" class="cancel-button">취소</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 import ReportAccountPlaylistForm from '@/components/report/ReportAccountPlaylistForm.vue'
+import ReportSongForm from '@/components/report/ReportSongForm.vue'
 import { mapActions } from 'vuex';
 
 const reportModule = "reportModule"
@@ -135,11 +154,14 @@ export default {
     }
   },
   components: {
-    ReportAccountPlaylistForm
+    ReportAccountPlaylistForm,
+    ReportSongForm
   }
   ,
   data() {
     return {
+      reportedSongIndex: null,
+      showReportSongDialog: false,
       showReportAccountPlaylistDialog: false,
       currentBtn: "LIST",
       currentIdx: 0,
@@ -176,18 +198,29 @@ export default {
     }
   },
   methods: {
-    ...mapActions(reportModule, ["requestReportAccountAndPlaylistToSpring"]),
+    ...mapActions(reportModule, ["requestReportAccountAndPlaylistAndSongToSpring"]),
 
-    async onSubmitReportForm(payload) {
-      // 신고 폼 전달 작성
-      const reportId = await this.requestReportAccountAndPlaylistToSpring(payload)
-      await this.$router.push({name: 'PlaylistReadPage', params: { reportId: reportId }})
+    reportSong(songId) {
+      this.songId = songId
+      this.showReportSongDialog = true;
+      // alert(songId)
+    },
+    async onSubmitReportSongForm(payload) {
+      await this.requestReportAccountAndPlaylistAndSongToSpring(payload)
+      this.showReportSongDialog = false
+      console.log('신고 폼이 제출되었습니다:', payload);
+    },
+
+    async onSubmitReportAccountPlaylistForm(payload) {
+      // 신고 폼 전달 작성(계정 & 플레이리스트 신고)
+      await this.requestReportAccountAndPlaylistAndSongToSpring(payload)
       this.showReportAccountPlaylistDialog = false
       console.log('신고 폼이 제출되었습니다:', payload);
 
     },
     cancelReportAccountPlalist() {
       this.showReportAccountPlaylistDialog = false;
+      this.showReportSongDialog = false;
     },
 
     reportAccountAndPlaylist() {
@@ -577,16 +610,21 @@ export default {
 .not-playing {
   color: #9b9797;
 }
+
 /* 신고폼 스타일 시작 */
 .report-dialog {
-  background-color: #3a3838; /* 다이얼로그 배경색 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  background-color: #3a3838;
+  /* 다이얼로그 배경색 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* 그림자 효과 */
 }
 
 .report-dialog-title {
   color: #ffffff;
-  font-size: 18px; /* 다이얼로그 제목 폰트 크기 */
-  font-weight: bold; /* 다이얼로그 제목 폰트 굵기 */
+  font-size: 18px;
+  /* 다이얼로그 제목 폰트 크기 */
+  font-weight: bold;
+  /* 다이얼로그 제목 폰트 굵기 */
 }
 
 .report-dialog-actions {
@@ -595,5 +633,4 @@ export default {
   color: white;
 }
 
-/* 신고폼 스타일 끝 */
-</style>
+/* 신고폼 스타일 끝 */</style>
