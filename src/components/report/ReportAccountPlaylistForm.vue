@@ -52,8 +52,7 @@
           <label for="details">기타 내용</label>
         </div>
         <div v-if="reportContent === '기타'">
-          <textarea id="details" v-model="otherDetails" 
-            class="custom-textarea"></textarea>
+          <textarea id="details" v-model="otherDetails" class="custom-textarea"></textarea>
         </div>
       </div>
     </div>
@@ -94,8 +93,7 @@
           <label for="details">기타 내용</label>
         </div>
         <div v-if="reportContent === '기타'">
-          <textarea id="details" v-model="otherDetails"
-            class="custom-textarea"></textarea>
+          <textarea id="details" v-model="otherDetails" class="custom-textarea"></textarea>
         </div>
       </div>
     </div>
@@ -127,7 +125,7 @@ export default {
       const reportData = {
         reportedCategoryType: this.reportedCategoryType,
         reportContent: this.reportContent === '기타' ? '기타 ' + this.otherDetails : this.reportContent,
-        reportedPlaylistId: this.playlistId // 신고하는 플레이리스트 ID 추가
+        reportedId: this.playlistId // 신고하는 플레이리스트 ID 추가
       };
       console.log('신고 정보를 서버에 제출:', reportData);
 
@@ -137,14 +135,14 @@ export default {
       this.reportedCategoryType = '';
       this.reportContent = '';
       this.otherDetails = '';
-      
+
     },
   },
 
   computed: {
-      isFormValid() {
-        return this.reportedCategoryType && this.reportContent;
-      }
+    isFormValid() {
+      return this.reportedCategoryType && this.reportContent;
+    }
   }
 };
 </script>

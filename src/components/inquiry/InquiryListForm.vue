@@ -22,21 +22,36 @@
                 <tr v-if="!inquiries || (Array.isArray(inquiries) && inquiries.length === 0)">
                     <td colspan="4">최근 6개월 간 문의하신 내역이 없습니다.</td>
                 </tr>
-                <tr v-for="inquiry in inquiries" :key="inquiry.inquiryId">
-                    <td>{{ mapToKoreanInquiryType(inquiry.inquiryCategoryType.inquiryCategory) }}</td>
-                    <td style="font-weight: bold;">{{ inquiry.inquiryTitle }}</td>
-                    <td>{{ inquiry.createInquiryDate }}</td>
-                    <td :style="inquiryStatus === '답변예정' ? 'color: gray;' : 'color: white;'">{{
-                        inquiryStatus }}</td>
-                </tr>
+                <template v-for="inquiry in inquiries" :key="inquiry.inquiryId + 'row'">
+                    <tr>
+                        <td>{{ mapToKoreanInquiryType(inquiry.inquiryCategoryType.inquiryCategory) }}</td>
+                        <td @click="showInquiryReadForm(inquiry.inquiryId)" style="font-weight: bold; cursor: pointer;">{{
+                            inquiry.inquiryTitle }}</td>
+                        <td>{{ inquiry.createInquiryDate }}</td>
+                        <td :style="inquiryStatus === '답변예정' ? 'color: gray;' : 'color: white;'">{{ inquiryStatus }}</td>
+                    </tr>
+                    <tr v-if="selectedInquiryId === inquiry.inquiryId" :key="inquiry.inquiriesId + 'form'">
+                        <td colspan="4">
+                            <InquiryReadForm :inquiry="inquiry" :selectedInquiry="selectedInquiry"
+                                :inquiryId="selectedInquiryId" />
+                        </td>
+                    </tr>
+                </template>
             </tbody>
         </table>
     </v-container>
 </template>
   
 <script>
+import InquiryReadForm from "@/components/inquiry/InquiryReadForm.vue";
+import { mapActions, mapState } from "vuex";
+
+const inquiryModule = "inquiryModule";
 
 export default {
+    components: {
+        InquiryReadForm,
+    },
     props: {
         inquiries: {
             type: Array,
@@ -45,12 +60,13 @@ export default {
     },
     data() {
         return {
-            inquiryStatus: '답변예정'
-
+            inquiryStatus: '답변예정',
+            isInquiryRead: false,
+            selectedInquiryId: null,
         };
     },
-
     methods: {
+        ...mapActions(inquiryModule, ["requestInquiryToSpring",]),
         mapToKoreanInquiryType(englishType) {
             const typeMap = {
                 "ACCOUNT": "계정 문의",
@@ -60,6 +76,14 @@ export default {
             };
             return typeMap[englishType] || englishType;
         },
+        async showInquiryReadForm(inquiryId) {
+            this.isInquiryRead = true
+            this.selectedInquiryId = inquiryId;
+            await this.requestInquiryToSpring(this.selectedInquiryId);
+        }
+    },
+    computed: {
+        ...mapState(inquiryModule, ["selectedInquiry"]),
     },
 };
 </script>
