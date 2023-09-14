@@ -100,7 +100,7 @@
   </div>
   <div>
     <v-card-actions class="custom-submit-button">
-      <v-btn :disabled="!isFormValid" @click="onSubmitReportForm" class="submit">제출</v-btn>
+      <v-btn :disabled="!isFormValid" @click="onSubmitReportAccountPlaylistForm" class="submit">제출</v-btn>
     </v-card-actions>
   </div>
 </template>
@@ -121,7 +121,7 @@ export default {
     };
   },
   methods: {
-    async onSubmitReportForm() {
+    async onSubmitReportAccountPlaylistForm() {
       const reportData = {
         reportedCategoryType: this.reportedCategoryType,
         reportContent: this.reportContent === '기타' ? '기타 ' + this.otherDetails : this.reportContent,
