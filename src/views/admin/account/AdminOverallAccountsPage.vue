@@ -1,6 +1,13 @@
 <template>
   <div>
-     <AdminOverallAccountsForm @getStatus="getAccountsStatus" :accountsStatus="accountsStatus" :accounts="accountList"/>   
+     <AdminOverallAccountsForm 
+       @getStatus="getAccountsStatus" 
+       @switchCategory="getCategorizedAccountList"
+       @openManage="getAccountInfo"
+       :accountsStatus="accountsStatus" 
+       :accounts="accountList"
+       :accountInfo="accountInfo"
+       />   
      <v-pagination 
       style="color: white" 
       v-model="currentPage" 
@@ -27,7 +34,14 @@ export default {
     AdminOverallAccountsForm
   },
   methods: {
-    ...mapActions(adminAccountModule, ['requestAccountsStatusToSpring', 'requestAccountListForAdminToSpring', 'requestAccountListTotalToSpring']),
+    ...mapActions(adminAccountModule, [
+      'requestAccountsStatusToSpring', 
+      'requestAccountListForAdminToSpring', 
+      'requestAccountListTotalToSpring',
+      'requestBlacklistAccountToSpring',
+      'requestBlacklistAccountListTotalToSpring',
+      'requestAccountInfoForAdminToSpring'
+    ]),
 
     async getAccountsStatus(targetDate) {
       const date = targetDate
@@ -36,10 +50,31 @@ export default {
     async getPaginatedAccounts() {
       const currentPage = this.currentPage
       await this.requestAccountListForAdminToSpring(currentPage)
+    },
+    async getCategorizedAccountList(selectedCategory) {
+      console.log("from page: " + selectedCategory)
+      this.currentPage = 1
+      if (selectedCategory === "recent") {
+        await this.requestAccountListForAdminToSpring(this.currentPage)
+        await this.requestAccountListTotalToSpring()
+      }
+      if ( selectedCategory === "blacklisted") {
+        await this.requestBlacklistAccountToSpring(this.currentPage)
+        await this.requestBlacklistAccountListTotalToSpring()
+      }
+    },
+    async getAccountInfo(selectedAccountId) {
+      const accountId = selectedAccountId
+      await this.requestAccountInfoForAdminToSpring(accountId)
     }
   },
   computed: {
-    ...mapState(adminAccountModule, ['accountsStatus', 'accountList', 'accountListCount']),
+    ...mapState(adminAccountModule, [
+      'accountsStatus', 
+      'accountList', 
+      'accountListCount',
+      'accountInfo'
+    ]),
 
   },
   async mounted() {
