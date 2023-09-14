@@ -28,7 +28,13 @@ export default {
     return axiosInst.springAxiosInst.get(`/inquiry/${inquiryId}`)
       .then((res) => {
         commit(REQUEST_SELECTED_INQUIRY_TO_SPRING, res.data);
-        console.log('게시글 잘 받아오니?' + JSON.stringify(res.data))
+      });
+  },
+  requestInquiryModifyToSpring({ }, payload) {
+    return axiosInst.springAxiosInst
+      .post("/inquiry/modify", payload)
+      .then((res) => {
+        return res.data
       });
   },
 };
