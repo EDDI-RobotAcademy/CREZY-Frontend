@@ -32,7 +32,8 @@
                     </tr>
                     <tr v-if="selectedInquiryId === inquiry.inquiryId" :key="inquiry.inquiriesId + 'form'">
                         <td colspan="4">
-                            <InquiryReadForm :selectedInquiry="selectedInquiry" :inquiryId="selectedInquiryId" />
+                            <InquiryReadForm @inquiryDeleted="handleInquiryDeleted" :selectedInquiry="selectedInquiry"
+                                :inquiryId="selectedInquiryId" />
                         </td>
                     </tr>
                 </template>
@@ -79,7 +80,19 @@ export default {
             this.isInquiryRead = true
             this.selectedInquiryId = inquiryId;
             await this.requestInquiryToSpring(this.selectedInquiryId);
-        }
+        },
+        handleInquiryDeleted(isDeleted) {
+            if (isDeleted) {
+                this.isInquiryRead = false;
+                const indexToRemove = this.inquiries.findIndex(
+                    (inquiry) => inquiry.inquiryId === this.selectedInquiryId
+                );
+                if (indexToRemove !== -1) {
+                    this.inquiries.splice(indexToRemove, 1);
+                }
+                this.selectedInquiryId = null;
+            }
+        },
     },
     computed: {
         ...mapState(inquiryModule, ["selectedInquiry"]),
@@ -92,7 +105,7 @@ export default {
                 const dateB = new Date(b.createInquiryDate);
                 return dateB - dateA;
             });
-        }
+        },
     },
 };
 </script>
