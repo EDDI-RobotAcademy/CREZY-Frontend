@@ -1,6 +1,1 @@
-// import {
-
-// } from "./mutations-types"
-// export default {
-
-// }
+export const REQUEST_REPORTLIST_TO_SPRING = "REQUEST_REPORTLIST_TO_SPRING";

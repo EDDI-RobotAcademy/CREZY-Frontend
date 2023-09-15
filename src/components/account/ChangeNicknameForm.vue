@@ -12,6 +12,7 @@
           style="display: none;"
           @change="handleFileUpload"
         />
+        <v-icon class='profile-image-icon'>mdi-pencil-circle-outline</v-icon>
         <dd class="delete-image-button" >
           <button v-if=isChangeImage @click.prevent.stop="deleteImage">기본 이미지로 변경</button>
         </dd>
@@ -270,5 +271,6 @@ export default {
   border-radius: 50%;
   background-color: black;
   margin-bottom: 16px;
+  cursor: pointer;
 }
 </style>

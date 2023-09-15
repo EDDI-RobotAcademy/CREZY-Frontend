@@ -141,7 +141,7 @@
             </tr>
             <tr v-if="selectedAccountId === account.accountId">
               <td colspan="6">
-                <AdminParticularAccountDetailForm :accountId="selectedAccountId"/>
+                <AdminParticularAccountDetailForm :accountInfo="accountInfo"/>
               </td>
             </tr>
           </template>
@@ -196,6 +196,10 @@ export default {
     accounts: {
       type: Array,
       required: true
+    },
+    accountInfo: {
+      type: Object,
+      required: false,
     }
   },
   data() {
@@ -231,10 +235,14 @@ export default {
         this.selectedAccountId = ''
       } else {
       this.selectedAccountId = accountId;
+      this.$emit("openManage", this.selectedAccountId)
+      console.log("날짜: " + this.accountInfo.lastLoginDate)
       }
     },
-    selectCategory(selectedCategory) {
-      this.selectedCategory = selectedCategory
+    selectCategory(category) {
+      this.selectedCategory = category
+      const selectedCategory = category
+      this.$emit("switchCategory", selectedCategory)
     },
     formatDate(date) {
       const year = date.getFullYear();
