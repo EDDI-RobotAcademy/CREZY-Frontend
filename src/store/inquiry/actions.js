@@ -25,10 +25,20 @@ export default {
     });
   },
   requestInquiryToSpring({ commit }, inquiryId) {
-    return axiosInst.springAxiosInst.get(`/inquiry/${inquiryId}`)
+    const userToken = localStorage.getItem("userToken")
+
+    return axiosInst.springAxiosInst.get(`/inquiry/${inquiryId}`, { headers: { Authorization: userToken } })
       .then((res) => {
         commit(REQUEST_SELECTED_INQUIRY_TO_SPRING, res.data);
-        console.log('게시글 잘 받아오니?' + JSON.stringify(res.data))
+      });
+  },
+  requestInquiryModifyToSpring({ commit }, payload) {
+    const userToken = localStorage.getItem("userToken")
+
+    return axiosInst.springAxiosInst.post("/inquiry/modify", payload, { headers: { Authorization: userToken } })
+      .then((res) => {
+        commit(REQUEST_SELECTED_INQUIRY_TO_SPRING, res.data);
+        commit("updateInquiryTitle", { inquiryId: payload.inquiryId, newTitle: payload.inquiryTitle });
       });
   },
 };
