@@ -4,6 +4,7 @@ import playlistRoutes from "./playlist";
 import accountRoutes from "./account";
 import inquiryRoutes from "./inquiry";
 import adminRoutes from "./admin";
+import songRoutes from "./song";
 
 const routes = [
   {
@@ -23,7 +24,8 @@ const routes = [
   ...playlistRoutes,
   ...accountRoutes,
   ...inquiryRoutes,
-  ...adminRoutes
+  ...adminRoutes,
+  ...songRoutes
 ];
 
 const router = createRouter({
