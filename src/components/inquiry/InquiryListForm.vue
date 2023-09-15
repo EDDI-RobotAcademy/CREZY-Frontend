@@ -32,8 +32,7 @@
                     </tr>
                     <tr v-if="selectedInquiryId === inquiry.inquiryId" :key="inquiry.inquiriesId + 'form'">
                         <td colspan="4">
-                            <InquiryReadForm :inquiry="inquiry" :selectedInquiry="selectedInquiry"
-                                :inquiryId="selectedInquiryId" />
+                            <InquiryReadForm :selectedInquiry="selectedInquiry" :inquiryId="selectedInquiryId" />
                         </td>
                     </tr>
                 </template>
@@ -84,6 +83,9 @@ export default {
     },
     computed: {
         ...mapState(inquiryModule, ["selectedInquiry"]),
+        updatedInquiries() {
+            return this.$store.state.inquiries;
+        },
     },
 };
 </script>
