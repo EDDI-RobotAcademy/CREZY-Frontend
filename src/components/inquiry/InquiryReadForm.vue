@@ -89,6 +89,7 @@ export default {
         },
         async submitInquiryModify(payload) {
             await this.requestInquiryModifyToSpring(payload)
+            this.isInquiryModify = false
         },
         cancelInquiryModify() {
             this.isInquiryModify = false

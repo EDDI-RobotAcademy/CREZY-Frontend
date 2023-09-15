@@ -35,7 +35,8 @@
                                 <div class="image-delete-button" @click="deleteNewImage(idx)">x</div>
                             </v-img>
                         </div>
-                        <label v-if="newInquiryImageNames.length + selectedInquiry.inquiryImageNames.length < 3"
+                        <label v-if="newInquiryImageNames && newInquiryImageNames.length +
+                            selectedInquiry.inquiryImageNames && selectedInquiry.inquiryImageNames.length < 3"
                             class="inquiry-modify-upload-image" for="file-selector">
                             <v-icon>mdi-camera</v-icon>
                             <span>사진 첨부</span>
@@ -59,14 +60,15 @@ export default {
             awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
 
             isChangeInquiryTitle: false,
-            newInquiryTitle: '',
-
             isChangeInquiryContent: false,
-            newInquiryContent: '',
 
-            newInquiryImageNames: [],
             files: [],
             s3: null,
+
+            newInquiryTitle: '',
+            newInquiryContent: '',
+            newInquiryImageNames: [],
+            deletedFileNameList: [],
         }
     },
     props: {
@@ -76,9 +78,30 @@ export default {
         },
     },
     methods: {
-        submitInquiryModify() {
-            const { newInquiryTitle, newInquiryContent } = this
-            this.$emit("submitInquiryModify", { newInquiryTitle, newInquiryContent, newInquiryImageNames: this.files });
+        async submitInquiryModify() {
+            const { newInquiryTitle, newInquiryContent } = this;
+
+            const allImages = [
+                ...(this.selectedInquiry.inquiryImageNames || []),
+                ...(this.newInquiryImageNames.map(image => image.file.name) || []),
+            ];
+
+            const payload = {
+                inquiryId: this.selectedInquiry.inquiryId,
+                inquiryTitle: newInquiryTitle || this.selectedInquiry.inquiryTitle,
+                inquiryContent: newInquiryContent || this.selectedInquiry.inquiryContent,
+                inquiryImageNames: allImages,
+            };
+
+            // if (this.deletedFileNameList.length > 0) {
+            //     await this.deleteImages()
+            // }
+            if (this.files.length > 0) {
+                await this.uploadAwsS3()
+            }
+
+            this.$emit("submitInquiryModify", payload);
+
         },
         getInquiryImages(inquiryImageName) {
 
@@ -99,7 +122,8 @@ export default {
             });
         },
         deleteImage(index) {
-            this.selectedInquiry.inquiryImageNames.splice(index, 1);
+            this.deletedFileNameList.push(this.selectedInquiry.inquiryImageNames[index])
+            this.selectedInquiry.inquiryImageNames.splice(index, 1)
             this.files.splice(index, 1);
         },
         deleteNewImage(idx) {
@@ -117,11 +141,10 @@ export default {
                         file: file,
                         previewURL: URL.createObjectURL(file),
                     });
-                    this.files.push(file); // this.files를 배열로 초기화하고 파일을 추가
+                    this.files.push(file);
                 }
             }
         },
-
         awsS3Config() {
             AWS.config.update({
                 region: this.awsBucketRegion,
@@ -137,27 +160,42 @@ export default {
                 }
             });
         },
-        uploadAwsS3(file) {
+        async uploadAwsS3() {
             this.awsS3Config();
 
-            for (let i = 0; i < this.$refs.file.files.length; i++) {
-                const file = this.$refs.file.files[i];
+            for (let i = 0; i < this.newInquiryImageNames.length; i++) {
+                const file = this.newInquiryImageNames[i].file;
+                const fileName = file.name;
 
-                if (file.name === fileName) {
-                    this.s3.upload({
-                        Key: file.name,
+                try {
+                    await this.s3.upload({
+                        Key: fileName,
                         Body: file,
-                        ACL: 'public-read'
-                    }, (err, data) => {
-                        if (err) {
-                            console.log(err);
-                            return alert('업로드 중 문제 발생 (사진 파일에 문제가 있음)', err.message);
-                        }
-                    });
-                    break;
+                        ACL: 'public-read',
+                    }).promise();
+                } catch (err) {
+                    console.error(err);
+                    alert('업로드 중 문제 발생 (사진 파일에 문제가 있음): ' + err.message);
                 }
             }
         },
+
+        async deleteImages() {
+            this.awsS3Config();
+
+            for (let i = 0; i < this.deletedFileNameList.length; i++) {
+                const fileName = this.deletedFileNameList[i];
+
+                await this.s3.deleteObject({
+                    Key: fileName
+                }, (err, data) => {
+                    if (err) {
+                        return alert('문제 발생' + err.message)
+                    }
+                })
+            }
+        }
+
     },
 }
 </script>
