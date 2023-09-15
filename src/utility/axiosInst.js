@@ -3,7 +3,7 @@ import env from "@/env";
 
 const springAxiosInst = axios.create({
     baseURL: env.api.SPRING_API_URL,
-    timeout: 2500,
+    timeout: 10000,
 })
 
 const fastApiAxiosInst = axios.create({
