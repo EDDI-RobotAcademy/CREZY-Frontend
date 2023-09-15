@@ -46,9 +46,9 @@ export default {
   data() {
     return {
       buttons: [
-        { label: "Home", class: "clicked-nav-btn", name: "home" },
-        { label: "Playlists", class: "nav-btn", name: "PlaylistListPage" },
-        { label: "My Page", class: "nav-btn", name: "MyPage" },
+        { label: "Home", class: "nav-btn", name: "home", secondName: "MusicRecommendationPage" },
+        { label: "Playlists", class: "nav-btn", name: "PlaylistListPage", secondName: "PlaylistReadPage" },
+        { label: "My Page", class: "nav-btn", name: "MyPage", secondName: "PlaylistManagePage" },
       ],
     };
   },
@@ -89,6 +89,14 @@ export default {
         this.$router.push({ name: currentRoute });
       }
     },
+
+    checkSecondName(currentRoute) {
+      this.buttons.forEach((button) => {
+        button.class =
+          button.secondName === currentRoute ? "clicked-nav-btn" : "nav-btn";
+      });
+    },
+
     async signOut() {
       await this.requestUserLogoutToSpring()
       localStorage.removeItem("userToken")
@@ -98,9 +106,17 @@ export default {
     }
   },
   watch: {
-    $route(to) {
-      this.toggleBtn(to.name);
-    },
+    $route: {
+      handler(to) {
+        this.toggleBtn(to.name);
+        const isAllNavButtons = this.buttons.every(button => button.class === "nav-btn");
+
+        if (isAllNavButtons) {
+          this.checkSecondName(to.name); // 새로고침하면 풀림 수정 필요
+        }
+      },
+      immediate: true
+    }
   },
   created() {
     this.toggleBtn(this.$route.name);
