@@ -22,7 +22,7 @@
                 <tr v-if="!inquiries || (Array.isArray(inquiries) && inquiries.length === 0)">
                     <td colspan="4">최근 6개월 간 문의하신 내역이 없습니다.</td>
                 </tr>
-                <template v-for="inquiry in inquiries" :key="inquiry.inquiryId + 'row'">
+                <template v-for="inquiry in sortedInquiries" :key="inquiry.inquiryId + 'row'">
                     <tr>
                         <td>{{ mapToKoreanInquiryType(inquiry.inquiryCategoryType.inquiryCategory) }}</td>
                         <td @click="showInquiryReadForm(inquiry.inquiryId)" style="font-weight: bold; cursor: pointer;">{{
@@ -86,6 +86,13 @@ export default {
         updatedInquiries() {
             return this.$store.state.inquiries;
         },
+        sortedInquiries() {
+            return this.inquiries.slice().sort((a, b) => {
+                const dateA = new Date(a.createInquiryDate);
+                const dateB = new Date(b.createInquiryDate);
+                return dateB - dateA;
+            });
+        }
     },
 };
 </script>
