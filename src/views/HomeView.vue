@@ -1,36 +1,26 @@
 <template>
-  <div
-    v-if="!musicList || (Array.isArray(musicList) && musicList.length === 0)"
-  >
-    <MusicRecommendationSearchForm @submit="recommendation" />
-  </div>
-  <div v-else>
-    <MusicRecommendationForm />
+  <div>
+    <MusicRecommendationSearchForm @submit="requestRecommendation" />
   </div>
 </template>
 
 <script>
 import MusicRecommendationSearchForm from "@/components/music/MusicRecommendationSearchForm.vue";
-import MusicRecommendationForm from "@/components/music/MusicRecommendationForm.vue";
-
-import { mapActions, mapState } from "vuex";
-
-const musicModule = "musicModule";
 
 export default {
   components: {
-    MusicRecommendationForm,
     MusicRecommendationSearchForm,
   },
-  computed: {
-    ...mapState(musicModule, ["musicList"]),
-  },
   methods: {
-    ...mapActions(musicModule, ["requestRecommendationToFastApi"]),
-
-    async recommendation(payload) {
-      await this.requestRecommendationToFastApi(payload);
+    async requestRecommendation(payload) {
+      const sentence = payload
+      await this.$router.push({
+        name: "MusicRecommendationPage",
+        params: { sentence: sentence },
+      });
     },
+
+
   },
 };
 </script>
