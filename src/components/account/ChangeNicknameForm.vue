@@ -18,6 +18,7 @@
         </dd>
       </div>
       <v-text-field v-model="newNickname" label="사용하고 싶은 닉네임을 입력하십시오" outlined class="nickname-input"></v-text-field>
+      <p class="nickname-condition">조건: 2~6자 한글, 영어 대소문자, 숫자만 사용 가능</p>
       <div class="nickname-dialog-actions">
         <v-btn @click="checkNickname" color="black">중복확인</v-btn>
         <v-btn @click="submit" color="black" :disabled="!isNicknameAvailable">Submit</v-btn>
@@ -249,7 +250,7 @@ export default {
 
 .nickname-input {
   width: 100%;
-  margin-bottom: 16px;
+  /*  margin-bottom: 16px; */
 }
 
 .nickname-dialog-actions {
@@ -272,5 +273,10 @@ export default {
   background-color: black;
   margin-bottom: 16px;
   cursor: pointer;
+}
+.nickname-condition {
+  margin-top: -20px;
+  text-align: left;
+  font-size: 70%;
 }
 </style>
