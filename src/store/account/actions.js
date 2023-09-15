@@ -141,17 +141,24 @@ export default {
   },
   requestCheckNicknameToSpring({ }, payload) {
     const { newNickname } = payload;
-    return axiosInst.springAxiosInst
-      .get(`/account/check-nickName/${newNickname}`)
-      .then((res) => {
-        if (res.data) {
-          alert("사용 가능한 닉네임입니다!");
-          return true;
-        } else {
-          alert("중복된 닉네임입니다!");
-          return false;
-        }
-      });
+    const isValidNickname = /^[가-힣a-zA-Z0-9]{2,6}$/.test(newNickname);
+
+    if (isValidNickname) {
+      return axiosInst.springAxiosInst
+        .get(`/account/check-nickName/${newNickname}`)
+        .then((res) => {
+          if (res.data) {
+            alert("사용 가능한 닉네임입니다!");
+            return true;
+          } else {
+            alert("중복된 닉네임입니다!");
+            return false;
+          }
+        });
+      } else {
+        alert("닉네임 조건을 만족하지 않습니다!");
+        return false;
+      }
   },
   async requestChangeNicknameToSpring({ }, payload) {
     const userToken = localStorage.getItem("userToken");
