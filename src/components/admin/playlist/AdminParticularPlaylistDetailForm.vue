@@ -33,15 +33,21 @@
             <th align="end">registered date</th>
             <th align="end">status</th>
           </tr>
-          <tr class="playlist-songlist-row" 
-            v-for="(song, index) in playlist.songlist">
-            <td>{{ index + 1 }}</td>
-            <td>이미지</td>
-            <td align="start">{{ song.title }}</td>
-            <td align="start">{{ song.artist }}</td>
-            <td align="end">{{ song.createDate }}</td>
-            <td align="end"><v-icon style="color: gray; font-size: 56px;">mdi-circle-small</v-icon></td>
-          </tr>
+          <template v-for="(song, index) in playlist.songlist">
+            <tr class="playlist-songlist-row" @click="manageSong(song.songId)">
+              <td>{{ index + 1 }}</td>
+              <td>이미지</td>
+              <td align="start">{{ song.title }}</td>
+              <td align="start">{{ song.artist }}</td>
+              <td align="end">{{ song.createDate }}</td>
+              <td align="end"><v-icon style="color: gray; font-size: 56px;">mdi-circle-small</v-icon></td>
+            </tr>
+            <tr v-if="selectedSongId === song.songId">
+              <td colspan="6">
+                <ParticularSongDetailForm/>
+              </td>
+            </tr>
+          </template>
         </table>
       </div>
     </v-card>
@@ -49,13 +55,29 @@
 </template>
 
 <script>
+import ParticularSongDetailForm from "@/components/admin/song/ParticularSongDetailForm.vue"
+
 export default {
   data() {
     return {
       playlist: {
         songlist: [ 
-          {title: "이름", artist: "가수", createDate: "23-09-14"} 
+          {songId: 1, title: "이름", artist: "가수", createDate: "23-09-14"} ,
+          {songId: 2, title: "이름", artist: "가수", createDate: "23-09-14"} 
         ]
+      },
+      selectedSongId: '',
+    }
+  },
+  components: {
+    ParticularSongDetailForm
+  },
+  methods: {
+    manageSong(songId) {
+      if (this.selectedSongId == songId.toString()) {
+        this.selectedSongId = ''
+      } else {
+        this.selectedSongId = songId
       }
     }
   }

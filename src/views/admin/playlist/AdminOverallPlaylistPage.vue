@@ -63,9 +63,6 @@ export default {
       'playlists',
       'playlistListCount',
     ]),
-    totalPages() {
-      return Math.ceil(this.playlistListCount / 1);
-    }
   }
 }
 </script>
