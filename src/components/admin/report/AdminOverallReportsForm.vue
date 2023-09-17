@@ -73,8 +73,8 @@
           ></v-text-field>
           <v-menu v-model="chooseReportCategory">
             <template v-slot:activator="{ on }">
-              <v-list class="admin-playlist-category-select-field" v-if="chooseReportCategory">
-                <v-list-item class="admin-playlist-category-selection" v-for="reportCategory in reportCategories" @click="selectCategory(reportCategory)">
+              <v-list class="report-select-field" v-if="chooseReportCategory">
+                <v-list-item class="report-category-selection" v-for="reportCategory in reportCategories" @click="selectCategory(reportCategory)">
                   <v-list-item-title style="font-size: 13px">{{ reportCategory }}</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -108,7 +108,7 @@
             </th>
           </tr>
           <template v-for="(report, index) in filteredReportList">
-            <tr class="overall-playlist-table-row" > 
+            <tr class="overall-playlist-table-row" @click="forManage(report.reportId)" > 
               <td>
                 <div class="overall-playlist-song-marker-container">
                   <div v-if="report.reportStatusType === 'APPROVE'" class="approve-report-marker"></div>
@@ -122,6 +122,11 @@
               <td align="end">{{ report.reportedCategoryType }}</td>
               <td align="end" style="padding-right: 25px">{{ report.createReportDate }}</td>
             </tr>
+            <tr v-if="selectedReportId === report.reportId">
+              <td colspan="6">
+                <AdminParticularReportDetailForm :accountReportDetail="accountReportDetail"/>
+              </td>
+            </tr>
           </template>
         </table>
       </div>
@@ -131,11 +136,18 @@
 
 <script>
 
+import AdminParticularReportDetailForm from "@/components/admin/report/AdminParticularReportDetailForm.vue"
 
 export default {
   
+  components: {
+      AdminParticularReportDetailForm
+  },
+
   data() {
+    
     return{ 
+      selectedReportId: '',
       chooseReportCategory: false,
       selectedCategory: '전체',
       reportCategories: [ '전체', '계정', '플레이리스트', '노래'],
@@ -150,11 +162,24 @@ export default {
     type: Object,
     required: true,
   },
+  accountReportDetail: {
+    type: Object,
+    required: false,
+  },
 },
   methods: {
     
     selectCategory(selectedCategory) {
       this.selectedCategory = selectedCategory
+    },
+
+    forManage(reportId) {
+      if (this.selectedReportId == reportId.toString()) {
+        this.selectedReportId = ''
+      } else {
+      this.selectedReportId = reportId;
+      this.$emit("openManage", this.selectedReportId)
+      }
     },
       
   },
@@ -250,7 +275,7 @@ export default {
   position: absolute; 
   z-index: 9999; 
 }
-.admin-playlist-category-select-field {
+.report-category-select-field {
   background-color: #212630 !important; 
   position: absolute; 
   width: 300px;
@@ -258,6 +283,9 @@ export default {
   position: absolute; 
   z-index: 9999; 
 
+}
+.report-category-selection {
+  margin-bottom: -5px; 
 }
 
 </style>
