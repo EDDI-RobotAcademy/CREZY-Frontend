@@ -246,6 +246,18 @@ export default {
   background-color: #fffffa;
   border-radius: 5px;
 }
+.v-menu__content {
+  position: absolute; 
+  z-index: 9999; 
+}
+.admin-playlist-category-select-field {
+  background-color: #212630 !important; 
+  position: absolute; 
+  width: 300px;
+  top: 82px;
+  position: absolute; 
+  z-index: 9999; 
 
+}
 
 </style>

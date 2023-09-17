@@ -1,4 +1,9 @@
+import {
+  REQUEST_RECOMMENDATIONS_TO_SPRING
+} from "./mutation-types";
+
 import axiosInst from "@/utility/axiosInst";
+
 export default {
   requestDeleteSelectedSongsToSpring({ }, payload) {
     const songlistId = payload
@@ -15,4 +20,12 @@ export default {
         return res.data
       });
   },
+
+  requestRecommendationToSpring({ commit }, payload) {
+    const sentence = payload
+    return axiosInst.springAxiosInst.get("/emotion/analysis", { params: { sentence: sentence } })
+      .then((res) => {
+        commit(REQUEST_RECOMMENDATIONS_TO_SPRING, res.data)
+      })
+  } 
 };

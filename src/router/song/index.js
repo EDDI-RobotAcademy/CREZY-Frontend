@@ -1,28 +1,11 @@
-import PlaylistListPage from "@/views/playlist/PlaylistListPage.vue";
-import PlaylistReadPage from "@/views/playlist/PlaylistReadPage.vue";
-import PlaylistManagePage from "@/views/playlist/PlaylistManagePage.vue";
+import MusicRecommendationPage from "@/views/song/MusicRecommendationPage.vue"
 
-const playlistRoutes = [
+const songRoutes = [
   {
-    path: "/playlist-list-page",
-    name: "PlaylistListPage",
-    component: PlaylistListPage,
-  },
-  {
-    path: "/playlist-read-page/:id",
-    name: "PlaylistReadPage",
+    path: "/music-recommendation-page/:sentence",
+    name: "MusicRecommendationPage",
     components: {
-      default: PlaylistReadPage,
-    },
-    props: {
-      default: true,
-    },
-  },
-  {
-    path: "/playlist-modify-page/:playlistId",
-    name: "PlaylistManagePage",
-    components: {
-      default: PlaylistManagePage,
+      default: MusicRecommendationPage,
     },
     props: {
       default: true,
@@ -30,4 +13,4 @@ const playlistRoutes = [
   },
 ];
 
-export default playlistRoutes;
+export default songRoutes;

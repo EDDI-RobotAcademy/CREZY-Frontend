@@ -34,7 +34,7 @@ export default {
   methods: {
     getRecommendation() {
       const { emotionKeyword } = this;
-      this.$emit("submit", { emotionKeyword });
+      this.$emit("submit", emotionKeyword);
     },
   },
 };
