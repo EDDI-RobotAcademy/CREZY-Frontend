@@ -42,7 +42,7 @@
             </tr>
             <tr v-if="selectedSongId === song.songId">
               <td colspan="6">
-                <ParticularSongDetailForm/>
+                <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail"/>
               </td>
             </tr>
           </template>
@@ -62,10 +62,15 @@ export default {
     playlist: {
       type: Object,
       required: true
+    },
+    songInfo: {
+      type: Object
     }
   },
   data() {
     return {
+      songThumbnail: '',
+
       selectedSongId: '',
       awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
       awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
@@ -81,7 +86,8 @@ export default {
       if (this.selectedSongId == songId.toString()) {
         this.selectedSongId = ''
       } else {
-        this.selectedSongId = songId
+        this.selectedSongId = songId;
+        this.$emit("openManage", this.selectedSongId)
       }
     },
     getImage(playlist) {
@@ -90,6 +96,20 @@ export default {
       }
       return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${this.playlist.thumbnailName}`;
     },
+    getSongImage(link) {
+      return (
+        "https://img.youtube.com/vi/" +
+        link.substring(link.lastIndexOf("=") + 1) +
+        "/mqdefault.jpg"
+      );
+    }
+  },
+  watch: {
+    songInfo: {
+      handler(newVal) {
+        this.songThumbnail = this.getSongImage(newVal.link)
+      }
+    }
   }
 }
 </script>
