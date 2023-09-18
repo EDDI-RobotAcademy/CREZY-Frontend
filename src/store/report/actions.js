@@ -1,5 +1,6 @@
 import {
-  REQUEST_REPORTLIST_TO_SPRING
+  REQUEST_REPORT_LIST_TO_SPRING,
+  REQUEST_ACCOUNT_REPORT_DETAIL_TO_SPRING
 } from "./mutation-types"
 import axiosInst from "@/utility/axiosInst"
 
@@ -19,7 +20,16 @@ export default {
     const userToken = localStorage.getItem('userToken');
     const { pageNum = 1 } = payload;
         return axiosInst.springAxiosInst.get(`/admin-report/list?page=${pageNum}`, { headers: { Authorization: userToken } }).then((res) => {
-          commit(REQUEST_REPORTLIST_TO_SPRING, res.data);
+          commit(REQUEST_REPORT_LIST_TO_SPRING, res.data);
         });
   },
+
+  requestAccountReportDetailToSpring({ commit }, selectedReportId) {
+    const userToken = localStorage.getItem('userToken');
+    const reportId = selectedReportId;
+        return axiosInst.springAxiosInst.get(`/admin-report/read-account-report?reportId=${reportId}`, { headers: { Authorization: userToken } }).then((res) => {
+          commit(REQUEST_ACCOUNT_REPORT_DETAIL_TO_SPRING, res.data);
+        });
+  },
+ 
 }
