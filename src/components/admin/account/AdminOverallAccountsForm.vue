@@ -105,10 +105,10 @@
             </th>
           </tr>
           <template v-for="(account, index) in accounts">
-            <tr class="overall-playlist-table-row" @click="forManage(account.accountId)">
+            <tr class="overall-playlist-table-row" @click="forManage(account)">
               <td>
                 <div class="overall-playlist-song-marker-container">
-                  <div v-if="account.warningCounts === 3" class="three-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'BLACKLIST'" class="three-warning-account-marker"></div>
                   <div v-if="account.warningCounts === 2" class="two-warning-account-marker"></div>
                   <div v-if="account.warningCounts === 1" class="one-warning-account-marker"></div>
                   <div v-if="account.warningCounts === 0" class="no-warning-account-marker"></div>
@@ -122,7 +122,12 @@
             </tr>
             <tr v-if="selectedAccountId === account.accountId">
               <td colspan="6">
-                <AdminParticularAccountDetailForm :accountInfo="accountInfo" @isChangeBadNickname="changeBadNickname" />
+                <AdminParticularAccountDetailForm 
+                  :accountInfo="accountInfo" 
+                  :selectedAccountRole="selectedAccountRole"
+                  @isChangeBadNickname="changeBadNickname" 
+                  @removeFromBlacklist="removeFromBlacklist"
+                  @moveToBlacklist="moveToBlacklist"/>
               </td>
             </tr>
           </template>
@@ -189,6 +194,7 @@ export default {
   data() {
     return {
       selectedAccountId: '',
+      selectedAccountRole: '',
       chooseAccountCategory: false,
       selectedCategory: 'recent',
       accountCategories: ['recent', 'blacklisted', '1 warning', '2 warnings'],
@@ -216,13 +222,13 @@ export default {
   methods: {
     ...mapActions(adminAccountModule, ["requestChangeBadNicknameToSpring", "requestAccountInfoForAdminToSpring"]),
 
-    forManage(accountId) {
-      if (this.selectedAccountId == accountId.toString()) {
+    forManage(account) {
+      if (this.selectedAccountId == account.accountId.toString()) {
         this.selectedAccountId = ''
       } else {
-        this.selectedAccountId = accountId;
+        this.selectedAccountId = account.accountId;
+        this.selectedAccountRole = account.accountRoleType
         this.$emit("openManage", this.selectedAccountId)
-        console.log("날짜: " + this.accountInfo.lastLoginDate)
       }
     },
     selectCategory(category) {
@@ -248,6 +254,14 @@ export default {
         accountToUpdate.nickname = this.accountInfo.nickname;
       }
     },
+    removeFromBlacklist() {
+      const selectedAccountId = this.selectedAccountId
+      this.$emit("removeFromBlacklist", selectedAccountId)
+    },
+    moveToBlacklist() {
+      const selectedAccountId = this.selectedAccountId
+      this.$emit("moveToBlacklist", selectedAccountId)
+    }
   },
   watch: {
     searchDate(newValue) {

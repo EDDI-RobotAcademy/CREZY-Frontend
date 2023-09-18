@@ -68,4 +68,20 @@ export default {
     }).then((res) => {
     })
   },
+
+  requestBlacklistAccountToSpring({}, accountId) {
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.get("/admin-account/account-change-RoleType-blacklist", {
+      params: { accountId: accountId },
+      headers: { Authorization: userToken }
+    }).then((res) => {})
+  },
+
+  requestRemoveBlacklistAccountToSpring({}, accountId) {
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.get("/admin-account/account-change-RoleType-normal", {
+      params: { accountId: accountId },
+      headers: { Authorization: userToken }
+    }).then((res) => {})
+  }
 }
