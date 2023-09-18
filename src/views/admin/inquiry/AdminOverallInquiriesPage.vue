@@ -1,15 +1,54 @@
 <template>
   <div>
-    <AdminOverallInquiriesForm/>
+    <AdminOverallInquiriesForm
+      :inquiryStatus = "inquiryStatus"
+      :inquiryList = "inquiryList"
+      :urgentInquiries = "urgentInquiries"
+      :inquiryListCount = "inquiryListCount"
+      @requestInquiries = "getInquiries"
+    />
   </div>
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+
 import AdminOverallInquiriesForm from "@/components/admin/inquiry/AdminOverallInquiriesForm.vue"
+
+const adminInquiryModule = "adminInquiryModule"
 
 export default {
   components: {
     AdminOverallInquiriesForm
+  },
+  data() {
+    return {
+      currentPage: 1,
+    }
+  },
+  methods: {
+    ...mapActions(adminInquiryModule, [
+      "requestInquiryStatusToSpring",
+      "requestInquiryListToSpring",
+      "requestUrgentInquiriesToSpring"
+    ]),
+
+    getInquiries(payload) {
+      const { statusType, categoryType, page } = payload 
+      this.requestInquiryListToSpring({ statusType, categoryType, page })
+    }
+  },
+  computed: {
+    ...mapState(adminInquiryModule, [
+      "inquiryStatus",
+      "inquiryList",
+      "urgentInquiries",
+      "inquiryListCount"
+    ])
+  },
+  async mounted() {
+    await this.requestInquiryStatusToSpring()
+    await this.requestUrgentInquiriesToSpring()
   }
 }
 </script>
