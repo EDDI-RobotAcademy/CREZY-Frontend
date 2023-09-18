@@ -14,9 +14,9 @@
             <div>좋아요 {{ playlist.likeCounts }}개</div>
           </div>
           <div style="display: flex; align-items: center;">
-            <v-btn class="particular-playlist-btn">사진 변경</v-btn>
-            <v-btn class="particular-playlist-btn">이름 변경</v-btn>
-            <v-btn class="particular-playlist-btn">삭제</v-btn>
+            <v-btn class="particular-playlist-btn" @click="deletePlaylistThumbnail">사진 변경</v-btn>
+            <v-btn class="particular-playlist-btn" @click="changePlaylistName">이름 변경</v-btn>
+            <v-btn class="particular-playlist-btn" @click="deletePlaylist">삭제</v-btn>
           </div>
         </div>
       </div>
@@ -102,6 +102,44 @@ export default {
         link.substring(link.lastIndexOf("=") + 1) +
         "/mqdefault.jpg"
       );
+    },
+    awsS3Config() {
+      AWS.config.update({
+        region: this.awsBucketRegion,
+        credentials: new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: this.awsIdentityPoolId
+        })
+      });
+
+      this.s3 = new AWS.S3({
+        apiVersion: '2006-03-01',
+        params: {
+            Bucket: this.awsBucketName
+        }
+      })
+    },
+
+    async deletePlaylistThumbnail() {
+      this.awsS3Config();
+
+      const fileName = this.playlist.thumbnailName
+
+      await this.s3.deleteObject({
+        Key: fileName
+      }, (err, data) => {
+        if (err) {
+          return alert("문제 발생" + err.message)
+        }
+      })
+      this.$emit("deleteThumbnail")
+    },
+
+    changePlaylistName() {
+      this.$emit("changePlaylistName")
+    },
+
+    deletePlaylist() {
+      this.$emit("deletePlaylist")
     }
   },
   watch: {
