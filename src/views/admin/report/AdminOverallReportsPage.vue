@@ -1,6 +1,10 @@
 <template>
     <div>
-       <AdminOverallReportsForm :reportList="reportList"/>   
+       <AdminOverallReportsForm 
+       @openManage="getReportInfo"
+       :reportList="reportList"
+       :accountReportDetail="accountReportDetail"
+       />   
     </div>
   </template>
   
@@ -15,10 +19,22 @@
       AdminOverallReportsForm
     },
     methods: {
-    ...mapActions(reportModule, ["requestReportListToSpring"]),
+    ...mapActions(reportModule, [
+      "requestReportListToSpring",
+      "requestAccountReportDetailToSpring"
+    ]),
+
+    async getReportInfo(selectedReportId) {
+      const reportId = selectedReportId
+      await this.requestAccountReportDetailToSpring(reportId)
+      console.log(this.accountReportDetail.reporterProfileName)
+    },
   },
   computed: {
-    ...mapState(reportModule, ["reportList"]),
+    ...mapState(reportModule, [
+      "reportList",
+      "accountReportDetail",
+    ]),
   },
   async mounted() {
     await this.requestReportListToSpring();
