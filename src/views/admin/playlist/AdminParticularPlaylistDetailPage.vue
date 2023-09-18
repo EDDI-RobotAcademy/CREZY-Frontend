@@ -4,6 +4,9 @@
     :playlist="playlist"
     :songInfo="songInfo"
     @openManage="getSongInfo"
+    @deleteThumbnail="removeThumbnail"
+    @changePlaylistName="changePlaylistName"
+    @deletePlaylist="deletePlaylist"
     />
   </div>
 </template>
@@ -27,12 +30,31 @@ export default {
     AdminParticularPlaylistDetailForm
   },
   methods: {
-    ...mapActions(adminPlaylistModule, ['requestPlaylistForAdminToSpring']),
+    ...mapActions(adminPlaylistModule, [
+      'requestPlaylistForAdminToSpring',
+      'requestRemovePlaylistThumbnailToSpring',
+      'requestChangePlaylistNameToSpring',
+      'requestDeletePlaylistToSpring'
+    ]),
     ...mapActions(adminSongModule, ['requestSongInfoForAdminToSpring']),
 
     async getSongInfo(selectedSongId) {
       const songId = selectedSongId;
       await this.requestSongInfoForAdminToSpring(songId)
+    },
+    async removeThumbnail() {
+      await this.requestRemovePlaylistThumbnailToSpring(this.selectedPlaylistId)
+      await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
+    },
+    async changePlaylistName() {
+      await this.requestChangePlaylistNameToSpring(this.selectedPlaylistId)
+      await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
+    },
+    async deletePlaylist() {
+      await this.requestDeletePlaylistToSpring(this.selectedPlaylistId)
+      await this.$router.push({
+        name: "AdminOverallPlaylistPage"
+      })
     }
   },
   computed: {
