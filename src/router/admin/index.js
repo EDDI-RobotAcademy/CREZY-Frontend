@@ -31,20 +31,15 @@ const adminRoutes = [
     name: "AdminOverallInquiriesPage",
     component: AdminOverallInquiriesPage
   },
-  // {
-  //   path: "/admin/particular-playlist/:playlistId",
-  //   name: "AdminParticularPlaylistPage",
-  //   components: {
-  //     default: AdminParticularPlaylistPage,
-  //   },
-  //   props: {
-  //     default: true
-  //   }
-  // },
   {
-    path: "/admin/particular-playlist",
+    path: "/admin/particular-playlist/:selectedPlaylistId",
     name: "AdminParticularPlaylistPage",
-    component: AdminParticularPlaylistPage,
+    components: {
+      default: AdminParticularPlaylistPage,
+    },
+    props: {
+      default: true
+    }
   },
 ]
 

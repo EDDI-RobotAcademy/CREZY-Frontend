@@ -1,5 +1,6 @@
 export default {
   playlistsStatus: {},
   playlists: [],
-  playlistListCount: 0
+  playlistListCount: 0,
+  playlist: {},
 }
