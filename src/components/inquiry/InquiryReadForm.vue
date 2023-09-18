@@ -24,7 +24,7 @@
                         :style="selectedInquiry.inquiryImageNames && selectedInquiry.inquiryImageNames.length > 0 ? 'margin-top:30px;' : 'margin-top:0px;'">
                         <button @click="modifyInquiryButton" style="margin-right: 20px;">수정</button>
                         <span>│</span>
-                        <button style="margin-left: 20px;">삭제</button>
+                        <button @click="deleteInquiryButton" style="margin-left: 20px;">삭제</button>
                     </div>
                 </div>
             </v-row>
@@ -68,7 +68,7 @@ export default {
         },
     },
     methods: {
-        ...mapActions(inquiryModule, ["requestInquiryModifyToSpring"]),
+        ...mapActions(inquiryModule, ["requestInquiryModifyToSpring", "requestInquiryDeleteToSpring"]),
 
         getInquiryImages(inquiryImageName) {
 
@@ -94,6 +94,14 @@ export default {
         cancelInquiryModify() {
             this.isInquiryModify = false
         },
+        async deleteInquiryButton() {
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                const isDeleted = await this.requestInquiryDeleteToSpring(this.selectedInquiry.inquiryId);
+                if (isDeleted) {
+                    this.$emit("inquiryDeleted", true);
+                }
+            }
+        }
     },
 }
 </script>
