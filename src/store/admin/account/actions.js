@@ -9,19 +9,19 @@ import {
 import axiosInst from "@/utility/axiosInst";
 
 export default {
-  requestAccountsStatusToSpring({commit}, targetDate) {
+  requestAccountsStatusToSpring({ commit }, targetDate) {
     const { date } = targetDate
     const userToken = localStorage.getItem("userToken")
-    return axiosInst.springAxiosInst.get("/admin-account/check-account", { 
-        params: { date: date } , 
-        headers: { Authorization: userToken }
+    return axiosInst.springAxiosInst.get("/admin-account/check-account", {
+      params: { date: date },
+      headers: { Authorization: userToken }
     }).then((res) => {
-        commit(REQUEST_ACCOUNTS_STATUS_TO_SPRING, res.data)
+      commit(REQUEST_ACCOUNTS_STATUS_TO_SPRING, res.data)
     })
   },
 
   requestAccountListForAdminToSpring({ commit }, payload) {
-    const currentPage  = payload
+    const currentPage = payload
     const userToken = localStorage.getItem("userToken")
     return axiosInst.springAxiosInst.get("/admin-account/account-list", {
       params: { page: currentPage },
@@ -41,12 +41,12 @@ export default {
   requestCategoryAccountListToSpring({ commit }, payload) {
     const { warningCounts, page } = payload
     const userToken = localStorage.getItem("userToken")
-    return axiosInst.springAxiosInst.post("/admin-account/account-warningCount-list", 
-    { warningCounts, page },
-    { headers: { Authorization: userToken }})
-    .then((res) => {
-      commit(REQUEST_CATEGORY_ACCOUNT_LIST_TO_SPRING, res.data)
-    })
+    return axiosInst.springAxiosInst.post("/admin-account/account-warningCount-list",
+      { warningCounts, page },
+      { headers: { Authorization: userToken } })
+      .then((res) => {
+        commit(REQUEST_CATEGORY_ACCOUNT_LIST_TO_SPRING, res.data)
+      })
   },
 
   requestAccountInfoForAdminToSpring({ commit }, selectedAccountId) {
@@ -58,5 +58,14 @@ export default {
     }).then((res) => {
       commit(REQUEST_ACCOUNT_INFO_FOR_ADMIN_TO_SPRING, res.data)
     })
-  }
+  },
+
+  requestChangeBadNicknameToSpring({ }, accountId) {
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.get("/admin-account/change-nickname", {
+      params: { accountId: accountId },
+      headers: { Authorization: userToken }
+    }).then((res) => {
+    })
+  },
 }

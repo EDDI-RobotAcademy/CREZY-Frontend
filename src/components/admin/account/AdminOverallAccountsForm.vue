@@ -3,7 +3,7 @@
     <v-row style="margin: 15px;">
       <v-col cols="8">
         <v-row>
-          <v-col cols="4" >
+          <v-col cols="4">
             <v-card class="overall-playlist-stat-card">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
@@ -15,7 +15,7 @@
               </div>
             </v-card>
           </v-col>
-          <v-col cols="4" >
+          <v-col cols="4">
             <v-card class="overall-playlist-stat-card">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
@@ -27,7 +27,7 @@
               </div>
             </v-card>
           </v-col>
-          <v-col cols="4" >
+          <v-col cols="4">
             <v-card class="overall-playlist-stat-card">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
@@ -41,26 +41,17 @@
           </v-col>
         </v-row>
         <v-card class="overall-playlist-graph">
-          <Line :data="accountsData" :options="accountsOptions"/>
+          <Line :data="accountsData" :options="accountsOptions" />
         </v-card>
       </v-col>
       <v-col cols="4">
         <v-card class="overall-playlist-calendar-card">
-          <DatePicker 
-            v-model="searchDate" 
-            transparent 
-            borderless 
-            :is-dark="true" 
-            expanded 
-            :rows="2"
-            :step="1"
-            :color="selectedColor"
-            :max-date="new Date()"
-            :initial-page-position="2"/>
+          <DatePicker v-model="searchDate" transparent borderless :is-dark="true" expanded :rows="2" :step="1"
+            :color="selectedColor" :max-date="new Date()" :initial-page-position="2" />
         </v-card>
       </v-col>
-    </v-row>     
-    
+    </v-row>
+
     <v-card class="admin-overall-playlist-list-card">
 
       <div style="justify-content: space-between; display: flex;">
@@ -68,28 +59,18 @@
           Accounts
         </div>
         <div style="width: 400px; margin-left: 80px">
-          <v-text-field 
-            class="admin-playlist-search-field"
-            variant="outlined"
-            append-inner-icon="mdi-magnify"
-            single-line
-            hide-details
-            @click:append-inner="onClick"
-          ></v-text-field>
+          <v-text-field class="admin-playlist-search-field" variant="outlined" append-inner-icon="mdi-magnify" single-line
+            hide-details @click:append-inner="onClick"></v-text-field>
         </div>
         <div style="width: 300px; ">
-          <v-text-field
-            variant="outlined"
-            append-inner-icon="mdi-menu-down-outline"
-            @click:append-inner="chooseAccountCategory = !chooseAccountCategory"
-            readonly
-            class="admin-playlist-search-field"
-            v-model="selectedCategory"
-          ></v-text-field>
+          <v-text-field variant="outlined" append-inner-icon="mdi-menu-down-outline"
+            @click:append-inner="chooseAccountCategory = !chooseAccountCategory" readonly
+            class="admin-playlist-search-field" v-model="selectedCategory"></v-text-field>
           <v-menu v-model="chooseAccountCategory">
             <template v-slot:activator="{ on }">
               <v-list class="admin-playlist-category-select-field" v-if="chooseAccountCategory">
-                <v-list-item class="admin-playlist-category-selection" v-for="accountCategory in accountCategories" @click="selectCategory(accountCategory)">
+                <v-list-item class="admin-playlist-category-selection" v-for="accountCategory in accountCategories"
+                  @click="selectCategory(accountCategory)">
                   <v-list-item-title style="font-size: 13px">{{ accountCategory }}</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -141,7 +122,7 @@
             </tr>
             <tr v-if="selectedAccountId === account.accountId">
               <td colspan="6">
-                <AdminParticularAccountDetailForm :accountInfo="accountInfo"/>
+                <AdminParticularAccountDetailForm :accountInfo="accountInfo" @isChangeBadNickname="changeBadNickname" />
               </td>
             </tr>
           </template>
@@ -176,8 +157,11 @@ ChartJS.register(
 
 import { Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
+import { mapActions } from "vuex";
 
 import AdminParticularAccountDetailForm from "@/components/admin/account/AdminParticularAccountDetailForm.vue"
+
+const adminAccountModule = 'adminAccountModule'
 
 export default {
   extends: Line,
@@ -203,11 +187,11 @@ export default {
     }
   },
   data() {
-    return{ 
+    return {
       selectedAccountId: '',
       chooseAccountCategory: false,
       selectedCategory: 'recent',
-      accountCategories: [ 'recent', 'blacklisted', '1 warning', '2 warnings'],
+      accountCategories: ['recent', 'blacklisted', '1 warning', '2 warnings'],
 
       selectedColor: 'teal',
       searchDate: '',
@@ -218,25 +202,27 @@ export default {
         maintainAspectRatio: false,
         scales: {
           y: {
-          beginAtZero: true,
+            beginAtZero: true,
           },
         },
         plugins: {
           legend: {
-          display: false,
+            display: false,
           },
         }
       },
     }
   },
   methods: {
+    ...mapActions(adminAccountModule, ["requestChangeBadNicknameToSpring", "requestAccountInfoForAdminToSpring"]),
+
     forManage(accountId) {
       if (this.selectedAccountId == accountId.toString()) {
         this.selectedAccountId = ''
       } else {
-      this.selectedAccountId = accountId;
-      this.$emit("openManage", this.selectedAccountId)
-      console.log("날짜: " + this.accountInfo.lastLoginDate)
+        this.selectedAccountId = accountId;
+        this.$emit("openManage", this.selectedAccountId)
+        console.log("날짜: " + this.accountInfo.lastLoginDate)
       }
     },
     selectCategory(category) {
@@ -253,6 +239,14 @@ export default {
     getStatus(targetDate) {
       const date = targetDate
       this.$emit("getStatus", { date });
+    },
+    async changeBadNickname(accountId) {
+      await this.requestChangeBadNicknameToSpring(accountId)
+      await this.requestAccountInfoForAdminToSpring(accountId);
+      const accountToUpdate = await this.accounts.find(account => account.accountId === accountId);
+      if (accountToUpdate) {
+        accountToUpdate.nickname = this.accountInfo.nickname;
+      }
     },
   },
   watch: {
@@ -287,32 +281,35 @@ export default {
 </script>
 
 <style>
-.accounts-table-picker-container{
+.accounts-table-picker-container {
   height: 20px;
-  color: #5F6871; 
+  color: #5F6871;
 }
 
 .three-warning-account-marker {
-  height: 50px; 
-  width: 3px; 
+  height: 50px;
+  width: 3px;
   background-color: #0f0606;
   border-radius: 5px;
 }
+
 .two-warning-account-marker {
-  height: 50px; 
-  width: 3px; 
+  height: 50px;
+  width: 3px;
   background-color: #EA78B3;
   border-radius: 5px;
 }
+
 .one-warning-account-marker {
-  height: 50px; 
-  width: 3px; 
+  height: 50px;
+  width: 3px;
   background-color: #dee57a;
   border-radius: 5px;
 }
+
 .no-warning-account-marker {
-  height: 50px; 
-  width: 3px; 
+  height: 50px;
+  width: 3px;
   background-color: #7AE5A8;
   border-radius: 5px;
 }
