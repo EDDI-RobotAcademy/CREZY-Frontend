@@ -1,6 +1,10 @@
 <template>
   <div>
-    <AdminParticularPlaylistDetailForm :playlist = "playlist"/>
+    <AdminParticularPlaylistDetailForm 
+    :playlist="playlist"
+    :songInfo="songInfo"
+    @openManage="getSongInfo"
+    />
   </div>
 </template>
 
@@ -10,6 +14,7 @@ import { mapActions, mapState } from "vuex";
 import AdminParticularPlaylistDetailForm from "@/components/admin/playlist/AdminParticularPlaylistDetailForm.vue"
 
 const adminPlaylistModule = "adminPlaylistModule"
+const adminSongModule = "adminSongModule"
 
 export default {
   props: {
@@ -22,10 +27,17 @@ export default {
     AdminParticularPlaylistDetailForm
   },
   methods: {
-    ...mapActions(adminPlaylistModule, ['requestPlaylistForAdminToSpring'])
+    ...mapActions(adminPlaylistModule, ['requestPlaylistForAdminToSpring']),
+    ...mapActions(adminSongModule, ['requestSongInfoForAdminToSpring']),
+
+    async getSongInfo(selectedSongId) {
+      const songId = selectedSongId;
+      await this.requestSongInfoForAdminToSpring(songId)
+    }
   },
   computed: {
-    ...mapState(adminPlaylistModule, ["playlist"])
+    ...mapState(adminPlaylistModule, ["playlist"]),
+    ...mapState(adminSongModule, ["songInfo"])
   },
   async mounted() {
     await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)

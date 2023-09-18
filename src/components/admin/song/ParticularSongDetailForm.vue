@@ -2,21 +2,22 @@
   <div style="display: flex; justify-content: space-between;">
     <div class="d-flex">
       <div class="admin-song-img-wrapper">
-        <v-img class="mx-auto" height="200" :src="getImage(song.link)"> </v-img>
+        <v-img class="mx-auto" height="200" :src="songThumbnail"> </v-img>
       </div>
       <div style="margin: 8px">
-        <div>{{ song.title }}</div>
-        <div>{{ song.artist }}</div>
-        <div>{{ song.createDate }}</div>
-        <a :href="song.link" target="_blank" style="color: white;">{{ song.link }}</a>
+        <div>{{ songInfo.title }}</div>
+        <div>{{ songInfo.singer }}</div>
+        <div>{{ songInfo.createDate }}</div>
+        <a :href="songInfo.link" target="_blank" style="color: white;">{{ songInfo.link }}</a>
       </div>
     </div>
     <div>
-      <div class="lyrics" align="center" v-html="song.lyrics" v-if="!isLyricModify"></div>
+      <div class="lyrics" align="center" v-html="songInfo.lyrics" v-if="!isLyricModify"></div>
       <div v-else>
         <v-textarea 
           class="lyric-modify"
           v-model="modifiedLyrics"
+          rows="7"
           >
         </v-textarea>
       </div>
@@ -51,21 +52,25 @@
 
 <script>
 export default {
+  props: {
+    songInfo: {
+      type: Object,
+      required: true,
+    },
+    songThumbnail: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
-      song: {
-        lyrics: "asdfasdf asdfadsfasdf asdfasdfasdf<br> asdfasdf <br> asdfasdf <br> asdfasdf <br> asdfasdf <br> asdfasdf <br> asdfasdf <br> asdfasdf <br> asdfasdf <br> asdfasdf <br> asdfasdf <br> ",
-        title: "제목 1",
-        artist: "가수 1",
-        link: "https://www.youtube.com/watch?v=orJSJGHjBLI"
-      },
       isLyricModify: false,
       modifiedLyrics: ""
     }
   },
   methods: {
     cancelModify() {
-      this.modifiedLyrics = this.song.lyrics
+      this.modifiedLyrics = this.songInfo.lyrics
       this.isLyricModify = false
     },
     getImage(link) {
@@ -79,7 +84,7 @@ export default {
   watch: {
     isLyricModify(newVal) {
       if (newVal) {
-        const convertedLyrics = this.song.lyrics.replace(/<br\s*\/?>/g, '\n')
+        const convertedLyrics = this.songInfo.lyrics.replace(/<br\s*\/?>/g, '\n')
         this.modifiedLyrics = convertedLyrics
       }
     },
