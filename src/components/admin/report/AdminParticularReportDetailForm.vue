@@ -2,9 +2,9 @@
     <div>
       <v-row>
         <v-col cols="8">
-          <v-card class="custom-card">
+          <v-card v-if= "accountReportDetail.reportedCategoryType === 'ACCOUNT'" class="custom-card">
             <div class="card-title" style="margin-bottom: 15px;">신고 사항</div>
-            <v-img :src="getProfileImage(accountReportDetail.reportedProfileImageName)" align="center" width="40%" style="margin-bottom: 15px; width: 250px;"></v-img>
+            <v-img :src="getProfileImage(accountReportDetail.reportedProfileImageName)" style="margin-bottom: 15px; width: 250px;"></v-img>
             <table class="info-table" >
               <tr>
                 <td>닉네임:</td>
@@ -12,6 +12,18 @@
               </tr>
             </table>
           </v-card>
+          <v-card v-if= "accountReportDetail.reportedCategoryType === 'PLAYLIST'"  class="custom-card">
+            <div class="card-title" style="margin-bottom: 15px;">신고 사항</div>
+            <v-img :src="getPlaylistImage(playlistReportDetail.thumbnailName)" style="margin-bottom: 15px; width: 250px;"></v-img>
+            <table class="info-table" >
+              <tr>
+                <td>플레이리스트:</td>
+                <td>{{ playlistReportDetail.playlistName }}</td>
+              </tr>
+            </table>
+          </v-card>
+          
+          
           <v-card class="custom-card">
             <div class="card-title">신고 정보</div>
             <table class="info-table">
@@ -47,6 +59,14 @@
             type: Object,
             required: false,
         },
+        playlistReportDetail: {
+            type: Object,
+            required: false,
+        },
+        songReportDetail: {
+            type: Object,
+            required: false,
+        },
       
     },
     components: {
@@ -61,6 +81,13 @@
                 return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${profileImageName}`;
             }
         },
+        getPlaylistImage(playlistImageName) {
+            if (!playlistImageName) {
+              return require("@/assets/images/Logo_Text-removebg-preview.png");
+            }
+            return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${playlistImageName}`;
+        },
+        
     },
 
     data() {
