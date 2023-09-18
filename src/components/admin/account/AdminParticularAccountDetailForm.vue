@@ -66,16 +66,8 @@
         <v-card class="account-manage-btn-container">
           <div align="center">
             <v-btn class="account-manage-btn">신고내역 보기</v-btn>
-            <v-btn class="account-manage-btn" @click="showStateManage = !showStateManage">상태 관리 하기</v-btn>
-            <v-menu v-model="showStateManage">
-              <template v-slot:activator="{ on }">
-                <v-list class="account-states-field" v-if="showStateManage">
-                  <v-list-item class="admin-playlist-category-selection" v-for="state in states">
-                    <v-list-item-title style="font-size: 13px">{{ state }}</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </template>
-            </v-menu>
+            <v-btn v-if="selectedAccountRole === 'BLACKLIST'" class="account-manage-btn" @click="removeFromBlacklist">블랙 해제하기</v-btn>
+            <v-btn v-else class="account-manage-btn" @click="moveToBlacklist">유저 블랙하기</v-btn>
             <v-btn class="account-manage-btn">경고 수정 하기</v-btn>
             <v-btn @click="changeBadNickname" class="account-manage-btn">닉네임 지우기</v-btn>
             <v-btn class="account-manage-btn">문의 내역 보기</v-btn>
@@ -116,6 +108,10 @@ export default {
   props: {
     accountInfo: {
       type: Object,
+      required: true
+    },
+    selectedAccountRole: {
+      type: String,
       required: true
     }
   },
@@ -180,6 +176,12 @@ export default {
     changeBadNickname() {
       this.$emit("isChangeBadNickname", this.accountInfo.accountId)
     },
+    removeFromBlacklist() {
+      this.$emit("removeFromBlacklist")
+    },
+    moveToBlacklist() {
+      this.$emit("moveToBlacklist")
+    }
   },
 }
 </script>
