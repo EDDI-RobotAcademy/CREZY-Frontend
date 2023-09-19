@@ -38,7 +38,10 @@
               <td align="start">{{ song.title }}</td>
               <td align="start">{{ song.singer }}</td>
               <td align="end">{{ song.createDate }}</td>
-              <td align="end"><v-icon style="color: gray; font-size: 56px;">mdi-circle-small</v-icon></td>
+              <td align="end">
+                <v-icon v-if="song.songStatus === 'BLOCK'" style="color: gray; font-size: 56px;">mdi-circle-small</v-icon>
+                <v-icon v-else style="color: greenyellow; font-size: 56px;">mdi-circle-small</v-icon>
+              </td>
             </tr>
             <tr v-if="selectedSongId === song.songId">
               <td colspan="6">
