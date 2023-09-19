@@ -120,7 +120,8 @@
                             <tr v-if="selectedSongId === song.songId">
                                 <td style="color: white;" colspan="6">
                                     <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail"
-                                        @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" />
+                                        @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" @openSong="openSong"
+                                        @blockSong="blockSong" />
                                 </td>
                             </tr>
                         </template>
@@ -248,6 +249,13 @@ export default {
         },
         deleteSong(selectedSongId) {
             this.$emit('deleteSong', selectedSongId)
+        },
+        openSong(selectedSongId) {
+            this.$emit('openSong', selectedSongId)
+        },
+
+        blockSong(selectedSongId) {
+            this.$emit('blockSong', selectedSongId)
         },
     },
     watch: {
