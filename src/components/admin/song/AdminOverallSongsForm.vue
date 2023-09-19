@@ -120,7 +120,8 @@
                             <tr v-if="selectedSongId === song.songId">
                                 <td style="color: white;" colspan="6">
                                     <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail"
-                                        @modifyLyrics="modifyLyrics" />
+                                        @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" @openSong="openSong"
+                                        @blockSong="blockSong" />
                                 </td>
                             </tr>
                         </template>
@@ -246,6 +247,16 @@ export default {
         modifyLyrics(payload) {
             this.$emit('modifyLyrics', payload)
         },
+        deleteSong(selectedSongId) {
+            this.$emit('deleteSong', selectedSongId)
+        },
+        openSong(selectedSongId) {
+            this.$emit('openSong', selectedSongId)
+        },
+
+        blockSong(selectedSongId) {
+            this.$emit('blockSong', selectedSongId)
+        },
     },
     watch: {
         searchDate(newValue) {
@@ -254,9 +265,11 @@ export default {
         },
         songInfo: {
             handler(newVal) {
-                this.songThumbnail = this.getSongImage(newVal.link)
+                if (newVal && newVal.link) {
+                    this.songThumbnail = this.getSongImage(newVal.link)
+                }
             }
-        },
+        }
     },
     async mounted() {
         this.searchDate = new Date()
