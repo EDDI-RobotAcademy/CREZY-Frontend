@@ -76,7 +76,6 @@ export default {
       params: { date: date },
       headers: { Authorization: userToken }
     }).then((res) => {
-      console.log(res.data)
       commit(REQUEST_SONGS_STATUS_TO_SPRING, res.data)
     })
   },
