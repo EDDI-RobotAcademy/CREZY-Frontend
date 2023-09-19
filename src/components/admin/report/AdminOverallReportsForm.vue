@@ -124,7 +124,11 @@
             </tr>
             <tr v-if="selectedReportId === report.reportId">
               <td colspan="6">
-                <AdminParticularReportDetailForm :accountReportDetail="accountReportDetail"/>
+                <AdminParticularReportDetailForm 
+                :accountReportDetail="accountReportDetail"
+                :playlistReportDetail="playlistReportDetail"
+                :songReportDetail="songReportDetail"
+                />
               </td>
             </tr>
           </template>
@@ -163,6 +167,14 @@ export default {
     required: true,
   },
   accountReportDetail: {
+    type: Object,
+    required: false,
+  },
+  playlistReportDetail: {
+    type: Object,
+    required: false,
+  },
+  songReportDetail: {
     type: Object,
     required: false,
   },
