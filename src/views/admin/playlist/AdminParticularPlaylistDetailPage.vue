@@ -1,17 +1,8 @@
 <template>
   <div>
-    <AdminParticularPlaylistDetailForm 
-    :playlist="playlist"
-    :songInfo="songInfo"
-    @openManage="getSongInfo"
-    @deleteThumbnail="removeThumbnail"
-    @changePlaylistName="changePlaylistName"
-    @deletePlaylist="deletePlaylist"
-    @modifyLyrics="modifyLyrics"
-    @deleteSong="deleteSong"
-    @openSong="openSong"
-    @blockSong="blockSong"
-    />
+    <AdminParticularPlaylistDetailForm :playlist="playlist" :songInfo="songInfo" @openManage="getSongInfo"
+      @deleteThumbnail="removeThumbnail" @changePlaylistName="changePlaylistName" @deletePlaylist="deletePlaylist"
+      @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" />
   </div>
 </template>
 
@@ -57,20 +48,26 @@ export default {
     },
 
     async removeThumbnail() {
-      await this.requestRemovePlaylistThumbnailToSpring(this.selectedPlaylistId)
+      if (confirm("플레이리스트 사진을 지우시겠습니까?")) {
+        await this.requestRemovePlaylistThumbnailToSpring(this.selectedPlaylistId)
+      }
       await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
     },
 
     async changePlaylistName() {
-      await this.requestChangePlaylistNameToSpring(this.selectedPlaylistId)
+      if (confirm("플레이리스트 이름을 바꾸시겠습니까?")) {
+        await this.requestChangePlaylistNameToSpring(this.selectedPlaylistId)
+      }
       await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
     },
 
     async deletePlaylist() {
-      await this.requestDeletePlaylistToSpring(this.selectedPlaylistId)
-      await this.$router.push({
-        name: "AdminOverallPlaylistPage"
-      })
+      if (confirm("플레이리스트를 삭제하겠습니까?")) {
+        await this.requestDeletePlaylistToSpring(this.selectedPlaylistId)
+        await this.$router.push({
+          name: "AdminOverallPlaylistPage"
+        })
+      }
     },
 
     async modifyLyrics(payload) {
@@ -80,8 +77,10 @@ export default {
     },
 
     async deleteSong(selectedSongId) {
-      await this.requestDeleteSongToSpring(selectedSongId)
-      await this.removeSongFromState()
+      if (confirm("노래를 지우시겠습니까?")) {
+        await this.requestDeleteSongToSpring(selectedSongId)
+        await this.removeSongFromState()
+      }
       await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
     },
 
@@ -107,6 +106,4 @@ export default {
 }
 </script>
 
-<style>
-    
-</style>
+<style></style>
