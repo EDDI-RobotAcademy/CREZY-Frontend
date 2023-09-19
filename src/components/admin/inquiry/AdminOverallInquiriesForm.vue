@@ -20,7 +20,7 @@
         </div>
         <div style="margin-right: 16px">
           <v-card class="admin-inquiries-list-container">
-            <div class="admin-inquiry-stat-card-container">
+            <div class="admin-inquiry-list-container">
               <div class="admin-inquiry-title">
                 Inquiries
               </div>
@@ -136,6 +136,7 @@ export default {
       selectedCategory: '전체',
       currentCategory: 'TOTAL',
       currentStatus: 'total',
+      selectedAccountId: this.$route.query.accountId,
       currentPage: 1,
 
       inquiryCategories: [
@@ -198,10 +199,19 @@ export default {
       const categoryType = this.currentCategory
       const page = this.currentPage
       this.$emit("requestInquiries", { statusType, categoryType, page })
+    },
+    getAccountInquiries(selectedAccountId) {
+      const accountId = selectedAccountId
+      const page = this.currentPage
+      this.$emit("getAccountInquiries", { accountId, page })
     }
   },
   mounted() {
-    this.getPaginatedInquiries()
+    if (this.selectedAccountId) {
+      this.getAccountInquiries(this.selectedAccountId)
+    } else {
+      this.getPaginatedInquiries()
+    }
   }
 }
 </script>
@@ -220,6 +230,12 @@ export default {
   padding: 8px;
   background-color: #292E37;
   color: white
+}
+
+.admin-inquiry-list-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .admin-inquiry-title {
@@ -256,6 +272,7 @@ export default {
   width: 140px;
   top: 65px;
   right: 8px;
+  z-index: 99;
 }
 
 .admin-enquiry-category-selection {

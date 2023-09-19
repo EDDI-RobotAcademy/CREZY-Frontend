@@ -3,8 +3,10 @@
     <AdminOverallPlaylistFrom
       @getStatus="getPlaylistsStatus"
       @switchCategory="getCategorizedPlaylistList"
+      @getPlaylistByAccountId="getPlaylistByAccountId"
       :playlistsStatus="playlistsStatus"
       :playlists="playlists"
+      :accountId="selectedAccountId"
     />
     <v-pagination 
       style="color: white" 
@@ -27,6 +29,7 @@ export default {
     return {
       currentPage: 1,
       currentCategory: '',
+      selectedAccountId: ''
     }
   },
   components: {
@@ -35,7 +38,8 @@ export default {
   methods: {
     ...mapActions(adminPlaylistModule, [
       "requestPlaylistsStatusToSpring",
-      "requestPlaylistsForAdminToSpring"
+      "requestPlaylistsForAdminToSpring",
+      "requestAccountPlaylistsToSpring"
     ]),
 
     async getPlaylistsStatus(targetDate) {
@@ -54,6 +58,12 @@ export default {
       const sortType = this.currentCategory
       const page = this.currentPage
       await this.requestPlaylistsForAdminToSpring({ sortType, page })
+    },
+
+    async getPlaylistByAccountId(selectedAccountId) {
+      const accountId = selectedAccountId
+      const page = this.currentPage
+      await this.requestAccountPlaylistsToSpring({accountId, page})
     }
   },
 
@@ -63,7 +73,9 @@ export default {
       'playlists',
       'playlistListCount',
     ]),
-  }
+  },
+
+  
 }
 </script>
 

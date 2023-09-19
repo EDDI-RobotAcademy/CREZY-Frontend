@@ -36,6 +36,12 @@
 
 <script>
 export default {
+  props: {
+    wrongAccountCount: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       email: '',
@@ -46,6 +52,19 @@ export default {
     adminLogin() {
       const { email, password } = this
       this.$emit("login", { email, password });
+    }
+  },
+  watch: {
+    wrongAccountCount: {
+      handler(newVal) {
+        if (newVal > 3) {
+          alert("해당 페이지는 관리자만 이용 가능합니다")
+          this.$router.push({ name: 'home' })
+        } else {
+          this.email = ''
+          this.password = ''
+        }
+      }
     }
   }
 }

@@ -98,7 +98,7 @@ export default {
       .get("/oauth/kakao-check-exist", { params: { code: code } })
       .then((res) => {
         if (res.data) {
-          return true;
+          return res.data;
         } else {
           return false;
         }
@@ -155,10 +155,10 @@ export default {
             return false;
           }
         });
-      } else {
-        alert("닉네임 조건을 만족하지 않습니다!");
-        return false;
-      }
+    } else {
+      alert("닉네임 조건을 만족하지 않습니다!");
+      return false;
+    }
   },
   async requestChangeNicknameToSpring({ }, payload) {
     const userToken = localStorage.getItem("userToken");
@@ -194,7 +194,7 @@ export default {
       .get("/oauth/google-check-exist", { params: { code: code } })
       .then((res) => {
         if (res.data) {
-          return true;
+          return res.data;
         } else {
           return false;
         }
@@ -210,7 +210,7 @@ export default {
         alert("탈퇴 완료")
       })
   },
-  
+
   async requestCheckNaverEmailToSpring({ }, checkPayload) {
     const { code } = checkPayload;
     console.log(code)
@@ -218,7 +218,7 @@ export default {
       .get("/oauth/naver-check-exist", { params: { code: code } })
       .then((res) => {
         if (res.data) {
-          return true;
+          return res.data;
         } else {
           return false;
         }
@@ -226,18 +226,20 @@ export default {
   },
 
   requestAdminLoginToSpring({ commit }, payload) {
-    const { email, password } = payload 
+    const { email, password } = payload
 
     return axiosInst.springAxiosInst.post("/account/login-admin", { email, password })
       .then((res) => {
-        localStorage.setItem("userToken", res.data.userToken)
-        localStorage.setItem("roleType", res.data.roleType)
-        localStorage.setItem("nickname", res.data.nickname)
-        commit(SET_LOGGED_IN, true)
-        return true
-      })
-      .catch((res) => {
-        return false
+        if (res.data.nickname == null) {
+          alert("계정 정보를 확인하세요")
+          return false
+        } else {
+          localStorage.setItem("userToken", res.data.userToken)
+          localStorage.setItem("roleType", res.data.roleType)
+          localStorage.setItem("nickname", res.data.nickname)
+          commit(SET_LOGGED_IN, true)
+          return true
+        }
       })
   }
 };

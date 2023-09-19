@@ -14,9 +14,17 @@ export default {
       commit(REQUEST_PLAYLISTS_TO_SPRING, res.data);
     });
   },
-  requestPlaylistToSpring({ commit }, playlistId) {
+  requestPlaylistExceptBlockSongToSpring({ commit }, playlistId) {
     return axiosInst.springAxiosInst
-      .get(`/playlist/${playlistId}`)
+      .get(`/playlist/playlists/${playlistId}`)
+      .then((res) => {
+        commit(REQUEST_PLAYLIST_TO_SPRING, res.data);
+        return res.data.likes;
+      });
+  },
+  requestPlaylistIncludeBlockSongToSpring({ commit }, playlistId) {
+    return axiosInst.springAxiosInst
+      .get(`/playlist/MyPage/${playlistId}`)
       .then((res) => {
         commit(REQUEST_PLAYLIST_TO_SPRING, res.data);
         return res.data.likes;

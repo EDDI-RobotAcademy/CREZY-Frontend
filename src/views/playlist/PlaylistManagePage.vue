@@ -22,18 +22,18 @@ export default {
     PlaylistManageForm,
   },
   methods: {
-    ...mapActions(playlistModule, ["requestPlaylistToSpring", "requestPlaylistModifyToSpring"]),
+    ...mapActions(playlistModule, ["requestPlaylistIncludeBlockSongToSpring", "requestPlaylistModifyToSpring"]),
     ...mapActions(songModule, ["requestSongRegisterToSpring", "requestDeleteSelectedSongsToSpring"]),
     async submitPlaylist(payload) {
       const playlistId = this.playlistId
       console.log(playlistId)
       await this.requestPlaylistModifyToSpring({ ...payload, playlistId })
-      await this.requestPlaylistToSpring(playlistId)
+      await this.requestPlaylistIncludeBlockSongToSpring(playlistId)
     },
     async submitSong(payload) {
       const playlistId = this.playlistId
       await this.requestSongRegisterToSpring({ ...payload, playlistId })
-      await this.requestPlaylistToSpring(playlistId)
+      await this.requestPlaylistIncludeBlockSongToSpring(playlistId)
     },
     async deleteSubmit(payload) {
       await this.requestDeleteSelectedSongsToSpring(payload)
@@ -43,7 +43,7 @@ export default {
     ...mapState(playlistModule, ["playlist"]),
   },
   async created() {
-    await this.requestPlaylistToSpring(this.playlistId);
+    await this.requestPlaylistIncludeBlockSongToSpring(this.playlistId);
   },
 };
 </script>
