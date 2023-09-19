@@ -1,7 +1,7 @@
 <template>
     <div>
         <AdminOverallSongsForm @getStatus="getSongsStatus" @switchCategory="getCategorizedSongList" :songs="songs"
-            :songInfo="songInfo" :songsStatus="songsStatus" @openManage="getSongInfo" />
+            :songInfo="songInfo" :songsStatus="songsStatus" @openManage="getSongInfo" @modifyLyrics="modifyLyrics" />
         <v-pagination style="color: white" v-model="currentPage" :length="songListCount" @click="getPaginatedSongs">
         </v-pagination>
     </div>
@@ -28,7 +28,8 @@ export default {
         ...mapActions(adminSongModule, [
             "requestSongListForAdminToSpring",
             "requestSongInfoForAdminToSpring",
-            "requestSongsStatusToSpring"]),
+            "requestSongsStatusToSpring",
+            "requestModifyLyricsToSpring"]),
 
         async getCategorizedSongList(selectedCategory) {
             const songStatusType = selectedCategory;
@@ -52,6 +53,12 @@ export default {
         async getSongsStatus(targetDate) {
             const date = targetDate
             await this.requestSongsStatusToSpring(date)
+        },
+
+        async modifyLyrics(payload) {
+            const songId = payload.songId
+            await this.requestModifyLyricsToSpring(payload)
+            await this.requestSongInfoForAdminToSpring(songId)
         },
     },
     computed: {

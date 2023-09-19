@@ -119,7 +119,8 @@
                             </tr>
                             <tr v-if="selectedSongId === song.songId">
                                 <td style="color: white;" colspan="6">
-                                    <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail" />
+                                    <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail"
+                                        @modifyLyrics="modifyLyrics" />
                                 </td>
                             </tr>
                         </template>
@@ -241,6 +242,9 @@ export default {
                 link.substring(link.lastIndexOf("=") + 1) +
                 "/mqdefault.jpg"
             );
+        },
+        modifyLyrics(payload) {
+            this.$emit('modifyLyrics', payload)
         },
     },
     watch: {
