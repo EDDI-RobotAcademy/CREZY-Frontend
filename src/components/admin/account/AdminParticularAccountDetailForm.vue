@@ -62,10 +62,9 @@
           </table>
         </v-card>
       </v-col>
-      <v-col cols="2">
-        <v-card class="account-manage-btn-container">
-          <div align="center">
-            <v-btn class="account-manage-btn">신고내역 보기</v-btn>
+      <v-col cols="2" class="account-manage-btn-column">
+        <v-card class="account-manage-btn-card">
+          <div align="center" class="account-manage-btn-container">
             <v-btn v-if="selectedAccountRole === 'BLACKLIST'" class="account-manage-btn" @click="removeFromBlacklist">블랙 해제하기</v-btn>
             <v-btn v-else class="account-manage-btn" @click="moveToBlacklist">유저 블랙하기</v-btn>
             <v-btn class="account-manage-btn">경고 수정 하기</v-btn>
@@ -229,14 +228,25 @@ export default {
   padding: 10px
 }
 
-.account-manage-btn-container {
+.account-manage-btn-column {
+  padding-top: 26.5px; 
+  padding-bottom: 30.5px;
+}
+
+.account-manage-btn-card {
   color: white;
   background-color: #485463;
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: center;
-  padding: 8px
+  padding: 8px;
+}
+
+.account-manage-btn-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .account-manage-btn {
