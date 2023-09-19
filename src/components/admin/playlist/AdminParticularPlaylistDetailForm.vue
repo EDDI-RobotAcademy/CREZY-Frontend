@@ -38,11 +38,21 @@
               <td align="start">{{ song.title }}</td>
               <td align="start">{{ song.singer }}</td>
               <td align="end">{{ song.createDate }}</td>
-              <td align="end"><v-icon style="color: gray; font-size: 56px;">mdi-circle-small</v-icon></td>
+              <td align="end">
+                <v-icon v-if="song.songStatus === 'BLOCK'" style="color: gray; font-size: 56px;">mdi-circle-small</v-icon>
+                <v-icon v-else style="color: greenyellow; font-size: 56px;">mdi-circle-small</v-icon>
+              </td>
             </tr>
             <tr v-if="selectedSongId === song.songId">
               <td colspan="6">
-                <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail"/>
+                <ParticularSongDetailForm 
+                  :songInfo="songInfo" 
+                  :songThumbnail="songThumbnail"
+                  @modifyLyrics="modifyLyrics"
+                  @deleteSong="deleteSong"
+                  @openSong="openSong"
+                  @blockSong="blockSong"
+                  />
               </td>
             </tr>
           </template>
@@ -140,12 +150,30 @@ export default {
 
     deletePlaylist() {
       this.$emit("deletePlaylist")
+    },
+
+    modifyLyrics(payload) {
+      this.$emit('modifyLyrics', payload)
+    },
+
+    deleteSong(selectedSongId) {
+      this.$emit('deleteSong', selectedSongId)
+    },
+
+    openSong(selectedSongId) {
+      this.$emit('openSong', selectedSongId)
+    },
+
+    blockSong(selectedSongId) {
+      this.$emit('blockSong', selectedSongId)
     }
   },
   watch: {
     songInfo: {
       handler(newVal) {
-        this.songThumbnail = this.getSongImage(newVal.link)
+        if (newVal && newVal.link) {
+          this.songThumbnail = this.getSongImage(newVal.link) 
+        }
       }
     }
   }
