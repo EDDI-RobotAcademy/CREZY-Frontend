@@ -167,10 +167,10 @@ export default {
     },
 
     props: {
-        // songsStatus: {
-        //     type: Object,
-        //     required: true
-        // },
+        songsStatus: {
+            type: Object,
+            required: true
+        },
         songs: {
             type: Array,
             required: true,
@@ -203,12 +203,6 @@ export default {
             selectedColor: 'teal',
             searchDate: '',
             formattedDate: '',
-
-            songsStatus: {
-                todaySong: 28,
-                increaseRate: 15,
-                totalSong: 159,
-            },
 
             songThumbnail: '',
             selectedSongId: '',

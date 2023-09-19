@@ -1,7 +1,8 @@
 import {
   REQUEST_SONG_INFO_FOR_ADMIN_TO_SPRING,
   REQUEST_SONG_LIST_FOR_ADMIN_TO_SPRING,
-  DELETE_SONG_FROM_STATE
+  DELETE_SONG_FROM_STATE,
+  REQUEST_SONGS_STATUS_TO_SPRING,
 } from './mutation-types'
 
 import axiosInst from '@/utility/axiosInst'
@@ -66,5 +67,17 @@ export default {
 
   removeSongFromState({ commit }) {
     return commit(DELETE_SONG_FROM_STATE)
-  }
+  },
+
+  requestSongsStatusToSpring({ commit }, targetDate) {
+    const { date } = targetDate
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.get("/admin-song/check-song", {
+      params: { date: date },
+      headers: { Authorization: userToken }
+    }).then((res) => {
+      console.log(res.data)
+      commit(REQUEST_SONGS_STATUS_TO_SPRING, res.data)
+    })
+  },
 }
