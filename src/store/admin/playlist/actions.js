@@ -63,4 +63,15 @@ export default {
       headers: { Authorization: userToken }
     }).then((res) => {})
   },
+
+  requestAccountPlaylistsToSpring({ commit }, payload) {
+    const { accountId, page } = payload
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.post("/admin-account/account-playlist", 
+      { accountId, page },
+      { headers: { Authorization: userToken }}
+    ).then((res) => {
+      commit(REQUEST_PLAYLISTS_FOR_ADMIN_TO_SPRING, res.data)
+    })
+  }
 }

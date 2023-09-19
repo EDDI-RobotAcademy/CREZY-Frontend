@@ -71,7 +71,7 @@
             <v-btn class="account-manage-btn">경고 수정 하기</v-btn>
             <v-btn @click="changeBadNickname" class="account-manage-btn">닉네임 지우기</v-btn>
             <v-btn class="account-manage-btn">문의 내역 보기</v-btn>
-            <v-btn class="account-manage-btn" style="margin: 0;">등록한 플레이리스트</v-btn>
+            <v-btn @click="findRegisteredPlaylists" class="account-manage-btn" style="margin: 0;">등록한 플레이리스트</v-btn>
           </div>
         </v-card>
       </v-col>
@@ -113,7 +113,7 @@ export default {
     selectedAccountRole: {
       type: String,
       required: true
-    }
+    },
   },
   components: {
     Line
@@ -181,6 +181,13 @@ export default {
     },
     moveToBlacklist() {
       this.$emit("moveToBlacklist")
+    },
+
+    findRegisteredPlaylists() {
+      this.$router.push({
+        name: "AdminOverallPlaylistPage",
+        query: { accountId: this.accountInfo.accountId }
+      })
     }
   },
 }

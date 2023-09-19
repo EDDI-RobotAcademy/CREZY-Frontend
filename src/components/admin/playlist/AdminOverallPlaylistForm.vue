@@ -176,13 +176,14 @@ export default {
     playlists: {
       type: Array,
       required: true,
-    }
+    },
   },
   data() {
     return{ 
       playlistCategories: ["recent", "trending", "empty"],
       choosePlaylistCategory: false,
       selectedCategory: 'recent',
+      selectedAccountId: this.$route.query.accountId,
 
       playlistOptions: {
         responsive: true,
@@ -230,6 +231,10 @@ export default {
       const date = targetDate
       this.$emit("getStatus", { date });
     },
+
+    getPlaylistByAccountId(selectedAccountId) {
+      this.$emit("getPlaylistByAccountId", selectedAccountId)
+    }
   },
   watch: {
     searchDate(newValue) {
@@ -241,7 +246,11 @@ export default {
     this.searchDate = new Date()
     const targetDate = this.formatDate(this.searchDate)
     await this.getStatus(targetDate)
-    await this.selectCategory(this.selectedCategory)
+    if (!this.selectedAccountId) {
+      await this.selectCategory(this.selectedCategory)
+    } else {
+      await this.getPlaylistByAccountId(this.selectedAccountId)
+    }
   },
   computed: {
     playlistData() {

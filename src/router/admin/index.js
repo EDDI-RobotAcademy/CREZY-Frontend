@@ -16,6 +16,10 @@ const adminRoutes = [
     path: "/admin/overall-playlist",
     name: "AdminOverallPlaylistPage",
     component: AdminOverallPlaylistPage,
+    props: {
+      default: true,
+      required: false
+    }
   },
   {
     path: "/admin/overall-accounts",
