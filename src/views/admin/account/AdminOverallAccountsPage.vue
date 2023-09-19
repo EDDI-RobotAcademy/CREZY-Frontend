@@ -4,6 +4,8 @@
        @getStatus="getAccountsStatus" 
        @switchCategory="getCategorizedAccountList"
        @openManage="getAccountInfo"
+       @removeFromBlacklist="removeFromBlacklist"
+       @moveToBlacklist="moveToBlacklist"
        :accountsStatus="accountsStatus" 
        :accounts="accountList"
        :accountInfo="accountInfo"
@@ -40,7 +42,9 @@ export default {
       'requestAccountListForAdminToSpring', 
       'requestAccountListTotalToSpring',
       'requestCategoryAccountListToSpring',
-      'requestAccountInfoForAdminToSpring'
+      'requestAccountInfoForAdminToSpring',
+      'requestBlacklistAccountToSpring',
+      'requestRemoveBlacklistAccountToSpring'
     ]),
 
     async getAccountsStatus(targetDate) {
@@ -86,6 +90,18 @@ export default {
     },
     async getAccountInfo(selectedAccountId) {
       const accountId = selectedAccountId
+      await this.requestAccountInfoForAdminToSpring(accountId)
+    },
+    async moveToBlacklist(selectedAccountId) {
+      const accountId = selectedAccountId
+      await this.requestBlacklistAccountToSpring(accountId)
+      await this.getPaginatedAccounts()
+      await this.requestAccountInfoForAdminToSpring(accountId)
+    },
+    async removeFromBlacklist(selectedAccountId) {
+      const accountId = selectedAccountId
+      await this.requestRemoveBlacklistAccountToSpring(accountId)
+      await this.getPaginatedAccounts()
       await this.requestAccountInfoForAdminToSpring(accountId)
     }
   },

@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="5">
         <div class="account-activitiy-chart">
-          <Line :data="accountData" :options="accountOptions" style="height: 400px"/>
+          <Line :data="accountData" :options="accountOptions" style="height: 400px" />
         </div>
       </v-col>
       <v-col cols="5">
@@ -20,7 +20,7 @@
                   <td>이메일:</td>
                   <td align="end">{{ accountInfo.email }}</td>
                 </tr>
-                <tr >
+                <tr>
                   <td>경고 수:</td>
                   <td align="end">{{ accountInfo.warningCounts }}</td>
                 </tr>
@@ -51,7 +51,7 @@
               <td>플레이리스트 수:</td>
               <td align="end">{{ accountInfo.playlistCounts }}</td>
             </tr>
-            <tr >
+            <tr>
               <td>등록한 곡 수:</td>
               <td align="end">{{ accountInfo.songCounts }}</td>
             </tr>
@@ -66,18 +66,10 @@
         <v-card class="account-manage-btn-container">
           <div align="center">
             <v-btn class="account-manage-btn">신고내역 보기</v-btn>
-            <v-btn class="account-manage-btn" @click="showStateManage = !showStateManage">상태 관리 하기</v-btn>
-              <v-menu v-model="showStateManage">
-                <template v-slot:activator="{ on }">
-                  <v-list class="account-states-field" v-if="showStateManage">
-                    <v-list-item class="admin-playlist-category-selection" v-for="state in states">
-                      <v-list-item-title style="font-size: 13px">{{ state }}</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </template>
-              </v-menu>
+            <v-btn v-if="selectedAccountRole === 'BLACKLIST'" class="account-manage-btn" @click="removeFromBlacklist">블랙 해제하기</v-btn>
+            <v-btn v-else class="account-manage-btn" @click="moveToBlacklist">유저 블랙하기</v-btn>
             <v-btn class="account-manage-btn">경고 수정 하기</v-btn>
-            <v-btn class="account-manage-btn">닉네임 지우기</v-btn>
+            <v-btn @click="changeBadNickname" class="account-manage-btn">닉네임 지우기</v-btn>
             <v-btn class="account-manage-btn">문의 내역 보기</v-btn>
             <v-btn class="account-manage-btn" style="margin: 0;">등록한 플레이리스트</v-btn>
           </div>
@@ -117,6 +109,10 @@ export default {
     accountInfo: {
       type: Object,
       required: true
+    },
+    selectedAccountRole: {
+      type: String,
+      required: true
     }
   },
   components: {
@@ -126,8 +122,8 @@ export default {
     return {
       showStateManage: false,
 
-      states: [ 'move to blacklist', 'move from blacklist' ],
-      
+      states: ['move to blacklist', 'move from blacklist'],
+
       accountOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -174,59 +170,70 @@ export default {
       accountData.datasets[0].data = this.accountInfo.playlistCountsList;
       accountData.datasets[1].data = this.accountInfo.songCountsList;
       return accountData
+    },
+  },
+  methods: {
+    changeBadNickname() {
+      this.$emit("isChangeBadNickname", this.accountInfo.accountId)
+    },
+    removeFromBlacklist() {
+      this.$emit("removeFromBlacklist")
+    },
+    moveToBlacklist() {
+      this.$emit("moveToBlacklist")
     }
-  }
+  },
 }
 </script>
 
 <style>
 .account-activity-chart {
-  height: 400px; 
+  height: 400px;
   width: 100%;
 }
 
 .account-info-card {
-  color: white; 
-  background-color: #485463; 
-  height: 50%; 
-  margin-top: 15px; 
+  color: white;
+  background-color: #485463;
+  height: 50%;
+  margin-top: 15px;
   padding: 10px
 }
 
 .account-warning-card {
-  background-color: black; 
-  color: white; 
-  text-align: center; 
-  width: 75%; 
+  background-color: black;
+  color: white;
+  text-align: center;
+  width: 75%;
   margin: 4px;
 }
 
-.account-activity-card{
-  color: white; 
-  background-color: #485463; 
+.account-activity-card {
+  color: white;
+  background-color: #485463;
   margin-top: 20px;
   padding: 10px
 }
 
 .account-manage-btn-container {
-  color: white; 
-  background-color: #485463; 
-  display: flex; 
-  flex-direction: column; 
-  height: 100%; 
-  justify-content: center; 
+  color: white;
+  background-color: #485463;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
   padding: 8px
 }
 
 .account-manage-btn {
   background-color: #5b6775c5;
-  width: 95%; 
+  width: 95%;
   margin-bottom: 25px;
 }
 
 .account-states-field {
-  background-color: #212630 !important; 
-  position: absolute; 
+  background-color: #212630 !important;
+  position: absolute;
   z-index: 999;
   width: 95%;
   text-align: center;

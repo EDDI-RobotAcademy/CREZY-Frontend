@@ -3,7 +3,7 @@
     <v-row style="margin: 15px;">
       <v-col cols="8">
         <v-row>
-          <v-col cols="4" >
+          <v-col cols="4">
             <v-card class="overall-playlist-stat-card">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
@@ -15,7 +15,7 @@
               </div>
             </v-card>
           </v-col>
-          <v-col cols="4" >
+          <v-col cols="4">
             <v-card class="overall-playlist-stat-card">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
@@ -27,7 +27,7 @@
               </div>
             </v-card>
           </v-col>
-          <v-col cols="4" >
+          <v-col cols="4">
             <v-card class="overall-playlist-stat-card">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
@@ -41,26 +41,17 @@
           </v-col>
         </v-row>
         <v-card class="overall-playlist-graph">
-          <Line :data="accountsData" :options="accountsOptions"/>
+          <Line :data="accountsData" :options="accountsOptions" />
         </v-card>
       </v-col>
       <v-col cols="4">
         <v-card class="overall-playlist-calendar-card">
-          <DatePicker 
-            v-model="searchDate" 
-            transparent 
-            borderless 
-            :is-dark="true" 
-            expanded 
-            :rows="2"
-            :step="1"
-            :color="selectedColor"
-            :max-date="new Date()"
-            :initial-page-position="2"/>
+          <DatePicker v-model="searchDate" transparent borderless :is-dark="true" expanded :rows="2" :step="1"
+            :color="selectedColor" :max-date="new Date()" :initial-page-position="2" />
         </v-card>
       </v-col>
-    </v-row>     
-    
+    </v-row>
+
     <v-card class="admin-overall-playlist-list-card">
 
       <div style="justify-content: space-between; display: flex;">
@@ -68,28 +59,18 @@
           Accounts
         </div>
         <div style="width: 400px; margin-left: 80px">
-          <v-text-field 
-            class="admin-playlist-search-field"
-            variant="outlined"
-            append-inner-icon="mdi-magnify"
-            single-line
-            hide-details
-            @click:append-inner="onClick"
-          ></v-text-field>
+          <v-text-field class="admin-playlist-search-field" variant="outlined" append-inner-icon="mdi-magnify" single-line
+            hide-details @click:append-inner="onClick"></v-text-field>
         </div>
         <div style="width: 300px; ">
-          <v-text-field
-            variant="outlined"
-            append-inner-icon="mdi-menu-down-outline"
-            @click:append-inner="chooseAccountCategory = !chooseAccountCategory"
-            readonly
-            class="admin-playlist-search-field"
-            v-model="selectedCategory"
-          ></v-text-field>
+          <v-text-field variant="outlined" append-inner-icon="mdi-menu-down-outline"
+            @click:append-inner="chooseAccountCategory = !chooseAccountCategory" readonly
+            class="admin-playlist-search-field" v-model="selectedCategory"></v-text-field>
           <v-menu v-model="chooseAccountCategory">
             <template v-slot:activator="{ on }">
               <v-list class="admin-playlist-category-select-field" v-if="chooseAccountCategory">
-                <v-list-item class="admin-playlist-category-selection" v-for="accountCategory in accountCategories" @click="selectCategory(accountCategory)">
+                <v-list-item class="admin-playlist-category-selection" v-for="accountCategory in accountCategories"
+                  @click="selectCategory(accountCategory)">
                   <v-list-item-title style="font-size: 13px">{{ accountCategory }}</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -124,13 +105,13 @@
             </th>
           </tr>
           <template v-for="(account, index) in accounts">
-            <tr class="overall-playlist-table-row" @click="forManage(account.accountId)">
+            <tr class="overall-playlist-table-row" @click="forManage(account)">
               <td>
                 <div class="overall-playlist-song-marker-container">
-                  <div v-if="account.warningCounts === 3" class="three-warning-account-marker"></div>
-                  <div v-if="account.warningCounts === 2" class="two-warning-account-marker"></div>
-                  <div v-if="account.warningCounts === 1" class="one-warning-account-marker"></div>
-                  <div v-if="account.warningCounts === 0" class="no-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'BLACKLIST'" class="three-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 2" class="two-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 1" class="one-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 0" class="no-warning-account-marker"></div>
                 </div>
               </td>
               <td>{{ index + 1 }}</td>
@@ -141,7 +122,12 @@
             </tr>
             <tr v-if="selectedAccountId === account.accountId">
               <td colspan="6">
-                <AdminParticularAccountDetailForm :accountInfo="accountInfo"/>
+                <AdminParticularAccountDetailForm 
+                  :accountInfo="accountInfo" 
+                  :selectedAccountRole="selectedAccountRole"
+                  @isChangeBadNickname="changeBadNickname" 
+                  @removeFromBlacklist="removeFromBlacklist"
+                  @moveToBlacklist="moveToBlacklist"/>
               </td>
             </tr>
           </template>
@@ -176,8 +162,11 @@ ChartJS.register(
 
 import { Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
+import { mapActions } from "vuex";
 
 import AdminParticularAccountDetailForm from "@/components/admin/account/AdminParticularAccountDetailForm.vue"
+
+const adminAccountModule = 'adminAccountModule'
 
 export default {
   extends: Line,
@@ -203,11 +192,12 @@ export default {
     }
   },
   data() {
-    return{ 
+    return {
       selectedAccountId: '',
+      selectedAccountRole: '',
       chooseAccountCategory: false,
       selectedCategory: 'recent',
-      accountCategories: [ 'recent', 'blacklisted', '1 warning', '2 warnings'],
+      accountCategories: ['recent', 'blacklisted', '1 warning', '2 warnings'],
 
       selectedColor: 'teal',
       searchDate: '',
@@ -218,25 +208,27 @@ export default {
         maintainAspectRatio: false,
         scales: {
           y: {
-          beginAtZero: true,
+            beginAtZero: true,
           },
         },
         plugins: {
           legend: {
-          display: false,
+            display: false,
           },
         }
       },
     }
   },
   methods: {
-    forManage(accountId) {
-      if (this.selectedAccountId == accountId.toString()) {
+    ...mapActions(adminAccountModule, ["requestChangeBadNicknameToSpring", "requestAccountInfoForAdminToSpring"]),
+
+    forManage(account) {
+      if (this.selectedAccountId == account.accountId.toString()) {
         this.selectedAccountId = ''
       } else {
-      this.selectedAccountId = accountId;
-      this.$emit("openManage", this.selectedAccountId)
-      console.log("날짜: " + this.accountInfo.lastLoginDate)
+        this.selectedAccountId = account.accountId;
+        this.selectedAccountRole = account.accountRoleType
+        this.$emit("openManage", this.selectedAccountId)
       }
     },
     selectCategory(category) {
@@ -254,6 +246,22 @@ export default {
       const date = targetDate
       this.$emit("getStatus", { date });
     },
+    async changeBadNickname(accountId) {
+      await this.requestChangeBadNicknameToSpring(accountId)
+      await this.requestAccountInfoForAdminToSpring(accountId);
+      const accountToUpdate = await this.accounts.find(account => account.accountId === accountId);
+      if (accountToUpdate) {
+        accountToUpdate.nickname = this.accountInfo.nickname;
+      }
+    },
+    removeFromBlacklist() {
+      const selectedAccountId = this.selectedAccountId
+      this.$emit("removeFromBlacklist", selectedAccountId)
+    },
+    moveToBlacklist() {
+      const selectedAccountId = this.selectedAccountId
+      this.$emit("moveToBlacklist", selectedAccountId)
+    }
   },
   watch: {
     searchDate(newValue) {
@@ -287,32 +295,35 @@ export default {
 </script>
 
 <style>
-.accounts-table-picker-container{
+.accounts-table-picker-container {
   height: 20px;
-  color: #5F6871; 
+  color: #5F6871;
 }
 
 .three-warning-account-marker {
-  height: 50px; 
-  width: 3px; 
+  height: 50px;
+  width: 3px;
   background-color: #0f0606;
   border-radius: 5px;
 }
+
 .two-warning-account-marker {
-  height: 50px; 
-  width: 3px; 
+  height: 50px;
+  width: 3px;
   background-color: #EA78B3;
   border-radius: 5px;
 }
+
 .one-warning-account-marker {
-  height: 50px; 
-  width: 3px; 
+  height: 50px;
+  width: 3px;
   background-color: #dee57a;
   border-radius: 5px;
 }
+
 .no-warning-account-marker {
-  height: 50px; 
-  width: 3px; 
+  height: 50px;
+  width: 3px;
   background-color: #7AE5A8;
   border-radius: 5px;
 }

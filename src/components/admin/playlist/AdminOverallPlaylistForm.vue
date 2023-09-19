@@ -215,7 +215,10 @@ export default {
       this.$emit("switchCategory", selectedCategory)
     },
     toManage(playlistId) {
-      alert(playlistId + "번 선택!")
+      this.$router.push({
+        name: "AdminParticularPlaylistPage",
+        params: { selectedPlaylistId: playlistId },
+      })
     },
     formatDate(date) {
       const year = date.getFullYear();

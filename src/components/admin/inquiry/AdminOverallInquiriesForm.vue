@@ -2,107 +2,104 @@
   <div>
     <v-row style="margin: 15px">
       <v-col cols="8">
-        <div style="display: flex; justify-content: center; align-items: center;">
-          <v-card class="admin-inquiry-stat-card">
-            <div class="admin-inquiry-title">New Today</div>
+        <div class="admin-inquiry-stat-card-container">
+          <v-card v-for="(card, index) in statusCards" class="admin-inquiry-stat-card">
+            <div class="admin-inquiry-title">{{ card.cardName }}</div>
             <div class="admin-inquiry-stat">
-              2
+              <span v-if="card.value === 'waiting'">{{ inquiryStatus.waitingAnswerInquiryCount }}</span>
+              <span v-if="card.value === 'today'">{{ inquiryStatus.todayInquiryCount }}</span>
+              <span v-if="card.value === 'total'">{{ inquiryStatus.totalInquiryCount }}</span>
             </div>
             <div style="text-align: center; margin-top: 20px">
-              <v-btn class="admin-inquiry-stat-action" style="background-color: #1E566C;">
-                see new
-              </v-btn>
-            </div>
-          </v-card>
-          <v-card class="admin-inquiry-stat-card">
-            <div class="admin-inquiry-title">Not Answered</div>
-            <div class="admin-inquiry-stat">
-              4
-            </div>
-            <div style="text-align: center; margin-top: 20px">
-              <v-btn class="admin-inquiry-stat-action" style=" background-color: #367589;">
-                <!-- background-color: #5795A7; -->
-                see not answered
-              </v-btn>
-            </div>
-          </v-card>
-          <v-card class="admin-inquiry-stat-card">
-            <div class="admin-inquiry-title">Total</div>
-            <div class="admin-inquiry-stat">
-              7
-            </div>
-            <div style="text-align: center; margin-top: 20px">
-              <v-btn class="admin-inquiry-stat-action" style="background-color: #1F7DAD;">
-                see all
+              <v-btn class="admin-inquiry-stat-action" :style="{ backgroundColor: card.buttonColor }"
+                @click="selectInquiryStatus(index)">
+                {{ card.buttonName }}
               </v-btn>
             </div>
           </v-card>
         </div>
         <div style="margin-right: 16px">
           <v-card class="admin-inquiries-list-container">
-            <div style="display: flex; justify-content: space-between; align-items: center;"> 
+            <div class="admin-inquiry-stat-card-container">
               <div class="admin-inquiry-title">
                 Inquiries
               </div>
               <div class="admin-inquiry-title">
-                Sort By
+                <v-text-field variant="plain" append-inner-icon="mdi-menu-down-outline"
+                  @click:append-inner="chooseInquiryCategory = !chooseInquiryCategory" readonly
+                  class="admin-inquiry-search-field" v-model="selectedCategory" v-on="on">
+                </v-text-field>
+                <v-menu v-model="choosePlaylistCategory">
+                  <template v-slot:activator="{ on }">
+                    <v-list class="admin-enquiry-category-select-field" v-if="chooseInquiryCategory">
+                      <v-list-item class="admin-enquiry-category-selection" v-for="inquiryCategory in inquiryCategories"
+                        @click="selectCategory(inquiryCategory)">
+                        <v-list-item-title style="font-size: 13px">{{ inquiryCategory.name }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </template>
+                </v-menu>
               </div>
             </div>
             <v-row>
-              <v-col cols="6" v-for="inquiry in inquiries">
-                <v-card class="urgent-inquiry-card" flat>
-                  <div style="justify-content: space-between; display: flex; align-items: center; margin-top: auto">
-                    <div class="urgent-inquiry-icon" :style="{backgroundColor: getIconBackground(inquiry.type)}">
-                      <v-icon>{{ getIcon(inquiry.type) }}</v-icon>
+              <v-col cols="6" v-for="inquiry in inquiryList">
+                <v-card class="admin-inquiry-card" flat>
+                  <div class="admin-inquiry-content">
+                    <div class="admin-inquiry-icon"
+                      :style="{ backgroundColor: getIconBackground(inquiry.inquiryCategoryType) }">
+                      <v-icon>{{ getIcon(inquiry.inquiryCategoryType) }}</v-icon>
                     </div>
                     <div>
                       <div style="font-size: 20px">
                         {{ inquiry.inquiryTitle }}
                       </div>
                       <div class="admin-inquiry-title" style="font-size: 12px;">
-                        {{ inquiry.writer }}
+                        {{ inquiry.nickname }}
                       </div>
                     </div>
                     <div align="end" style="right: 70px">
-                      <div :style="answerStyle(inquiry.isAnswered)">
-                        {{ answerText(inquiry.isAnswered) }}
+                      <div :style="answerStyle(inquiry.existAnswer)">
+                        {{ answerText(inquiry.existAnswer) }}
                       </div>
                       <div class="admin-inquiry-title" style="font-size: 12px;">
-                        {{ inquiry.inquiryDate }}
+                        {{ inquiry.createInquiryDate }}
                       </div>
                     </div>
                   </div>
                 </v-card>
               </v-col>
             </v-row>
+            <v-pagination style="color: white; bottom: 0;" v-model="currentPage" :length="inquiryListCount"
+              @click="getPaginatedInquiries">
+            </v-pagination>
           </v-card>
         </div>
-
       </v-col>
       <v-col cols="4">
         <v-card class="urgent-inquires-container">
           <div class="admin-inquiry-title">
             Urgent Inquires
           </div>
-          <v-card v-for="inquiry in urgentInquiries" class="urgent-inquiry-card" flat>
-            <div style="justify-content: space-between; display: flex; align-items: center; margin-top: auto">
-              <div class="urgent-inquiry-icon" :style="{backgroundColor: getIconBackground(inquiry.type)}">
-                <v-icon>{{ getIcon(inquiry.type) }}</v-icon>
+          <v-card v-for="inquiry in urgentInquiries" class="admin-inquiry-card" flat>
+            <div class="admin-inquiry-content">
+              <div class="admin-inquiry-icon"
+                :style="{ backgroundColor: getIconBackground(inquiry.inquiryCategoryType) }">
+                <v-icon>{{ getIcon(inquiry.inquiryCategoryType) }}</v-icon>
               </div>
               <div>
                 <div style="font-size: 20px">
                   {{ inquiry.inquiryTitle }}
                 </div>
                 <div class="admin-inquiry-title" style="font-size: 12px;">
-                  {{ inquiry.writer }}
+                  {{ inquiry.nickname }}
                 </div>
               </div>
               <div align="end" style="right: 70px">
-                <div :style="answerStyle(inquiry.isAnswered)">
-                  {{ answerText(inquiry.isAnswered) }}
+                <div :style="answerStyle(inquiry.existAnswer)">
+                  {{ answerText(inquiry.existAnswer) }}
                 </div>
                 <div class="admin-inquiry-title" style="font-size: 12px;">
-                  {{ inquiry.inquiryDate }}
+                  {{ inquiry.createInquiryDate }}
                 </div>
               </div>
             </div>
@@ -115,45 +112,65 @@
 
 <script>
 export default {
+  props: {
+    inquiryStatus: {
+      type: Object,
+      required: true,
+    },
+    inquiryList: {
+      type: Array,
+      required: true,
+    },
+    urgentInquiries: {
+      type: Array,
+      required: true,
+    },
+    inquiryListCount: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
-      urgentInquiries: [
-        { type: "계정 문의", inquiryTitle: "뭐가 안돼요 1", inquiryDate: "23-09-02", writer: "이름1", isAnswered: false },
-        { type: "계정 문의", inquiryTitle: "뭐가 안돼요 3", inquiryDate: "23-09-03", writer: "이름1", isAnswered: false },
-        { type: "노래 문의", inquiryTitle: "뭐가 안돼요 5", inquiryDate: "23-09-06", writer: "이름3", isAnswered: false },
-        { type: "서비스 이용 문의", inquiryTitle: "뭐가 안돼요 6", inquiryDate: "23-09-07", writer: "이름4", isAnswered: false },
+      chooseInquiryCategory: false,
+      selectedCategory: '전체',
+      currentCategory: 'TOTAL',
+      currentStatus: 'total',
+      currentPage: 1,
+
+      inquiryCategories: [
+        { name: "전체", value: "TOTAL" },
+        { name: "재생목록", value: "PLAYLIST" },
+        { name: "노래", value: "SONG" },
+        { name: "계정", value: "ACCOUNT" },
+        { name: "서비스", value: "SERVICE" },
       ],
-      inquiries: [
-        { type: "노래 문의", inquiryTitle: "뭐가 안돼요 7", inquiryDate: "23-09-07", writer: "이름7", isAnswered: true },
-        { type: "서비스 이용 문의", inquiryTitle: "뭐가 안돼요 6", inquiryDate: "23-09-07", writer: "이름6", isAnswered: false },
-        { type: "노래 문의", inquiryTitle: "뭐가 안돼요 5", inquiryDate: "23-09-06", writer: "이름5", isAnswered: false },
-        { type: "재생목록 문의", inquiryTitle: "뭐가 안돼요 4", inquiryDate: "23-09-05", writer: "이름4", isAnswered: true },
-        { type: "계정 문의", inquiryTitle: "뭐가 안돼요 3", inquiryDate: "23-09-03", writer: "이름3", isAnswered: false },
-        { type: "서비스 이용 문의", inquiryTitle: "뭐가 안돼요 2", inquiryDate: "23-09-02", writer: "이름2", isAnswered: true },
-        { type: "계정 문의", inquiryTitle: "뭐가 안돼요 1", inquiryDate: "23-09-02", writer: "이름1", isAnswered: false },
- 
+
+      statusCards: [
+        { cardName: "New Today", buttonName: "see new", value: "today", buttonColor: "#1E566C" },
+        { cardName: "Not Answered", buttonName: "see not answered", value: "waiting", buttonColor: "#367589" },
+        { cardName: "Total", buttonName: "see all", value: "total", buttonColor: "#1F7DAD" }
+      ],
 
 
-
-      ]
     }
   },
   methods: {
     getIcon(type) {
       const icons = {
-        "재생목록 문의": "mdi-music-box-multiple",
-        "계정 문의": "mdi-sticker-emoji",
-        "노래 문의": "mdi-music-circle-outline",
-        "서비스 이용 문의": "mdi-face-agent"
+        "PLAYLIST": "mdi-music-box-multiple",
+        "ACCOUNT": "mdi-sticker-emoji",
+        "SONG": "mdi-music-circle-outline",
+        "SERVICE": "mdi-face-agent"
       };
       return icons[type] || "";
     },
     getIconBackground(type) {
       const backgrounds = {
-        "재생목록 문의": "#1E566C",
-        "계정 문의": "#367589",
-        "노래 문의": "#5795A7",
-        "서비스 이용 문의": "#1F7DAD"
+        "PLAYLIST": "#1E566C",
+        "ACCOUNT": "#367589",
+        "SONG": "#5795A7",
+        "SERVICE": "#1F7DAD"
       };
       return backgrounds[type] || "";
     },
@@ -165,16 +182,41 @@ export default {
         color: isAnswered ? "green" : "red",
         fontSize: "14px"
       };
+    },
+    selectCategory(chosenCategory) {
+      this.selectedCategory = chosenCategory.name
+      this.currentCategory = chosenCategory.value
+      this.chooseInquiryCategory = false
+      this.getPaginatedInquiries()
+    },
+    selectInquiryStatus(index) {
+      this.currentStatus = this.statusCards[index].value
+      this.getPaginatedInquiries()
+    },
+    getPaginatedInquiries() {
+      const statusType = this.currentStatus
+      const categoryType = this.currentCategory
+      const page = this.currentPage
+      this.$emit("requestInquiries", { statusType, categoryType, page })
     }
+  },
+  mounted() {
+    this.getPaginatedInquiries()
   }
 }
 </script>
 
 <style>
+.admin-inquiry-stat-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .admin-inquiry-stat-card {
-  height: 250px; 
+  height: 250px;
   width: 100%;
-  margin: 8px; 
+  margin: 8px;
   padding: 8px;
   background-color: #292E37;
   color: white
@@ -194,35 +236,60 @@ export default {
   height: 65px !important;
 }
 
-.admin-inquiries-list-container{
-  height: 800px; 
-  width: 100%; 
+.admin-inquiries-list-container {
+  min-height: 535px;
+  width: 100%;
   margin: 8px;
   padding: 8px;
   background-color: #292E37;
 }
 
+.admin-inquiry-search-field {
+  width: 130px;
+  font-size: 8px !important;
+  background-color: transparent !important;
+}
+
+.admin-enquiry-category-select-field {
+  background-color: #212630 !important;
+  position: absolute;
+  width: 140px;
+  top: 65px;
+  right: 8px;
+}
+
+.admin-enquiry-category-selection {
+  color: white;
+  border-bottom: 1px dotted white;
+}
 
 .urgent-inquires-container {
   background-color: #292E37;
-  height: 800px; 
+  min-height: 800px;
   width: 100%;
-  margin: 8px; 
+  margin: 8px;
   padding: 8px;
   color: white
 }
 
-.urgent-inquiry-card {
-  margin: 15px; 
-  height: 100px; 
-  background-color: transparent; 
-  border: solid 1px black; 
-  color: white; 
-  display: grid; 
+.admin-inquiry-card {
+  margin: 15px;
+  height: 100px;
+  background-color: transparent;
+  border: solid 1px black;
+  color: white;
+  display: grid;
   padding: 16px;
 }
 
-.urgent-inquiry-icon {
+.admin-inquiry-content {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  margin-top: auto
+}
+
+.admin-inquiry-icon {
   width: 65px;
   height: 65px;
   border-radius: 50%;

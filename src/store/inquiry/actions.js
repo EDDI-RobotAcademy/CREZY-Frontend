@@ -41,4 +41,9 @@ export default {
         commit("updateInquiryTitle", { inquiryId: payload.inquiryId, newTitle: payload.inquiryTitle });
       });
   },
+  requestInquiryDeleteToSpring({ }, inquiryId) {
+    const userToken = localStorage.getItem("userToken")
+
+    return axiosInst.springAxiosInst.delete(`/inquiry/${inquiryId}`, { headers: { Authorization: userToken } })
+  },
 };

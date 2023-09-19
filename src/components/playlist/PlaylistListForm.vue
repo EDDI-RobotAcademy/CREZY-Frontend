@@ -40,6 +40,12 @@
             </div>
           </v-col>
         </v-row>
+        <v-pagination 
+              style="color: white; bottom: 0;" 
+              v-model="currentPage" 
+              :length="playlistListCount" 
+              @click="getPaginatedPlaylist">
+            </v-pagination>
       </div>
     </v-card>
   </v-container>
@@ -50,6 +56,7 @@ export default {
   data() {
     return {
       showDescription: false,
+      currentPage: 1,
     };
   },
   props: {
@@ -57,6 +64,10 @@ export default {
       type: Array,
       required: true,
     },
+    playlistListCount: {
+      type: Number,
+      required: true,
+    }
   },
   methods: {
     getImage(link) {
@@ -72,7 +83,15 @@ export default {
         params: { playlistId: playlistId.toString() },
       });
     },
+    getPaginatedPlaylist() {
+      const page = this.currentPage
+      this.$emit("requestPlaylist", page)
+    }
   },
+  mounted() {
+    this.getPaginatedPlaylist()
+    console.log("?", this.playlistListCount)
+  }
 };
 </script>
 
@@ -83,13 +102,16 @@ export default {
   width: 900px;
   background-color: rgba(0, 0, 0, 0.4) !important;
 }
+
 .playlist-list-title {
   font-size: 22px;
   color: #ccff00;
 }
+
 .playlist-list {
   margin-top: 30px;
 }
+
 .playlist-img {
   background-position: center;
   background-size: cover;
@@ -100,6 +122,7 @@ export default {
   max-width: 100%;
   max-height: 100%;
 }
+
 .image-description {
   position: absolute;
   top: 0;
