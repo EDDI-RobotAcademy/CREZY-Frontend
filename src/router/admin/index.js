@@ -4,6 +4,7 @@ import AdminOverallAccountsPage from "@/views/admin/account/AdminOverallAccounts
 import AdminOverallReportsPage from "@/views/admin/report/AdminOverallReportsPage.vue"
 import AdminOverallInquiriesPage from "@/views/admin/inquiry/AdminOverallInquiriesPage.vue"
 import AdminParticularPlaylistPage from "@/views/admin/playlist/AdminParticularPlaylistDetailPage.vue"
+import AdminOverallSongsPage from "@/views/admin/song/AdminOverallSongsPage.vue"
 
 const adminRoutes = [
   {
@@ -40,6 +41,11 @@ const adminRoutes = [
     props: {
       default: true
     }
+  },
+  {
+    path: "/admin/overall-songs",
+    name: "AdminOverallSongsPage",
+    component: AdminOverallSongsPage
   },
 ]
 
