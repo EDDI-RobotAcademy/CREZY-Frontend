@@ -99,16 +99,14 @@
                             <th align="start">title</th>
                             <th align="start">singer</th>
                             <th align="end">writer</th>
-                            <th align="end" style="padding-right: 25px">registered date</th>
+                            <th align="end" style="padding-right: 25px">created date</th>
                         </tr>
                         <template v-for="(song, index) in songs">
                             <tr class="overall-song-table-row" @click="forManage(song.songId)">
                                 <td>
                                     <div class="overall-song-marker-container">
-                                        <div v-if="song.songStatusType.statusType === 'OPEN'" class="open-song-marker">
-                                        </div>
-                                        <div v-if="song.songStatusType.statusType === 'BLOCK'" class="block-song-marker">
-                                        </div>
+                                        <div v-if="song.songStatusType === 'block'" class="block-song-marker"></div>
+                                        <div v-else class="open-song-marker"></div>
                                     </div>
                                 </td>
                                 <td>{{ index + 1 }}</td>
@@ -118,8 +116,8 @@
                                 <td align="end" style="padding-right: 25px">{{ song.createDate }}</td>
                             </tr>
                             <tr v-if="selectedSongId === song.songId">
-                                <td style="color: white;" colspan="6">
-                                    <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail" />
+                                <td colspan="6">
+                                    <ParticularSongDetailForm :songInfo="songInfo" />
                                 </td>
                             </tr>
                         </template>
@@ -174,16 +172,13 @@ export default {
         songs: {
             type: Array,
             required: true,
-        },
-        songInfo: {
-            type: Object
         }
     },
     data() {
         return {
-            songCategories: ["TOTAL", "OPEN", "BLOCK"],
+            songCategories: ["OPEN", "BLOCK"],
             chooseSongCategory: false,
-            selectedCategory: 'TOTAL',
+            selectedCategory: 'recent',
 
             songsOptions: {
                 responsive: true,
@@ -210,8 +205,23 @@ export default {
                 totalSong: 159,
             },
 
-            songThumbnail: '',
-            selectedSongId: '',
+            // songs: [
+            //     {
+            //         songId: 1,
+            //         title: "노래제목",
+            //         singer: "가수",
+            //         nickname: "등록한 사람",
+            //         createDate: "2023-09-09",
+            //         songStatus: "block",
+            //     }
+            // ],
+
+            // songInfo: {
+            //     songId: 1,
+            //     title: "노래제목",
+            //     singer: "가수",
+            //     createDate: "2023-09-09",
+            // }
         }
     },
     methods: {
@@ -219,8 +229,8 @@ export default {
             alert("yay")
         },
         selectCategory(category) {
-            const selectedCategory = category
             this.selectedCategory = category
+            const selectedCategory = category
             this.$emit("switchCategory", selectedCategory)
         },
         forManage(songId) {
@@ -241,30 +251,18 @@ export default {
             const date = targetDate
             this.$emit("getStatus", { date });
         },
-        getSongImage(link) {
-            return (
-                "https://img.youtube.com/vi/" +
-                link.substring(link.lastIndexOf("=") + 1) +
-                "/mqdefault.jpg"
-            );
-        },
     },
     watch: {
         searchDate(newValue) {
             this.formattedDate = this.formatDate(newValue);
             this.getStatus(this.formattedDate)
         },
-        songInfo: {
-            handler(newVal) {
-                this.songThumbnail = this.getSongImage(newVal.link)
-            }
-        },
     },
     async mounted() {
         this.searchDate = new Date()
         const targetDate = this.formatDate(this.searchDate)
         await this.getStatus(targetDate)
-        await this.selectCategory(this.selectedCategory)
+        // await this.selectCategory(this.selectedCategory)
     },
     computed: {
         songsData() {
@@ -382,19 +380,20 @@ export default {
     border-radius: 0 10px 10px 0;
 }
 
-.open-song-marker {
+.block-song-marker {
     height: 50px;
     width: 3px;
     background-color: #EA78B3;
     border-radius: 5px;
 }
 
-.block-song-marker {
+.open-song-marker {
     height: 50px;
     width: 3px;
     background-color: #7AE5A8;
     border-radius: 5px;
 }
+
 
 td:first-child,
 th:first-child {
