@@ -77,12 +77,12 @@ export default {
     return {
       navigation_drawer: true,
       links: [
-        { icon: "mdi-developer-board", text: "Dashboard", class: "clicked-nav-drawer-item", route: "AdminMainPage"},
-        { icon: "mdi-music-box-multiple", text: "Playlists", class: "nav-drawer-items", route: "AdminOverallPlaylistPage"},
-        { icon: "mdi-account-box-multiple-outline", text: "Accounts", class: "nav-drawer-items", route: "AdminOverallAccountsPage"},
-        { icon: "mdi-music-circle-outline", text: "Songs", class: "nav-drawer-items", route: ""},
-        { icon: "mdi-alert-circle-outline", text: "Reports", class: "nav-drawer-items", route: "AdminOverallReportsPage"},
-        { icon: "mdi-file-document-edit-outline", text: "Inquiries", class: "nav-drawer-items", route: "AdminOverallInquiriesPage"}
+        { icon: "mdi-developer-board", text: "Dashboard", class: "clicked-nav-drawer-item", route: "AdminMainPage" },
+        { icon: "mdi-music-box-multiple", text: "Playlists", class: "nav-drawer-items", route: "AdminOverallPlaylistPage" },
+        { icon: "mdi-account-box-multiple-outline", text: "Accounts", class: "nav-drawer-items", route: "AdminOverallAccountsPage" },
+        { icon: "mdi-music-circle-outline", text: "Songs", class: "nav-drawer-items", route: "AdminOverallSongsPage" },
+        { icon: "mdi-alert-circle-outline", text: "Reports", class: "nav-drawer-items", route: "AdminOverallReportsPage" },
+        { icon: "mdi-file-document-edit-outline", text: "Inquiries", class: "nav-drawer-items", route: "AdminOverallInquiriesPage" }
       ]
     }
   },
@@ -91,7 +91,7 @@ export default {
 
     handleNav(currentRoute) {
       this.links.forEach((link) => {
-        link.class = 
+        link.class =
           link.route === currentRoute ? "clicked-nav-drawer-item" : "nav-drawer-items";
       });
       if (this.$route.name !== currentRoute) {
@@ -126,54 +126,54 @@ export default {
 }
 </script>
 <style>
-.navigation-drawer{
+.navigation-drawer {
   background-color: #31363F;
 }
 
-.admin-nav-bar{
+.admin-nav-bar {
   background-color: #26292E !important;
   height: 80px;
 }
 
-.v-toolbar__content{
+.v-toolbar__content {
   height: 80px !important;
 }
 
-.admin-nav-content{
+.admin-nav-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 }
 
-.nav-page-title{
+.nav-page-title {
   color: white;
   font-size: 20px;
   margin-left: 24px;
 }
 
-.drawer-btn{
+.drawer-btn {
   color: white !important;
   font-size: 24px !important;
 }
 
-.nav-drawer-items{
+.nav-drawer-items {
   color: white;
   padding: 20px;
   margin-bottom: 20px !important;
 }
 
-.clicked-nav-drawer-item{
+.clicked-nav-drawer-item {
   border-right: solid 5px #2DA793;
-  background: linear-gradient(to right, transparent 20%, rgba(45, 167, 147, 0.1) 60%, rgba(45, 167, 147, 0.3) 100%); 
+  background: linear-gradient(to right, transparent 20%, rgba(45, 167, 147, 0.1) 60%, rgba(45, 167, 147, 0.3) 100%);
   color: white;
   padding: 20px;
   margin-bottom: 20px !important;
 }
 
 .logout-btn-container {
-  position: absolute; 
-  bottom: 24px; 
+  position: absolute;
+  bottom: 24px;
   width: 100%;
 }
 
@@ -181,5 +181,4 @@ export default {
   color: white;
   padding: 20px;
 }
-    
 </style>
