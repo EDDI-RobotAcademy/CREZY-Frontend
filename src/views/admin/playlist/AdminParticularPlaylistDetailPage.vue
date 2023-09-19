@@ -8,6 +8,7 @@
     @changePlaylistName="changePlaylistName"
     @deletePlaylist="deletePlaylist"
     @modifyLyrics="modifyLyrics"
+    @deleteSong="deleteSong"
     />
   </div>
 </template>
@@ -40,7 +41,9 @@ export default {
 
     ...mapActions(adminSongModule, [
       'requestSongInfoForAdminToSpring',
-      'requestModifyLyricsToSpring'
+      'requestModifyLyricsToSpring',
+      'requestDeleteSongToSpring',
+      'removeSongFromState'
     ]),
 
 
@@ -70,6 +73,12 @@ export default {
       const songId = payload.songId
       await this.requestModifyLyricsToSpring(payload)
       await this.requestSongInfoForAdminToSpring(songId)
+    },
+
+    async deleteSong(selectedSongId) {
+      await this.requestDeleteSongToSpring(selectedSongId)
+      await this.removeSongFromState()
+      await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
     }
   },
   computed: {

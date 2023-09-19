@@ -45,7 +45,13 @@
           수정 완료
         </v-btn>
       </div>
-      <div><v-btn class="particular-song-btn">삭제</v-btn></div>
+      <div>
+        <v-btn 
+          class="particular-song-btn"
+          @click="deleteSong">
+          삭제
+        </v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -90,6 +96,11 @@ export default {
     modifyForHtml(lyrics) {
       const convertedLyrics = lyrics.replace(/\n/g, '<br>')
       return convertedLyrics
+    },
+
+    deleteSong() {
+      const selectedSongId = this.songInfo.songId
+      this.$emit('deleteSong', selectedSongId)
     }
   },
   watch: {

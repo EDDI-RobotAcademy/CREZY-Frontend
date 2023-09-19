@@ -49,6 +49,7 @@
                   :songInfo="songInfo" 
                   :songThumbnail="songThumbnail"
                   @modifyLyrics="modifyLyrics"
+                  @deleteSong="deleteSong"
                   />
               </td>
             </tr>
@@ -151,6 +152,10 @@ export default {
 
     modifyLyrics(payload) {
       this.$emit('modifyLyrics', payload)
+    },
+
+    deleteSong(selectedSongId) {
+      this.$emit('deleteSong', selectedSongId)
     }
   },
   watch: {
