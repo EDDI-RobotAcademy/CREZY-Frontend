@@ -230,14 +230,16 @@ export default {
 
     return axiosInst.springAxiosInst.post("/account/login-admin", { email, password })
       .then((res) => {
-        localStorage.setItem("userToken", res.data.userToken)
-        localStorage.setItem("roleType", res.data.roleType)
-        localStorage.setItem("nickname", res.data.nickname)
-        commit(SET_LOGGED_IN, true)
-        return true
-      })
-      .catch((res) => {
-        return false
+        if (res.data.nickname == null) {
+          alert("계정 정보를 확인하세요")
+          return false
+        } else {
+          localStorage.setItem("userToken", res.data.userToken)
+          localStorage.setItem("roleType", res.data.roleType)
+          localStorage.setItem("nickname", res.data.nickname)
+          commit(SET_LOGGED_IN, true)
+          return true
+        }
       })
   }
 };
