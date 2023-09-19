@@ -65,7 +65,7 @@
       <v-col cols="2" class="account-manage-btn-column">
         <v-card class="account-manage-btn-card">
           <div align="center" class="account-manage-btn-container">
-            <v-btn v-if="selectedAccountRole === 'BLACKLIST'" class="account-manage-btn" @click="removeFromBlacklist">블랙 해제하기</v-btn>
+            <v-btn v-if="accountInfo.accountRoleType === 'BLACKLIST'" class="account-manage-btn" @click="removeFromBlacklist">블랙 해제하기</v-btn>
             <v-btn v-else class="account-manage-btn" @click="moveToBlacklist">유저 블랙하기</v-btn>
             <v-btn class="account-manage-btn">경고 수정 하기</v-btn>
             <v-btn @click="changeBadNickname" class="account-manage-btn">닉네임 지우기</v-btn>
@@ -107,10 +107,6 @@ export default {
   props: {
     accountInfo: {
       type: Object,
-      required: true
-    },
-    selectedAccountRole: {
-      type: String,
       required: true
     },
   },

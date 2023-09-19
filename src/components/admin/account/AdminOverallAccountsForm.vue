@@ -124,7 +124,6 @@
               <td colspan="6">
                 <AdminParticularAccountDetailForm 
                   :accountInfo="accountInfo" 
-                  :selectedAccountRole="selectedAccountRole"
                   @isChangeBadNickname="changeBadNickname" 
                   @removeFromBlacklist="removeFromBlacklist"
                   @moveToBlacklist="moveToBlacklist"/>
