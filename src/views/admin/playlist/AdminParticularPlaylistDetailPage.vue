@@ -9,6 +9,8 @@
     @deletePlaylist="deletePlaylist"
     @modifyLyrics="modifyLyrics"
     @deleteSong="deleteSong"
+    @openSong="openSong"
+    @blockSong="blockSong"
     />
   </div>
 </template>
@@ -43,7 +45,9 @@ export default {
       'requestSongInfoForAdminToSpring',
       'requestModifyLyricsToSpring',
       'requestDeleteSongToSpring',
-      'removeSongFromState'
+      'removeSongFromState',
+      'requestOpenSongToSpring',
+      'requestBlockSongToSpring'
     ]),
 
 
@@ -79,6 +83,18 @@ export default {
       await this.requestDeleteSongToSpring(selectedSongId)
       await this.removeSongFromState()
       await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
+    },
+
+    async openSong(selectedSongId) {
+      await this.requestOpenSongToSpring(selectedSongId)
+      await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
+      await this.getSongInfo(selectedSongId)
+    },
+
+    async blockSong(selectedSongId) {
+      await this.requestBlockSongToSpring(selectedSongId)
+      await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
+      await this.getSongInfo(selectedSongId)
     }
   },
   computed: {
