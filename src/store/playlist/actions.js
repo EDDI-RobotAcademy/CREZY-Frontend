@@ -8,8 +8,9 @@ import {
 import axiosInst from "@/utility/axiosInst";
 
 export default {
-  requestPlaylistsToSpring({ commit }) {
-    return axiosInst.springAxiosInst.get("/playlist/list").then((res) => {
+  requestPlaylistsToSpring({ commit }, payload) {
+    const currentPage = payload
+    return axiosInst.springAxiosInst.get("/playlist/list", { params: { page: currentPage } }).then((res) => {
       commit(REQUEST_PLAYLISTS_TO_SPRING, res.data);
     });
   },

@@ -7,7 +7,8 @@ import {
 
 export default {
   [REQUEST_PLAYLISTS_TO_SPRING](state, receivedData) {
-    state.playlists = receivedData;
+    state.playlists = receivedData.content
+    state.playlistListCount = receivedData.totalPages
   },
   [REQUEST_PLAYLIST_TO_SPRING](state, receivedData) {
     state.playlist = receivedData;
