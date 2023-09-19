@@ -18,8 +18,9 @@
                         </td>
                     </tr>
                     <tr v-else v-for="(song, index) in playlist.songlist" :key="song.songId"
-                        :class="{ playing: checkedSongs.includes(song.songId) }" style="cursor: pointer"
+                        :class="{ 'playing': checkedSongs.includes(song.songId), }" style="cursor: pointer"
                         @mouseover="showCheckbox(index)" @mouseleave="hideCheckbox(index)">
+
                         <td align="center" style="width: 10%;">
                             <v-img :src=getImage(song.link) height="50" width="50"></v-img>
                         </td>
@@ -29,6 +30,14 @@
                         <td align="center" style="width: 30%;">
                             {{ song.singer }}
                         </td>
+
+                        <td align="center" style="">
+                            <button  v-if="song.statusType.statusType === 'BLOCK'" @click="reModifySongButtonClick(song.songId)"
+                                style="color: red; margin-right: 70px;" >
+                                <v-icon>mdi-alert-circle</v-icon>
+                            </button>
+                        </td>
+
                         <td v-if="hoverIndex == index || checkedSongs.includes(song.songId)" style="width: 10%;">
                             <input type="checkbox" :id="'song-' + song.songId" v-model="checkedSongs" :value="song.songId"
                                 class="checkbox">
@@ -71,6 +80,9 @@ export default {
         }
     },
     methods: {
+        reModifySongButtonClick(songId) {
+
+        },
         showCheckbox(index) {
             this.hoverIndex = index;
         },
