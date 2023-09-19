@@ -1,6 +1,6 @@
 import {
   REQUEST_SONG_INFO_FOR_ADMIN_TO_SPRING,
-  REQUEST_SONGLIST_FOR_ADMIN_TO_SPRING,
+  REQUEST_SONG_LIST_FOR_ADMIN_TO_SPRING,
 } from './mutation-types'
 
 import axiosInst from '@/utility/axiosInst'
@@ -23,8 +23,7 @@ export default {
       { songStatusType, sortType, page },
       { headers: { Authorization: userToken } })
       .then((res) => {
-        commit(REQUEST_SONGLIST_FOR_ADMIN_TO_SPRING, res.data)
-        console.log(res.data.totalPages)
+        commit(REQUEST_SONG_LIST_FOR_ADMIN_TO_SPRING, res.data)
       })
   },
 }
