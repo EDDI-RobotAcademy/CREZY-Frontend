@@ -33,4 +33,15 @@ export default {
         commit(REQUEST_URGENT_INQUIRIES_TO_SPRING, res.data)
     })
   },
+
+  requestAccountInquiriesToSpring({ commit }, payload) {
+    const { accountId, page } = payload
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.post("/admin-account/account-inquiry",
+      { accountId, page },
+      { headers: { Authorization: userToken }}
+    ).then((res) => {
+      commit(REQUEST_INQUIRY_LIST_TO_SPRING, res.data)
+    })
+  }
 }

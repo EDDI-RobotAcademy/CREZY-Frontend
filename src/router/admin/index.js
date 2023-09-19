@@ -34,7 +34,8 @@ const adminRoutes = [
   {
     path: "/admin/overall-inquiries",
     name: "AdminOverallInquiriesPage",
-    component: AdminOverallInquiriesPage
+    component: AdminOverallInquiriesPage,
+    props: true
   },
   {
     path: "/admin/particular-playlist/:selectedPlaylistId",
