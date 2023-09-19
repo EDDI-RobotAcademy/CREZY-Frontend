@@ -119,7 +119,7 @@ export default {
   watch: {
     isLyricModify(newVal) {
       if (newVal) {
-        const convertedLyrics = this.songInfo.lyrics.replace(/<br\s*\/?>/, '\n')
+        const convertedLyrics = this.songInfo.lyrics.replace(/<br\s*\/?>/g, '\n')
         this.modifiedLyrics = convertedLyrics
       }
     },

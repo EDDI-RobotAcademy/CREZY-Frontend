@@ -44,8 +44,11 @@ export default {
       const checkPayload = code;
       const isEmailValid = await requestCheckGoogleEmailToSpring(checkPayload);
 
-      if (isEmailValid) {
+      if (isEmailValid === 'NORMAL') {
         await requestExistUserInfoGoogleToSpring(checkPayload);
+        router.push({ name: "home" });
+      } else if (isEmailValid === 'BLACKLIST') {
+        alert("회원님은 저희와 함께 할 수 없습니다.")
         router.push({ name: "home" });
       } else {
         showModal.value = true;

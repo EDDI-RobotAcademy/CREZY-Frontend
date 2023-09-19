@@ -6,6 +6,7 @@
       :urgentInquiries = "urgentInquiries"
       :inquiryListCount = "inquiryListCount"
       @requestInquiries = "getInquiries"
+      @getAccountInquiries = "getAccountInquiries"
     />
   </div>
 </template>
@@ -30,12 +31,18 @@ export default {
     ...mapActions(adminInquiryModule, [
       "requestInquiryStatusToSpring",
       "requestInquiryListToSpring",
-      "requestUrgentInquiriesToSpring"
+      "requestUrgentInquiriesToSpring",
+      "requestAccountInquiriesToSpring"
     ]),
 
-    getInquiries(payload) {
+    async getInquiries(payload) {
       const { statusType, categoryType, page } = payload 
-      this.requestInquiryListToSpring({ statusType, categoryType, page })
+      await this.requestInquiryListToSpring({ statusType, categoryType, page })
+    },
+
+    async getAccountInquiries(payload) {
+      const { accountId, page } = payload
+      await this.requestAccountInquiriesToSpring({ accountId, page })
     }
   },
   computed: {

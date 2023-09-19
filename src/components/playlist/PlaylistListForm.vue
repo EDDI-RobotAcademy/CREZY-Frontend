@@ -22,7 +22,6 @@
                   class="mx-auto"
                   height="300"
                   :src="getImage(playlist.thumbnailName)"
-                  v-on="on"
                 ></v-img>
                 <div v-show="showDescription" class="image-description">
                   <div class="description-title">
@@ -57,6 +56,10 @@ export default {
     return {
       showDescription: false,
       currentPage: 1,
+
+      awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
+      awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
+      awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
     };
   },
   props: {
@@ -70,12 +73,18 @@ export default {
     }
   },
   methods: {
-    getImage(link) {
-      return (
-        "https://img.youtube.com/vi/" +
-        link.substring(link.lastIndexOf("=") + 1) +
-        "/mqdefault.jpg"
-      );
+    getImage(thumbnailName) {
+      if (this.isYoutubeLink(thumbnailName)) {
+        return (
+          "https://img.youtube.com/vi/" +
+          thumbnailName.substring(thumbnailName.lastIndexOf("=") + 1) +
+          "/mqdefault.jpg"
+        );
+      }
+      else {
+        return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${thumbnailName}`;
+      }
+
     },
     toPlaylist(playlistId) {
       this.$router.push({
@@ -86,11 +95,15 @@ export default {
     getPaginatedPlaylist() {
       const page = this.currentPage
       this.$emit("requestPlaylist", page)
+    },
+    isYoutubeLink(link) {
+      const youtubeUrlPattern = /^https:\/\/www\.youtube\.com\/watch\?v=[A-Za-z0-9_-]{11}$/;
+
+      return youtubeUrlPattern.test(link);
     }
   },
   mounted() {
     this.getPaginatedPlaylist()
-    console.log("?", this.playlistListCount)
   }
 };
 </script>
