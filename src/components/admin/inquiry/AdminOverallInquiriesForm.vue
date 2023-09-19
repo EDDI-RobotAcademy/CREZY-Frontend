@@ -6,10 +6,13 @@
           <v-card v-for="(card, index) in statusCards" class="admin-inquiry-stat-card">
             <div class="admin-inquiry-title">{{ card.cardName }}</div>
             <div class="admin-inquiry-stat">
-              {{ inquiryStatus.todayInquiryCount }}
+              <span v-if="card.value === 'waiting'">{{ inquiryStatus.waitingAnswerInquiryCount }}</span>
+              <span v-if="card.value === 'today'">{{ inquiryStatus.todayInquiryCount }}</span>
+              <span v-if="card.value === 'total'">{{ inquiryStatus.totalInquiryCount }}</span>
             </div>
             <div style="text-align: center; margin-top: 20px">
-              <v-btn class="admin-inquiry-stat-action" :style="{backgroundColor: card.buttonColor}" @click="selectInquiryStatus(index)">
+              <v-btn class="admin-inquiry-stat-action" :style="{ backgroundColor: card.buttonColor }"
+                @click="selectInquiryStatus(index)">
                 {{ card.buttonName }}
               </v-btn>
             </div>
@@ -17,25 +20,20 @@
         </div>
         <div style="margin-right: 16px">
           <v-card class="admin-inquiries-list-container">
-            <div class="admin-inquiry-stat-card-container"> 
+            <div class="admin-inquiry-stat-card-container">
               <div class="admin-inquiry-title">
                 Inquiries
               </div>
               <div class="admin-inquiry-title">
-                <v-text-field
-                  variant="plain"
-                  append-inner-icon="mdi-menu-down-outline"
-                  @click:append-inner="chooseInquiryCategory = !chooseInquiryCategory"
-                  readonly
-                  class="admin-inquiry-search-field"
-                  v-model="selectedCategory"
-                  v-on="on"
-                  >
+                <v-text-field variant="plain" append-inner-icon="mdi-menu-down-outline"
+                  @click:append-inner="chooseInquiryCategory = !chooseInquiryCategory" readonly
+                  class="admin-inquiry-search-field" v-model="selectedCategory" v-on="on">
                 </v-text-field>
                 <v-menu v-model="choosePlaylistCategory">
                   <template v-slot:activator="{ on }">
                     <v-list class="admin-enquiry-category-select-field" v-if="chooseInquiryCategory">
-                      <v-list-item class="admin-enquiry-category-selection" v-for="inquiryCategory in inquiryCategories" @click="selectCategory(inquiryCategory)">
+                      <v-list-item class="admin-enquiry-category-selection" v-for="inquiryCategory in inquiryCategories"
+                        @click="selectCategory(inquiryCategory)">
                         <v-list-item-title style="font-size: 13px">{{ inquiryCategory.name }}</v-list-item-title>
                       </v-list-item>
                     </v-list>
@@ -47,7 +45,8 @@
               <v-col cols="6" v-for="inquiry in inquiryList">
                 <v-card class="admin-inquiry-card" flat>
                   <div class="admin-inquiry-content">
-                    <div class="admin-inquiry-icon" :style="{backgroundColor: getIconBackground(inquiry.inquiryCategoryType)}">
+                    <div class="admin-inquiry-icon"
+                      :style="{ backgroundColor: getIconBackground(inquiry.inquiryCategoryType) }">
                       <v-icon>{{ getIcon(inquiry.inquiryCategoryType) }}</v-icon>
                     </div>
                     <div>
@@ -70,10 +69,7 @@
                 </v-card>
               </v-col>
             </v-row>
-            <v-pagination 
-              style="color: white; bottom: 0;" 
-              v-model="currentPage" 
-              :length="inquiryListCount" 
+            <v-pagination style="color: white; bottom: 0;" v-model="currentPage" :length="inquiryListCount"
               @click="getPaginatedInquiries">
             </v-pagination>
           </v-card>
@@ -86,7 +82,8 @@
           </div>
           <v-card v-for="inquiry in urgentInquiries" class="admin-inquiry-card" flat>
             <div class="admin-inquiry-content">
-              <div class="admin-inquiry-icon" :style="{backgroundColor: getIconBackground(inquiry.inquiryCategoryType)}">
+              <div class="admin-inquiry-icon"
+                :style="{ backgroundColor: getIconBackground(inquiry.inquiryCategoryType) }">
                 <v-icon>{{ getIcon(inquiry.inquiryCategoryType) }}</v-icon>
               </div>
               <div>
@@ -141,7 +138,7 @@ export default {
       currentStatus: 'total',
       currentPage: 1,
 
-      inquiryCategories: [ 
+      inquiryCategories: [
         { name: "전체", value: "TOTAL" },
         { name: "재생목록", value: "PLAYLIST" },
         { name: "노래", value: "SONG" },
@@ -150,9 +147,9 @@ export default {
       ],
 
       statusCards: [
-        { cardName: "New Today", buttonName: "see new", value: "today", buttonColor: "#1E566C"},
-        { cardName: "Not Answered", buttonName: "see not answered", value: "waiting", buttonColor: "#367589"},
-        { cardName: "Total", buttonName: "see all", value: "total", buttonColor: "#1F7DAD"}
+        { cardName: "New Today", buttonName: "see new", value: "today", buttonColor: "#1E566C" },
+        { cardName: "Not Answered", buttonName: "see not answered", value: "waiting", buttonColor: "#367589" },
+        { cardName: "Total", buttonName: "see all", value: "total", buttonColor: "#1F7DAD" }
       ],
 
 
@@ -200,7 +197,7 @@ export default {
       const statusType = this.currentStatus
       const categoryType = this.currentCategory
       const page = this.currentPage
-      this.$emit("requestInquiries", {statusType, categoryType, page})
+      this.$emit("requestInquiries", { statusType, categoryType, page })
     }
   },
   mounted() {
@@ -211,15 +208,15 @@ export default {
 
 <style>
 .admin-inquiry-stat-card-container {
-  display: flex; 
-  justify-content: center; 
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
 .admin-inquiry-stat-card {
-  height: 250px; 
+  height: 250px;
   width: 100%;
-  margin: 8px; 
+  margin: 8px;
   padding: 8px;
   background-color: #292E37;
   color: white
@@ -239,56 +236,56 @@ export default {
   height: 65px !important;
 }
 
-.admin-inquiries-list-container{
+.admin-inquiries-list-container {
   min-height: 535px;
-  width: 100%; 
+  width: 100%;
   margin: 8px;
   padding: 8px;
   background-color: #292E37;
 }
 
-.admin-inquiry-search-field{
+.admin-inquiry-search-field {
   width: 130px;
   font-size: 8px !important;
   background-color: transparent !important;
 }
 
-.admin-enquiry-category-select-field{
-  background-color: #212630 !important; 
-  position: absolute; 
+.admin-enquiry-category-select-field {
+  background-color: #212630 !important;
+  position: absolute;
   width: 140px;
   top: 65px;
   right: 8px;
 }
 
 .admin-enquiry-category-selection {
-  color: white; 
+  color: white;
   border-bottom: 1px dotted white;
 }
 
 .urgent-inquires-container {
   background-color: #292E37;
-  min-height: 800px; 
+  min-height: 800px;
   width: 100%;
-  margin: 8px; 
+  margin: 8px;
   padding: 8px;
   color: white
 }
 
 .admin-inquiry-card {
-  margin: 15px; 
-  height: 100px; 
-  background-color: transparent; 
-  border: solid 1px black; 
-  color: white; 
-  display: grid; 
+  margin: 15px;
+  height: 100px;
+  background-color: transparent;
+  border: solid 1px black;
+  color: white;
+  display: grid;
   padding: 16px;
 }
 
 .admin-inquiry-content {
-  justify-content: space-between; 
-  display: flex; 
-  align-items: center; 
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
   margin-top: auto
 }
 

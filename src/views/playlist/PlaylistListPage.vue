@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PlaylistListForm :playlists="playlists" />
+    <PlaylistListForm :playlists="playlists" :playlistListCount="playlistListCount" @requestPlaylist="getPlaylists" />
   </div>
 </template>
 
@@ -16,12 +16,13 @@ export default {
   },
   methods: {
     ...mapActions(playlistModule, ["requestPlaylistsToSpring"]),
+    async getPlaylists(payload) {
+      const page = payload
+      await this.requestPlaylistsToSpring(page)
+    }
   },
   computed: {
-    ...mapState(playlistModule, ["playlists"]),
-  },
-  async mounted() {
-    await this.requestPlaylistsToSpring();
+    ...mapState(playlistModule, ["playlists", "playlistListCount"]),
   },
 };
 </script>

@@ -3,4 +3,5 @@ export default {
   playlist: {},
   myPlaylists: [],
   myLikedPlaylists: [],
+  playlistListCount: 0
 };

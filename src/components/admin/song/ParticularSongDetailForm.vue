@@ -23,7 +23,10 @@
       </div>
     </div>
     <div align="end">
-      <div><v-btn class="particular-song-btn">상태 설정</v-btn></div>
+      <div>
+        <v-btn v-if="songInfo.songStatus === 'BLOCK'" class="particular-song-btn" @click="openSong">노래 열기</v-btn>
+        <v-btn v-else class="particular-song-btn" @click="blockSong">노래 막기</v-btn>
+      </div>
       <div v-if="!isLyricModify">
         <v-btn 
           class="particular-song-btn" 
@@ -45,7 +48,13 @@
           수정 완료
         </v-btn>
       </div>
-      <div><v-btn class="particular-song-btn">삭제</v-btn></div>
+      <div>
+        <v-btn 
+          class="particular-song-btn"
+          @click="deleteSong">
+          삭제
+        </v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -80,11 +89,37 @@ export default {
         "/mqdefault.jpg"
       );
     },
+    modifyLyrics() {
+      const songId = this.songInfo.songId
+      const lyrics = this.modifyForHtml(this.modifiedLyrics)
+      this.$emit('modifyLyrics', { songId, lyrics })
+      this.isLyricModify = false
+    },
+
+    modifyForHtml(lyrics) {
+      const convertedLyrics = lyrics.replace(/\n/g, '<br>')
+      return convertedLyrics
+    },
+
+    deleteSong() {
+      const selectedSongId = this.songInfo.songId
+      this.$emit('deleteSong', selectedSongId)
+    },
+
+    openSong() {
+      const selectedSongId = this.songInfo.songId
+      this.$emit('openSong', selectedSongId)
+    },
+
+    blockSong() {
+      const selectedSongId = this.songInfo.songId
+      this.$emit('blockSong', selectedSongId)
+    }
   },
   watch: {
     isLyricModify(newVal) {
       if (newVal) {
-        const convertedLyrics = this.songInfo.lyrics.replace(/<br\s*\/?>/g, '\n')
+        const convertedLyrics = this.songInfo.lyrics.replace(/<br\s*\/?>/, '\n')
         this.modifiedLyrics = convertedLyrics
       }
     },
