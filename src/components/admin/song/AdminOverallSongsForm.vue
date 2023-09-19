@@ -119,7 +119,8 @@
                             </tr>
                             <tr v-if="selectedSongId === song.songId">
                                 <td style="color: white;" colspan="6">
-                                    <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail" />
+                                    <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail"
+                                        @modifyLyrics="modifyLyrics" />
                                 </td>
                             </tr>
                         </template>
@@ -167,10 +168,10 @@ export default {
     },
 
     props: {
-        // songsStatus: {
-        //     type: Object,
-        //     required: true
-        // },
+        songsStatus: {
+            type: Object,
+            required: true
+        },
         songs: {
             type: Array,
             required: true,
@@ -203,12 +204,6 @@ export default {
             selectedColor: 'teal',
             searchDate: '',
             formattedDate: '',
-
-            songsStatus: {
-                todaySong: 28,
-                increaseRate: 15,
-                totalSong: 159,
-            },
 
             songThumbnail: '',
             selectedSongId: '',
@@ -247,6 +242,9 @@ export default {
                 link.substring(link.lastIndexOf("=") + 1) +
                 "/mqdefault.jpg"
             );
+        },
+        modifyLyrics(payload) {
+            this.$emit('modifyLyrics', payload)
         },
     },
     watch: {

@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     ...mapActions(playlistModule, [
-      "requestPlaylistToSpring",
+      "requestPlaylistExceptBlockSongToSpring",
       "checkIsPlaylistLikedToSpring",
       "requestLikePlaylistToSpring",
       "requestUnlikePlaylistToSpring"
@@ -62,7 +62,7 @@ export default {
     }
   },
   async mounted() {
-    this.playlistLikes = await this.requestPlaylistToSpring(this.playlistId);
+    this.playlistLikes = await this.requestPlaylistExceptBlockSongToSpring(this.playlistId);
     if (localStorage.getItem("userToken") != null) {
       await this.checkIsPlaylistLiked();
     }

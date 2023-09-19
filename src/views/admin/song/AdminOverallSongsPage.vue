@@ -1,7 +1,7 @@
 <template>
     <div>
-        <AdminOverallSongsForm @switchCategory="getCategorizedSongList" :songs="songs" :songInfo="songInfo"
-            @openManage="getSongInfo" />
+        <AdminOverallSongsForm @getStatus="getSongsStatus" @switchCategory="getCategorizedSongList" :songs="songs"
+            :songInfo="songInfo" :songsStatus="songsStatus" @openManage="getSongInfo" @modifyLyrics="modifyLyrics" />
         <v-pagination style="color: white" v-model="currentPage" :length="songListCount" @click="getPaginatedSongs">
         </v-pagination>
     </div>
@@ -19,7 +19,6 @@ export default {
         return {
             currentPage: 1,
             currentSort: 'ASC',
-
         }
     },
     components: {
@@ -28,7 +27,9 @@ export default {
     methods: {
         ...mapActions(adminSongModule, [
             "requestSongListForAdminToSpring",
-            "requestSongInfoForAdminToSpring"]),
+            "requestSongInfoForAdminToSpring",
+            "requestSongsStatusToSpring",
+            "requestModifyLyricsToSpring"]),
 
         async getCategorizedSongList(selectedCategory) {
             const songStatusType = selectedCategory;
@@ -44,9 +45,19 @@ export default {
             await this.requestSongListForAdminToSpring({ songStatusType, sortType, page });
         },
 
-
         async getSongInfo(selectedSongId) {
             const songId = selectedSongId
+            await this.requestSongInfoForAdminToSpring(songId)
+        },
+
+        async getSongsStatus(targetDate) {
+            const date = targetDate
+            await this.requestSongsStatusToSpring(date)
+        },
+
+        async modifyLyrics(payload) {
+            const songId = payload.songId
+            await this.requestModifyLyricsToSpring(payload)
             await this.requestSongInfoForAdminToSpring(songId)
         },
     },
@@ -54,7 +65,8 @@ export default {
         ...mapState(adminSongModule, [
             'songs',
             'songInfo',
-            'songListCount']),
+            'songListCount',
+            'songsStatus']),
     },
 }
 </script>
