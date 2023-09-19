@@ -1,6 +1,9 @@
 <template>
   <div class="admin-login" align="center" v-if="!adminLogin">
-    <AdminLoginForm @login="loginAdmin"/>
+    <AdminLoginForm 
+      @login="loginAdmin"
+      :wrongAccountCount="wrongAccountCount"
+    />
   </div>
   <div v-else>
     <AdminDashboardForm/>
@@ -18,7 +21,8 @@ const accountModule = 'accountModule'
 export default {
   data(){
     return {
-      adminLogin: false
+      adminLogin: false,
+      wrongAccountCount: 1,
     }
   },
   components: {
@@ -45,8 +49,7 @@ export default {
         alert("어서 오세요 " + localStorage.getItem("nickname") + "님")
         this.adminLogin = true
       }
-      
-      
+      this.wrongAccountCount = this.wrongAccountCount + 1
     }
   }
 }
