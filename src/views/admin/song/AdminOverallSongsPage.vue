@@ -1,7 +1,8 @@
 <template>
     <div>
         <AdminOverallSongsForm @getStatus="getSongsStatus" @switchCategory="getCategorizedSongList" :songs="songs"
-            :songInfo="songInfo" :songsStatus="songsStatus" @openManage="getSongInfo" @modifyLyrics="modifyLyrics" />
+            :songInfo="songInfo" :songsStatus="songsStatus" @openManage="getSongInfo" @modifyLyrics="modifyLyrics"
+            @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" />
         <v-pagination style="color: white" v-model="currentPage" :length="songListCount" @click="getPaginatedSongs">
         </v-pagination>
     </div>
@@ -19,6 +20,7 @@ export default {
         return {
             currentPage: 1,
             currentSort: 'ASC',
+            currentCategory: 'TOTAL'
         }
     },
     components: {
@@ -29,9 +31,15 @@ export default {
             "requestSongListForAdminToSpring",
             "requestSongInfoForAdminToSpring",
             "requestSongsStatusToSpring",
-            "requestModifyLyricsToSpring"]),
+            "requestModifyLyricsToSpring",
+            "requestDeleteSongToSpring",
+            "removeSongFromState",
+            "requestOpenSongToSpring",
+            "requestBlockSongToSpring"]),
 
         async getCategorizedSongList(selectedCategory) {
+            this.currentCategory = selectedCategory;
+
             const songStatusType = selectedCategory;
             const sortType = this.currentSort
             const page = this.currentPage;
@@ -59,6 +67,26 @@ export default {
             const songId = payload.songId
             await this.requestModifyLyricsToSpring(payload)
             await this.requestSongInfoForAdminToSpring(songId)
+        },
+
+        async deleteSong(selectedSongId) {
+            if (confirm("노래를 지우시겠습니까?")) {
+                await this.requestDeleteSongToSpring(selectedSongId)
+                await this.removeSongFromState()
+            }
+            await this.getPaginatedSongs();
+        },
+
+        async openSong(selectedSongId) {
+            await this.requestOpenSongToSpring(selectedSongId)
+            await this.getPaginatedSongs();
+            await this.getSongInfo(selectedSongId)
+        },
+
+        async blockSong(selectedSongId) {
+            await this.requestBlockSongToSpring(selectedSongId)
+            await this.getPaginatedSongs();
+            await this.getSongInfo(selectedSongId)
         },
     },
     computed: {
