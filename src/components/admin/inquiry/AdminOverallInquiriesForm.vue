@@ -20,7 +20,7 @@
         </div>
         <div style="margin-right: 16px">
           <v-card class="admin-inquiries-list-container">
-            <div class="admin-inquiry-stat-card-container">
+            <div class="admin-inquiry-list-container">
               <div class="admin-inquiry-title">
                 Inquiries
               </div>
@@ -220,6 +220,12 @@ export default {
   padding: 8px;
   background-color: #292E37;
   color: white
+}
+
+.admin-inquiry-list-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .admin-inquiry-title {
