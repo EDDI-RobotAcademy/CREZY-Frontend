@@ -109,9 +109,9 @@
               <td>
                 <div class="overall-playlist-song-marker-container">
                   <div v-if="account.accountRoleType === 'BLACKLIST'" class="three-warning-account-marker"></div>
-                  <div v-if="account.warningCounts === 2" class="two-warning-account-marker"></div>
-                  <div v-if="account.warningCounts === 1" class="one-warning-account-marker"></div>
-                  <div v-if="account.warningCounts === 0" class="no-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 2" class="two-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 1" class="one-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 0" class="no-warning-account-marker"></div>
                 </div>
               </td>
               <td>{{ index + 1 }}</td>
