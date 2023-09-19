@@ -1,5 +1,7 @@
 export default {
     reportList: [],
-    accountReportDetail: [],    
+    accountReportDetail: {},
+    playlistReportDetail: {},
+    songReportDetail: {},
  };
   

@@ -4,6 +4,8 @@
        @openManage="getReportInfo"
        :reportList="reportList"
        :accountReportDetail="accountReportDetail"
+       :playlistReportDetail="playlistReportDetail"
+       :songReportDetail="songReportDetail"
        />   
     </div>
   </template>
@@ -21,19 +23,27 @@
     methods: {
     ...mapActions(reportModule, [
       "requestReportListToSpring",
-      "requestAccountReportDetailToSpring"
+      "requestAccountReportDetailToSpring",
+      "requestPlaylistReportDetailToSpring",
+      "requestSongReportDetailToSpring",
     ]),
 
     async getReportInfo(selectedReportId) {
       const reportId = selectedReportId
-      await this.requestAccountReportDetailToSpring(reportId)
+      await this.requestAccountReportDetailToSpring(reportId);
       console.log(this.accountReportDetail.reporterProfileName)
+      await this.requestPlaylistReportDetailToSpring(reportId);
+      console.log(this.playlistReportDetail.reporterProfileName)
+      await this.requestSongReportDetailToSpring(reportId);
+      
     },
   },
   computed: {
     ...mapState(reportModule, [
       "reportList",
       "accountReportDetail",
+      "playlistReportDetail",
+      "songReportDetail",
     ]),
   },
   async mounted() {
