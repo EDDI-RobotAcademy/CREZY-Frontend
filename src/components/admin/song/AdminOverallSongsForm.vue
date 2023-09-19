@@ -96,7 +96,11 @@
                         <tr class="overall-song-table-header">
                             <th style="width: 100px;"></th>
                             <th align="start">index</th>
-                            <th align="start">title</th>
+                            <th @click="toggleSortDirection" style="cursor: pointer;" align="start">
+                                title
+                                <v-icon v-if="selectedSort === 'ASC'">mdi-menu-up</v-icon>
+                                <v-icon v-else>mdi-menu-down</v-icon>
+                            </th>
                             <th align="start">singer</th>
                             <th align="end">writer</th>
                             <th align="end" style="padding-right: 25px">registered date</th>
@@ -187,6 +191,8 @@ export default {
             chooseSongCategory: false,
             selectedCategory: 'TOTAL',
 
+            selectedSort: 'ASC',
+
             songsOptions: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -218,6 +224,10 @@ export default {
             this.selectedCategory = category
             const selectedCategory = category
             this.$emit("switchCategory", selectedCategory)
+        },
+        toggleSortDirection() {
+            this.selectedSort = this.selectedSort === 'ASC' ? 'DESC' : 'ASC';
+            this.$emit('switchSort', this.selectedSort);
         },
         forManage(songId) {
             if (this.selectedSongId == songId.toString()) {
