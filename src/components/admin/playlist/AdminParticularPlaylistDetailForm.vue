@@ -171,7 +171,9 @@ export default {
   watch: {
     songInfo: {
       handler(newVal) {
-        this.songThumbnail = this.getSongImage(newVal.link)
+        if (newVal && newVal.link) {
+          this.songThumbnail = this.getSongImage(newVal.link) 
+        }
       }
     }
   }
