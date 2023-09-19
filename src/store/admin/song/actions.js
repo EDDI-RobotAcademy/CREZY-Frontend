@@ -14,5 +14,14 @@ export default {
     }).then((res) => {
       commit(REQUEST_SONG_INFO_FOR_ADMIN_TO_SPRING, res.data)
     })
+  },
+
+  requestModifyLyricsToSpring({}, payload) {
+    const { songId, lyrics } = payload
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.post("/admin-song/modify-lyrics", 
+      { songId, lyrics },
+      {headers: { Authorization: userToken }}
+    ).then((res) => {})
   }
 }

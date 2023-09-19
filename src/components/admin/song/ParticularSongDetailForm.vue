@@ -80,11 +80,22 @@ export default {
         "/mqdefault.jpg"
       );
     },
+    modifyLyrics() {
+      const songId = this.songInfo.songId
+      const lyrics = this.modifyForHtml(this.modifiedLyrics)
+      this.$emit('modifyLyrics', { songId, lyrics })
+      this.isLyricModify = false
+    },
+
+    modifyForHtml(lyrics) {
+      const convertedLyrics = lyrics.replace(/\n/g, '<br>')
+      return convertedLyrics
+    }
   },
   watch: {
     isLyricModify(newVal) {
       if (newVal) {
-        const convertedLyrics = this.songInfo.lyrics.replace(/<br\s*\/?>/g, '\n')
+        const convertedLyrics = this.songInfo.lyrics.replace(/<br\s*\/?>/, '\n')
         this.modifiedLyrics = convertedLyrics
       }
     },
