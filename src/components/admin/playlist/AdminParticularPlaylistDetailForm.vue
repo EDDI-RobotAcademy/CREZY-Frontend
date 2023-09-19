@@ -45,7 +45,12 @@
             </tr>
             <tr v-if="selectedSongId === song.songId">
               <td colspan="6">
-                <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail"/>
+                <ParticularSongDetailForm 
+                  :songInfo="songInfo" 
+                  :songThumbnail="songThumbnail"
+                  @modifyLyrics="modifyLyrics"
+                  @deleteSong="deleteSong"
+                  />
               </td>
             </tr>
           </template>
@@ -143,6 +148,14 @@ export default {
 
     deletePlaylist() {
       this.$emit("deletePlaylist")
+    },
+
+    modifyLyrics(payload) {
+      this.$emit('modifyLyrics', payload)
+    },
+
+    deleteSong(selectedSongId) {
+      this.$emit('deleteSong', selectedSongId)
     }
   },
   watch: {

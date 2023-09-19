@@ -7,6 +7,8 @@
     @deleteThumbnail="removeThumbnail"
     @changePlaylistName="changePlaylistName"
     @deletePlaylist="deletePlaylist"
+    @modifyLyrics="modifyLyrics"
+    @deleteSong="deleteSong"
     />
   </div>
 </template>
@@ -36,25 +38,47 @@ export default {
       'requestChangePlaylistNameToSpring',
       'requestDeletePlaylistToSpring'
     ]),
-    ...mapActions(adminSongModule, ['requestSongInfoForAdminToSpring']),
+
+    ...mapActions(adminSongModule, [
+      'requestSongInfoForAdminToSpring',
+      'requestModifyLyricsToSpring',
+      'requestDeleteSongToSpring',
+      'removeSongFromState'
+    ]),
+
 
     async getSongInfo(selectedSongId) {
       const songId = selectedSongId;
       await this.requestSongInfoForAdminToSpring(songId)
     },
+
     async removeThumbnail() {
       await this.requestRemovePlaylistThumbnailToSpring(this.selectedPlaylistId)
       await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
     },
+
     async changePlaylistName() {
       await this.requestChangePlaylistNameToSpring(this.selectedPlaylistId)
       await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
     },
+
     async deletePlaylist() {
       await this.requestDeletePlaylistToSpring(this.selectedPlaylistId)
       await this.$router.push({
         name: "AdminOverallPlaylistPage"
       })
+    },
+
+    async modifyLyrics(payload) {
+      const songId = payload.songId
+      await this.requestModifyLyricsToSpring(payload)
+      await this.requestSongInfoForAdminToSpring(songId)
+    },
+
+    async deleteSong(selectedSongId) {
+      await this.requestDeleteSongToSpring(selectedSongId)
+      await this.removeSongFromState()
+      await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
     }
   },
   computed: {
