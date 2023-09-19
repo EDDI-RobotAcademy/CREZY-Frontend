@@ -23,7 +23,10 @@
       </div>
     </div>
     <div align="end">
-      <div><v-btn class="particular-song-btn">상태 설정</v-btn></div>
+      <div>
+        <v-btn v-if="songInfo.songStatus === 'BLOCK'" class="particular-song-btn" @click="openSong">노래 열기</v-btn>
+        <v-btn v-else class="particular-song-btn" @click="blockSong">노래 막기</v-btn>
+      </div>
       <div v-if="!isLyricModify">
         <v-btn 
           class="particular-song-btn" 
@@ -101,6 +104,16 @@ export default {
     deleteSong() {
       const selectedSongId = this.songInfo.songId
       this.$emit('deleteSong', selectedSongId)
+    },
+
+    openSong() {
+      const selectedSongId = this.songInfo.songId
+      this.$emit('openSong', selectedSongId)
+    },
+
+    blockSong() {
+      const selectedSongId = this.songInfo.songId
+      this.$emit('blockSong', selectedSongId)
     }
   },
   watch: {

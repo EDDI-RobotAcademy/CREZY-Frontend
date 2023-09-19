@@ -50,6 +50,8 @@
                   :songThumbnail="songThumbnail"
                   @modifyLyrics="modifyLyrics"
                   @deleteSong="deleteSong"
+                  @openSong="openSong"
+                  @blockSong="blockSong"
                   />
               </td>
             </tr>
@@ -156,6 +158,14 @@ export default {
 
     deleteSong(selectedSongId) {
       this.$emit('deleteSong', selectedSongId)
+    },
+
+    openSong(selectedSongId) {
+      this.$emit('openSong', selectedSongId)
+    },
+
+    blockSong(selectedSongId) {
+      this.$emit('blockSong', selectedSongId)
     }
   },
   watch: {

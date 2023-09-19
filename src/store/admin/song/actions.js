@@ -35,6 +35,24 @@ export default {
     }).then((res) => {})
   },
 
+  requestOpenSongToSpring({}, selectedSongId) {
+    const songId = selectedSongId
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.get("/admin-song/register-song-status-open", {
+      params: { songId: songId },
+      headers: { Authorization: userToken }
+    }).then((res) => {})
+  },
+
+  requestBlockSongToSpring({}, selectedSongId) {
+    const songId = selectedSongId
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.get("/admin-song/register-song-status-block", {
+      params: { songId: songId },
+      headers: { Authorization: userToken }
+    }).then((res) => {})
+  },
+
   removeSongFromState({commit}) {
     return commit(DELETE_SONG_FROM_STATE)
   }
