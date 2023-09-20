@@ -1,12 +1,9 @@
 <template>
-  <div class="admin-login" align="center" v-if="!adminLogin">
+  <div class="admin-login" align="center">
     <AdminLoginForm 
       @login="loginAdmin"
       :wrongAccountCount="wrongAccountCount"
     />
-  </div>
-  <div v-else>
-    <AdminDashboardForm/>
   </div>
 </template>
 
@@ -21,7 +18,6 @@ const accountModule = 'accountModule'
 export default {
   data(){
     return {
-      adminLogin: false,
       wrongAccountCount: 1,
     }
   },
@@ -38,7 +34,7 @@ export default {
       }
     }
     if (localStorage.getItem("roleType") === "ADMIN") {
-      this.adminLogin = true
+      this.$router.push({ name: 'AdminDashboardPage' })
     }
   },
   methods: {
@@ -47,7 +43,7 @@ export default {
     async loginAdmin(payload) {
       if (await this.requestAdminLoginToSpring(payload)) {
         alert("어서 오세요 " + localStorage.getItem("nickname") + "님")
-        this.adminLogin = true
+        this.$router.push({ name: 'AdminDashboardPage' })
       }
       this.wrongAccountCount = this.wrongAccountCount + 1
     }

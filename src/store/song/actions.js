@@ -21,7 +21,14 @@ export default {
         return res.data
       });
   },
-
+  async requestSongModifyToSpring(_, payload) {
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.post("/song/modify", payload, { headers: { Authorization: userToken } })
+      .then((res) => {
+        console.log(res)
+        return res.data
+      });
+  },
   requestRecommendationToSpring({ commit }, payload) {
     const sentence = payload
     return axiosInst.springAxiosInst.get("/emotion/analysis", { params: { sentence: sentence } })
