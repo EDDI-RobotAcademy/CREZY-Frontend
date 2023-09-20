@@ -2,7 +2,7 @@
     <div>
         <AdminOverallSongsForm @getStatus="getSongsStatus" @switchCategory="getCategorizedSongList" :songs="songs"
             :songInfo="songInfo" :songsStatus="songsStatus" @openManage="getSongInfo" @modifyLyrics="modifyLyrics"
-            @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" />
+            @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" @switchSort="getSortedSongList" />
         <v-pagination style="color: white" v-model="currentPage" :length="songListCount" @click="getPaginatedSongs">
         </v-pagination>
     </div>
@@ -42,6 +42,15 @@ export default {
 
             const songStatusType = selectedCategory;
             const sortType = this.currentSort
+            const page = this.currentPage;
+            await this.requestSongListForAdminToSpring({ songStatusType, sortType, page });
+        },
+
+        async getSortedSongList(selectedSort) {
+            this.currentSort = selectedSort;
+
+            const songStatusType = this.currentCategory;
+            const sortType = selectedSort
             const page = this.currentPage;
             await this.requestSongListForAdminToSpring({ songStatusType, sortType, page });
         },
