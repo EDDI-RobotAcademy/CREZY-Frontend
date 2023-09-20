@@ -5,6 +5,7 @@ import AdminOverallReportsPage from "@/views/admin/report/AdminOverallReportsPag
 import AdminOverallInquiriesPage from "@/views/admin/inquiry/AdminOverallInquiriesPage.vue"
 import AdminParticularPlaylistPage from "@/views/admin/playlist/AdminParticularPlaylistDetailPage.vue"
 import AdminOverallSongsPage from "@/views/admin/song/AdminOverallSongsPage.vue"
+import AdminParticularInquiryAnswerPage from "@/views/admin/inquiry/AdminParticularInquiryAnswerPage.vue"
 
 const adminRoutes = [
   {
@@ -51,6 +52,16 @@ const adminRoutes = [
     path: "/admin/overall-songs",
     name: "AdminOverallSongsPage",
     component: AdminOverallSongsPage
+  },
+  {
+    path: "/admin/particular-inquiry/:selectedInquiryId",
+    name: "AdminParticularInquiryAnswerPage",
+    components: {
+      default: AdminParticularInquiryAnswerPage,
+    },
+    props: {
+      default: true
+    }
   },
 ]
 
