@@ -207,11 +207,16 @@ export default {
     }
   },
   mounted() {
-    if (this.selectedAccountId) {
-      this.getAccountInquiries(this.selectedAccountId)
+    if (!localStorage.getItem("roleType") === "ADMIN" || localStorage.getItem("roleType") === null) {
+      this.$router.push({ name: "home" });
     } else {
-      this.getPaginatedInquiries()
+      if (this.selectedAccountId) {
+        this.getAccountInquiries(this.selectedAccountId)
+      } else {
+        this.getPaginatedInquiries()
+      }
     }
+
   }
 }
 </script>
@@ -232,7 +237,7 @@ export default {
   color: white
 }
 
-.admin-inquiry-list-container{
+.admin-inquiry-list-container {
   display: flex;
   justify-content: space-between;
   align-items: center;

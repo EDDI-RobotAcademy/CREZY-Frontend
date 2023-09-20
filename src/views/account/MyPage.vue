@@ -23,11 +23,19 @@ export default {
     ...mapState(accountModule, ["account"]),
   },
   async mounted() {
-    await this.requestAccountInfoToSpring();
-    await this.requestMyPlaylistsToSpring();
-    await this.requestMyLikedPlaylistsToSpring();
-  },
-};
+    if (localStorage.getItem("userToken") === null) {
+      if (confirm("로그인 후 이용 가능합니다.\n\n로그인 하시겠습니까?")) {
+        this.$router.push({ name: "AccountLoginPage" })
+      } else {
+        this.$router.push({ name: "home" })
+      }
+    } else {
+      await this.requestAccountInfoToSpring();
+      await this.requestMyPlaylistsToSpring();
+      await this.requestMyLikedPlaylistsToSpring();
+    }
+  }
+}
 </script>
 <style></style>
   
