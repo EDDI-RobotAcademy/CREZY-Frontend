@@ -97,8 +97,8 @@
           <tr class="overall-playlist-table-header">
             <th style="width: 100px;"></th>
             <th align="start">index</th>
-            <th align="start">신고 사유</th>
-            <th align="end">신고 대상</th>
+            <th align="start">신고 주제</th>
+            <th align="end">신고자</th>
             <th align="end" style="padding-right: 25px;">
               register date
             </th>
@@ -114,8 +114,8 @@
               </td>
 
               <td align="start">{{ index + 1 }}</td>
-              <td align="start">{{ report.reportContent }}</td>
-              <td align="end">{{ report.reportedCategoryType }}</td>
+              <td align="start">{{ report.reportedCategoryType }}</td>
+              <td align="end">{{ report.reporterNickname }}</td>
               <td align="end" style="padding-right: 25px">{{ report.createReportDate }}</td>
             </tr>
             <tr v-if="selectedReportId === report.reportId">
