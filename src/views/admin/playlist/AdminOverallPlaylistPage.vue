@@ -63,7 +63,7 @@ export default {
     async getPlaylistByAccountId(selectedAccountId) {
       const accountId = selectedAccountId
       const page = this.currentPage
-      await this.requestAccountPlaylistsToSpring({accountId, page})
+      await this.requestAccountPlaylistsToSpring({ accountId, page })
     }
   },
 
@@ -74,11 +74,14 @@ export default {
       'playlistListCount',
     ]),
   },
+  async mounted() {
+    if (!localStorage.getItem("roleType") === "ADMIN" || localStorage.getItem("roleType") === null) {
+      this.$router.push({ name: "home" });
+    }
+  },
 
-  
+
 }
 </script>
 
-<style>
-    
-</style>
+<style></style>

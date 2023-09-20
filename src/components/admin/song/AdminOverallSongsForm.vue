@@ -282,10 +282,14 @@ export default {
         }
     },
     async mounted() {
-        this.searchDate = new Date()
-        const targetDate = this.formatDate(this.searchDate)
-        await this.getStatus(targetDate)
-        await this.selectCategory(this.selectedCategory)
+        if (!localStorage.getItem("roleType") === "ADMIN" || localStorage.getItem("roleType") === null) {
+            this.$router.push({ name: "home" });
+        } else {
+            this.searchDate = new Date()
+            const targetDate = this.formatDate(this.searchDate)
+            await this.getStatus(targetDate)
+            await this.selectCategory(this.selectedCategory)
+        }
     },
     computed: {
         songsData() {

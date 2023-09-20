@@ -14,11 +14,7 @@
     <div>
       <div class="lyrics" align="center" v-html="songInfo.lyrics" v-if="!isLyricModify"></div>
       <div v-else>
-        <v-textarea 
-          class="lyric-modify"
-          v-model="modifiedLyrics"
-          rows="7"
-          >
+        <v-textarea class="lyric-modify" v-model="modifiedLyrics" rows="7">
         </v-textarea>
       </div>
     </div>
@@ -28,30 +24,22 @@
         <v-btn v-else class="particular-song-btn" @click="blockSong">노래 막기</v-btn>
       </div>
       <div v-if="!isLyricModify">
-        <v-btn 
-          class="particular-song-btn" 
-          @click="isLyricModify = !isLyricModify">
+        <v-btn class="particular-song-btn" @click="isLyricModify = !isLyricModify">
           가사 수정
         </v-btn>
       </div>
       <div v-if="isLyricModify">
-        <v-btn 
-          class="particular-song-btn" 
-          @click="cancelModify">
+        <v-btn class="particular-song-btn" @click="cancelModify">
           수정 취소
         </v-btn>
       </div>
       <div v-if="isLyricModify">
-        <v-btn 
-          class="particular-song-btn" 
-          @click="modifyLyrics">
+        <v-btn class="particular-song-btn" @click="modifyLyrics">
           수정 완료
         </v-btn>
       </div>
       <div>
-        <v-btn 
-          class="particular-song-btn"
-          @click="deleteSong">
+        <v-btn class="particular-song-btn" @click="deleteSong">
           삭제
         </v-btn>
       </div>
@@ -128,15 +116,15 @@ export default {
 </script>
 
 <style scoped>
-.particular-song-btn{
+.particular-song-btn {
   background-color: #5F6871;
   width: 100px;
   margin: 8px;
 }
 
-.admin-song-img-wrapper{
-  height: 200px; 
-  width: 300px; 
+.admin-song-img-wrapper {
+  height: 200px;
+  width: 300px;
   background-color: black;
 }
 
@@ -148,12 +136,12 @@ export default {
   overflow: scroll;
 }
 
-.lyric-modify{
+.lyric-modify {
   width: 250px;
 }
 
 a:visited {
-    color: white;
+  color: white;
 }
 
 .lyrics::-webkit-scrollbar {

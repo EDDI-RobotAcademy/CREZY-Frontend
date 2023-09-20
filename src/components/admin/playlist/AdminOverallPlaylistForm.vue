@@ -1,9 +1,9 @@
 <template>
-  <div> 
+  <div>
     <v-row style="margin: 15px;">
       <v-col cols="8">
         <v-row>
-          <v-col cols="4" >
+          <v-col cols="4">
             <v-card class="overall-playlist-stat-card">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
@@ -15,7 +15,7 @@
               </div>
             </v-card>
           </v-col>
-          <v-col cols="4" >
+          <v-col cols="4">
             <v-card class="overall-playlist-stat-card">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
@@ -27,7 +27,7 @@
               </div>
             </v-card>
           </v-col>
-          <v-col cols="4" >
+          <v-col cols="4">
             <v-card class="overall-playlist-stat-card">
               <div class="overall-playlist-stat-content">
                 <div class="overall-playlist-stat=title">
@@ -46,92 +46,74 @@
       </v-col>
       <v-col cols="4">
         <v-card class="overall-playlist-calendar-card">
-          <DatePicker 
-            v-model="searchDate" 
-            transparent 
-            borderless 
-            :is-dark="true" 
-            expanded 
-            :rows="2"
-            :step="1"
-            :color="selectedColor"
-            :max-date="new Date()"
-            :initial-page-position="2"/>
+          <DatePicker v-model="searchDate" transparent borderless :is-dark="true" expanded :rows="2" :step="1"
+            :color="selectedColor" :max-date="new Date()" :initial-page-position="2" />
         </v-card>
       </v-col>
-    </v-row>  
+    </v-row>
     <div>
       <v-card class="admin-overall-playlist-list-card">
 
-          <div style="justify-content: space-between; display: flex;">
-            <div class="admin-overall-playlist-list-title" align="start">
-              Playlists
-            </div>
-              <div style="width: 400px; margin-left: 80px">
-                <v-text-field 
-                  class="admin-playlist-search-field"
-                  variant="outlined"
-                  append-inner-icon="mdi-magnify"
-                  single-line
-                  hide-details
-                  @click:append-inner="onClick"
-                ></v-text-field>
-              </div>
-              <div style="width: 300px; ">
-                <v-text-field
-                  variant="outlined"
-                  append-inner-icon="mdi-menu-down-outline"
-                  @click:append-inner="choosePlaylistCategory = !choosePlaylistCategory"
-                  readonly
-                  class="admin-playlist-search-field"
-                  v-model="selectedCategory"
-                  >
-                </v-text-field>
-                <v-menu v-model="choosePlaylistCategory">
-                    <template v-slot:activator="{ on }">
-                      <v-list class="admin-playlist-category-select-field" v-if="choosePlaylistCategory">
-                        <v-list-item class="admin-playlist-category-selection" v-for="playlistCategory in playlistCategories" @click="selectCategory(playlistCategory)">
-                          <v-list-item-title style="font-size: 13px">{{ playlistCategory }}</v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </template>
-                  </v-menu>
-              </div>
+        <div style="justify-content: space-between; display: flex;">
+          <div class="admin-overall-playlist-list-title" align="start">
+            Playlists
           </div>
-
-
-          <v-divider></v-divider>
-
-          <div>
-            <table class="overall-playlist-table">
-              <tr class="overall-playlist-table-header">
-                <th style="width: 100px;"></th>
-                <th align="start">index</th>
-                <th align="start">title</th>
-                <th align="start">creater</th>
-                <th align="end">likes</th>
-                <th align="end">songs</th>
-                <th align="end" style="padding-right: 25px">created date</th>
-              </tr>
-              <tr class="overall-playlist-table-row" v-for="(playlist, index) in playlists" @click="toManage(playlist.playlistId)">
-                <td>
-                  <div class="overall-playlist-song-marker-container">
-                    <div v-if="playlist.songCounts === 0" class="no-song-marker"></div>
-                    <div v-else class="yes-song-marker"></div>
-                  </div>
-                </td>
-                <td>{{ index + 1 }}</td>
-                <td align="start">{{ playlist.playlistName }}</td>
-                <td align="start">{{ playlist.accountName }}</td>
-                <td align="end">{{ playlist.likeCounts }}</td>
-                <td align="end">{{ playlist.songCounts }}</td>
-                <td align="end" style="padding-right: 25px">{{ playlist.createDate }}</td>
-              </tr>
-            </table>
+          <div style="width: 400px; margin-left: 80px">
+            <v-text-field class="admin-playlist-search-field" variant="outlined" append-inner-icon="mdi-magnify"
+              single-line hide-details @click:append-inner="onClick"></v-text-field>
           </div>
-        
+          <div style="width: 300px; ">
+            <v-text-field variant="outlined" append-inner-icon="mdi-menu-down-outline"
+              @click:append-inner="choosePlaylistCategory = !choosePlaylistCategory" readonly
+              class="admin-playlist-search-field" v-model="selectedCategory">
+            </v-text-field>
+            <v-menu v-model="choosePlaylistCategory">
+              <template v-slot:activator="{ on }">
+                <v-list class="admin-playlist-category-select-field" v-if="choosePlaylistCategory">
+                  <v-list-item class="admin-playlist-category-selection" v-for="playlistCategory in playlistCategories"
+                    @click="selectCategory(playlistCategory)">
+                    <v-list-item-title style="font-size: 13px">{{ playlistCategory }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </template>
+            </v-menu>
+          </div>
+        </div>
+
+
+        <v-divider></v-divider>
+
+        <div>
+          <table class="overall-playlist-table">
+            <tr class="overall-playlist-table-header">
+              <th style="width: 100px;"></th>
+              <th align="start">index</th>
+              <th align="start">title</th>
+              <th align="start">creater</th>
+              <th align="end">likes</th>
+              <th align="end">songs</th>
+              <th align="end" style="padding-right: 25px">created date</th>
+            </tr>
+            <tr class="overall-playlist-table-row" v-for="(playlist, index) in playlists"
+              @click="toManage(playlist.playlistId)">
+              <td>
+                <div class="overall-playlist-song-marker-container">
+                  <div v-if="playlist.songCounts === 0" class="no-song-marker"></div>
+                  <div v-else class="yes-song-marker"></div>
+                </div>
+              </td>
+              <td>{{ index + 1 }}</td>
+              <td align="start">{{ playlist.playlistName }}</td>
+              <td align="start">{{ playlist.accountName }}</td>
+              <td align="end">{{ playlist.likeCounts }}</td>
+              <td align="end">{{ playlist.songCounts }}</td>
+              <td align="end" style="padding-right: 25px">{{ playlist.createDate }}</td>
+            </tr>
+          </table>
+        </div>
+
       </v-card>
-    </div>    
+    </div>
   </div>
 </template>
 
@@ -179,7 +161,7 @@ export default {
     },
   },
   data() {
-    return{ 
+    return {
       playlistCategories: ["recent", "trending", "empty"],
       choosePlaylistCategory: false,
       selectedCategory: 'recent',
@@ -190,12 +172,12 @@ export default {
         maintainAspectRatio: false,
         scales: {
           y: {
-          beginAtZero: true,
+            beginAtZero: true,
           },
         },
         plugins: {
           legend: {
-          display: false,
+            display: false,
           },
         }
       },
@@ -243,14 +225,19 @@ export default {
     },
   },
   async mounted() {
-    this.searchDate = new Date()
-    const targetDate = this.formatDate(this.searchDate)
-    await this.getStatus(targetDate)
-    if (!this.selectedAccountId) {
-      await this.selectCategory(this.selectedCategory)
+    if (!localStorage.getItem("roleType") === "ADMIN" || localStorage.getItem("roleType") === null) {
+      this.$router.push({ name: "home" });
     } else {
-      await this.getPlaylistByAccountId(this.selectedAccountId)
+      this.searchDate = new Date()
+      const targetDate = this.formatDate(this.searchDate)
+      await this.getStatus(targetDate)
+      if (!this.selectedAccountId) {
+        await this.selectCategory(this.selectedCategory)
+      } else {
+        await this.getPlaylistByAccountId(this.selectedAccountId)
+      }
     }
+
   },
   computed: {
     playlistData() {
@@ -273,7 +260,7 @@ export default {
 </script>
 
 <style>
-.overall-playlist-stat-card{
+.overall-playlist-stat-card {
   background-color: #292E37;
   border-radius: 5px;
   color: white;
@@ -291,92 +278,92 @@ export default {
   font-size: 45px;
 }
 
-.overall-playlist-calendar-card{
-  background-color: #292E37; 
+.overall-playlist-calendar-card {
+  background-color: #292E37;
   padding: 15px;
 }
 
-.overall-playlist-calendar{
+.overall-playlist-calendar {
   background-color: transparent;
   color: white;
 }
 
-.overall-playlist-graph{
+.overall-playlist-graph {
   background-color: #292E37;
   height: 450px;
   margin-top: 15px;
 }
 
-.admin-overall-playlist-list-card{
+.admin-overall-playlist-list-card {
   background-color: #292E37;
   margin: 15px;
   padding: 25px;
 }
 
-.admin-overall-playlist-list-title{
+.admin-overall-playlist-list-title {
   color: white;
   font-size: 32px;
   float: left;
 }
 
-.admin-playlist-search-field{
+.admin-playlist-search-field {
   color: #5BB5EF;
   border-radius: 10px !important;
   font-size: 12px;
 }
 
 .admin-playlist-category-select-field {
-  background-color: #212630 !important; 
-  position: absolute; 
+  background-color: #212630 !important;
+  position: absolute;
   width: 300px;
   top: 82px;
 
 }
 
 .admin-playlist-category-selection {
-  color: white; 
+  color: white;
   border-bottom: 1px dotted white;
 }
 
 .overall-playlist-table {
-  width: 100%; 
+  width: 100%;
   border-collapse: separate;
   border-spacing: 0 15px;
 }
 
-.overall-playlist-table-header{
-  color: #5F6871; 
+.overall-playlist-table-header {
+  color: #5F6871;
   height: 75px;
 }
 
 .overall-playlist-table-row {
   background-color: #485463;
-  color: white; 
-  height: 100px; 
+  color: white;
+  height: 100px;
   padding: 20px
 }
 
 .overall-playlist-song-marker-container {
-  height: 70px; 
-  width: 20px; 
-  background-color: #3E4756; 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center; 
-  align-items: center; 
+  height: 70px;
+  width: 20px;
+  background-color: #3E4756;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   border-radius: 0 10px 10px 0;
 }
 
 .no-song-marker {
-  height: 50px; 
-  width: 3px; 
+  height: 50px;
+  width: 3px;
   background-color: #EA78B3;
   border-radius: 5px;
 }
 
 .yes-song-marker {
-  height: 50px; 
-  width: 3px; 
+  height: 50px;
+  width: 3px;
   background-color: #7AE5A8;
   border-radius: 5px;
 }
@@ -391,5 +378,4 @@ td:last-child,
 th:last-child {
   border-radius: 0 10px 10px 0;
 }
-
 </style>
