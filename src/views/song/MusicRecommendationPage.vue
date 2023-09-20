@@ -25,10 +25,11 @@ export default {
     ...mapState(songModule, ["musicList"]),
   },
   methods: {
-    ...mapActions(songModule, ["requestRecommendationToSpring"]),
+    ...mapActions(songModule, ["requestRecommendationToSpring", "removeRecommendations"]),
 
     async getRecommendation(inputedSentence) {
       const sentence = inputedSentence
+      await this.removeRecommendations()
       await this.requestRecommendationToSpring(sentence)
     }
     
