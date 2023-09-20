@@ -10,6 +10,7 @@ import AdminAccountModule from "./admin/account/AdminAccountModule";
 import AdminPlaylistModule from "./admin/playlist/AdminPlaylistModule";
 import AdminInquiryModule from "./admin/inquiry/AdminInquiryModule";
 import AdminSongModule from "./admin/song/AdminSongModule"
+import AdminDashboardModule from "./admin/dashboard/AdminDashboardModule";
 
 import createPersistedState from 'vuex-persistedstate';
 
@@ -26,6 +27,7 @@ export default createStore({
     adminPlaylistModule: AdminPlaylistModule,
     adminInquiryModule: AdminInquiryModule,
     adminSongModule: AdminSongModule,
+    adminDashboardModule: AdminDashboardModule
   },
   plugins: [
     createPersistedState({
