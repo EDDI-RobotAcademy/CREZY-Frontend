@@ -109,9 +109,12 @@
               <td>
                 <div class="overall-playlist-song-marker-container">
                   <div v-if="account.accountRoleType === 'BLACKLIST'" class="three-warning-account-marker"></div>
-                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 2" class="two-warning-account-marker"></div>
-                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 1" class="one-warning-account-marker"></div>
-                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 0" class="no-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 2"
+                    class="two-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 1"
+                    class="one-warning-account-marker"></div>
+                  <div v-if="account.accountRoleType === 'NORMAL' && account.warningCounts === 0"
+                    class="no-warning-account-marker"></div>
                 </div>
               </td>
               <td>{{ index + 1 }}</td>
@@ -122,11 +125,8 @@
             </tr>
             <tr v-if="selectedAccountId === account.accountId">
               <td colspan="6">
-                <AdminParticularAccountDetailForm 
-                  :accountInfo="accountInfo" 
-                  @isChangeBadNickname="changeBadNickname" 
-                  @removeFromBlacklist="removeFromBlacklist"
-                  @moveToBlacklist="moveToBlacklist"/>
+                <AdminParticularAccountDetailForm :accountInfo="accountInfo" @isChangeBadNickname="changeBadNickname"
+                  @removeFromBlacklist="removeFromBlacklist" @moveToBlacklist="moveToBlacklist" />
               </td>
             </tr>
           </template>
@@ -269,9 +269,13 @@ export default {
     },
   },
   async mounted() {
-    this.searchDate = new Date()
-    const targetDate = this.formatDate(this.searchDate)
-    await this.getStatus(targetDate)
+    if (!localStorage.getItem("roleType") === "ADMIN" || localStorage.getItem("roleType") === null) {
+      this.$router.push({ name: "home" });
+    } else {
+      this.searchDate = new Date()
+      const targetDate = this.formatDate(this.searchDate)
+      await this.getStatus(targetDate)
+    }
   },
   computed: {
     accountsData() {

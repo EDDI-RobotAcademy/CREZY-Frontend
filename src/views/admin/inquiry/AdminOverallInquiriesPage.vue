@@ -1,13 +1,8 @@
 <template>
   <div>
-    <AdminOverallInquiriesForm
-      :inquiryStatus = "inquiryStatus"
-      :inquiryList = "inquiryList"
-      :urgentInquiries = "urgentInquiries"
-      :inquiryListCount = "inquiryListCount"
-      @requestInquiries = "getInquiries"
-      @getAccountInquiries = "getAccountInquiries"
-    />
+    <AdminOverallInquiriesForm :inquiryStatus="inquiryStatus" :inquiryList="inquiryList"
+      :urgentInquiries="urgentInquiries" :inquiryListCount="inquiryListCount" @requestInquiries="getInquiries"
+      @getAccountInquiries="getAccountInquiries" />
   </div>
 </template>
 
@@ -36,7 +31,7 @@ export default {
     ]),
 
     async getInquiries(payload) {
-      const { statusType, categoryType, page } = payload 
+      const { statusType, categoryType, page } = payload
       await this.requestInquiryListToSpring({ statusType, categoryType, page })
     },
 
@@ -54,12 +49,14 @@ export default {
     ])
   },
   async mounted() {
-    await this.requestInquiryStatusToSpring()
-    await this.requestUrgentInquiriesToSpring()
+    if (!localStorage.getItem("roleType") === "ADMIN" || localStorage.getItem("roleType") === null) {
+      this.$router.push({ name: "home" });
+    } else {
+      await this.requestInquiryStatusToSpring()
+      await this.requestUrgentInquiriesToSpring()
+    }
   }
 }
 </script>
 
-<style>
-    
-</style>
+<style></style>

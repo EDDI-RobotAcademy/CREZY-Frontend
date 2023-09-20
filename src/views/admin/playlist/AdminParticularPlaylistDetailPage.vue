@@ -101,6 +101,9 @@ export default {
     ...mapState(adminSongModule, ["songInfo"])
   },
   async mounted() {
+    if (!localStorage.getItem("roleType") === "ADMIN" || localStorage.getItem("roleType") === null) {
+      this.$router.push({ name: "home" });
+    }
     await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
   }
 }

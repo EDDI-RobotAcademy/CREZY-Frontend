@@ -105,6 +105,11 @@ export default {
             'songListCount',
             'songsStatus']),
     },
+    mounted() {
+        if (!localStorage.getItem("roleType") === "ADMIN" || localStorage.getItem("roleType") === null) {
+            this.$router.push({ name: "home" });
+        }
+    }
 }
 </script>
 
