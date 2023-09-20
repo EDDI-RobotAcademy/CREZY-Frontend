@@ -28,7 +28,9 @@
                         <td @click="showInquiryReadForm(inquiry.inquiryId)" style="font-weight: bold; cursor: pointer;">{{
                             inquiry.inquiryTitle }}</td>
                         <td>{{ inquiry.createInquiryDate }}</td>
-                        <td :style="inquiryStatus === '답변예정' ? 'color: gray;' : 'color: white;'">{{ inquiryStatus }}</td>
+                        <td :style="answerStyle(inquiry.existAnswer)">
+                            {{ answerText(inquiry.existAnswer) }}
+                        </td>
                     </tr>
                     <tr v-if="selectedInquiryId === inquiry.inquiryId" :key="inquiry.inquiriesId + 'form'">
                         <td colspan="4">
@@ -60,7 +62,6 @@ export default {
     },
     data() {
         return {
-            inquiryStatus: '답변예정',
             isInquiryRead: false,
             selectedInquiryId: null,
         };
@@ -93,6 +94,15 @@ export default {
                 this.selectedInquiryId = null;
             }
         },
+        answerText(isAnswered) {
+            return isAnswered ? "답변 완료" : "답변 필요";
+        },
+        answerStyle(isAnswered) {
+            return {
+                color: isAnswered ? "white" : "gray",
+                fontSize: "14px"
+            };
+        },
     },
     computed: {
         ...mapState(inquiryModule, ["selectedInquiry"]),
@@ -118,7 +128,6 @@ export default {
     align-items: center;
     justify-content: center;
     border-collapse: collapse;
-    /* background-color: rgba(218, 213, 213, 0.212); */
     margin-top: 20px;
 }
 
@@ -127,7 +136,6 @@ export default {
     height: 60px;
     border-bottom: 1px solid rgba(218, 213, 213, 0.212);
     font-size: 15px;
-    /* color: r12, 212, 212);gb(2 */
 }
 </style>
   
