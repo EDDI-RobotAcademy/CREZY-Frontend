@@ -1,6 +1,6 @@
 <template>
     <div>
-        <AdminParticularInquiryAnswerForm :inquiry="inquiry" />
+        <AdminParticularInquiryAnswerForm :inquiry="inquiry" @submitInquiryAnswer="onSubmitInquiryAnswer" />
     </div>
 </template>
 <script>
@@ -21,7 +21,15 @@ export default {
     },
     methods: {
         ...mapActions(adminInquiryModule, [
-            "requestInquiryForAdminToSpring",]),
+            "requestInquiryForAdminToSpring",
+            "requestInquiryAnswerToSpring"
+        ]),
+
+        async onSubmitInquiryAnswer(inquiryAnswer) {
+            const inquiryId = this.selectedInquiryId
+            await this.requestInquiryAnswerToSpring({ inquiryAnswer, inquiryId })
+            await this.requestInquiryForAdminToSpring(this.selectedInquiryId)
+        },
     },
     computed: {
         ...mapState(adminInquiryModule, ['inquiry'])
