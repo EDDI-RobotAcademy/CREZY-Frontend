@@ -4,30 +4,15 @@
       <div class="nav-content">
         <button class="icon-btn">
           <div class="logo-container">
-            <v-img
-              src="@/assets/images/Logo_only_small-removebg-preview.png"
-              height="55"
-              width="55"
-              contain
-              @click="goHome"
-            ></v-img>
-            <v-img
-              style="margin-left: -55px"
-              src="@/assets/images/Logo_Text-removebg-preview.png"
-              height="100"
-              width="270"
-              contain
-              @click="goHome"
-            ></v-img>
+            <v-img src="@/assets/images/Logo_only_small-removebg-preview.png" height="55" width="55" contain
+              @click="goHome"></v-img>
+            <v-img style="margin-left: -55px" src="@/assets/images/Logo_Text-removebg-preview.png" height="100"
+              width="270" contain @click="goHome"></v-img>
           </div>
         </button>
         <div class="nav-btn-container">
-          <button
-            v-for="(button, index) in [...buttons, loginButton]"
-            :key="index"
-            :class="button.class"
-            @click="toggleBtn(button.name)"
-          >
+          <button v-for="(button, index) in [...buttons, loginButton]" :key="index" :class="button.class"
+            @click="toggleBtn(button.name)">
             {{ button.label }}
           </button>
         </div>
@@ -54,10 +39,10 @@ export default {
   },
   computed: {
     ...mapState(accountModule, ['isLoggedIn']),
-    
+
 
     loginButton() {
-      let buttonClass = this.$route.name === "AccountLoginPage" ? "clicked-nav-btn" : "nav-btn"; 
+      let buttonClass = this.$route.name === "AccountLoginPage" ? "clicked-nav-btn" : "nav-btn";
       if (this.isLoggedIn) {
         return { label: "Logout", class: buttonClass, name: "AccountLoginPage" }
       } else {
@@ -65,7 +50,7 @@ export default {
       }
     },
   },
-  
+
   methods: {
     ...mapActions(accountModule, ['requestUserLogoutToSpring']),
     goHome() {
@@ -120,6 +105,7 @@ export default {
   },
   created() {
     this.toggleBtn(this.$route.name);
+    this.checkSecondName(this.$route.name);
     this.isLoggedIn = this.$store.state.isLoggedIn
   }
 };
@@ -156,6 +142,7 @@ export default {
 .nav-btn-container {
   margin-right: 20px;
 }
+
 .nav-btn {
   font-size: 12px;
   padding: 10px;
@@ -169,6 +156,7 @@ export default {
     border-top: solid 3px #ccff00;
   }
 }
+
 .clicked-nav-btn {
   font-size: 12px;
   padding: 10px;
