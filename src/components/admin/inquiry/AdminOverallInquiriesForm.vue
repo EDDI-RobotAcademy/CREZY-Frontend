@@ -43,7 +43,7 @@
             </div>
             <v-row>
               <v-col cols="6" v-for="inquiry in inquiryList">
-                <v-card class="admin-inquiry-card" flat>
+                <v-card class="admin-inquiry-card" flat @click="showInquiryAnswerForm(inquiry.inquiryId)">
                   <div class="admin-inquiry-content">
                     <div class="admin-inquiry-icon"
                       :style="{ backgroundColor: getIconBackground(inquiry.inquiryCategoryType) }">
@@ -80,7 +80,8 @@
           <div class="admin-inquiry-title">
             Urgent Inquires
           </div>
-          <v-card v-for="inquiry in urgentInquiries" class="admin-inquiry-card" flat>
+          <v-card v-for="inquiry in urgentInquiries" class="admin-inquiry-card"
+            @click="showInquiryAnswerForm(inquiry.inquiryId)" flat>
             <div class="admin-inquiry-content">
               <div class="admin-inquiry-icon"
                 :style="{ backgroundColor: getIconBackground(inquiry.inquiryCategoryType) }">
@@ -152,8 +153,6 @@ export default {
         { cardName: "Not Answered", buttonName: "see not answered", value: "waiting", buttonColor: "#367589" },
         { cardName: "Total", buttonName: "see all", value: "total", buttonColor: "#1F7DAD" }
       ],
-
-
     }
   },
   methods: {
@@ -204,6 +203,12 @@ export default {
       const accountId = selectedAccountId
       const page = this.currentPage
       this.$emit("getAccountInquiries", { accountId, page })
+    },
+    showInquiryAnswerForm(inquiryId) {
+      this.$router.push({
+        name: "AdminParticularInquiryAnswerPage",
+        params: { selectedInquiryId: inquiryId },
+      })
     }
   },
   mounted() {
@@ -302,13 +307,14 @@ export default {
   color: white;
   display: grid;
   padding: 16px;
+  cursor: pointer;
 }
 
 .admin-inquiry-content {
   justify-content: space-between;
   display: flex;
   align-items: center;
-  margin-top: auto
+  margin-top: auto;
 }
 
 .admin-inquiry-icon {
