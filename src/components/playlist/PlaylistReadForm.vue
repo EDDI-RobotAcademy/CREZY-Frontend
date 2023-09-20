@@ -208,15 +208,14 @@ export default {
     async onSubmitReportSongForm(payload) {
       await this.requestReportAccountAndPlaylistAndSongToSpring(payload)
       this.showReportSongDialog = false
-      console.log('신고 폼이 제출되었습니다:', payload);
+      alert("신고가 완료되었습니다.")
     },
 
     async onSubmitReportAccountPlaylistForm(payload) {
       // 신고 폼 전달 작성(계정 & 플레이리스트 신고)
       await this.requestReportAccountAndPlaylistAndSongToSpring(payload)
       this.showReportAccountPlaylistDialog = false
-      console.log('신고 폼이 제출되었습니다:', payload);
-
+      alert("신고가 완료되었습니다.")
     },
     cancelReportAccountPlalist() {
       this.showReportAccountPlaylistDialog = false;
@@ -633,4 +632,5 @@ export default {
   color: white;
 }
 
-/* 신고폼 스타일 끝 */</style>
+/* 신고폼 스타일 끝 */
+</style>
