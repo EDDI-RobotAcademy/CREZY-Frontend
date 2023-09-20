@@ -1,7 +1,7 @@
 <template>
     <div>
       <v-row>
-        <v-col cols="8">
+        <v-col cols="8" style="margin: auto;">
           <v-card v-if= "accountReportDetail.reportedCategoryType === 'ACCOUNT'" class="custom-card">
             <div class="card-title" style="margin-bottom: 15px;">신고 사항</div>
             <div class="card-content" style="display: flex; align-items: flex-start; margin-left: 100px;">
@@ -12,7 +12,26 @@
                 <div>
                       <div class="playlist-title">
                         {{ accountReportDetail.reportedProfileName }}
-                      </div>                      
+                      </div>      
+                      <tr>                         
+                          <td>신고 수 {{ accountReportDetail.reportedCounts }} 개</td>
+                      </tr>                                        
+                      <tr>
+                          <td>경고 수 {{ accountReportDetail.warningCounts }} 곡</td>
+                      </tr>                                       
+                      <tr>                          
+                          <td>문의 수 {{ accountReportDetail.inquiryCounts }} 개</td>
+                      </tr>                
+                </div>
+              </table>
+              <table class="info-table" style="margin-left: 20px;">
+                <div>
+                      <div>
+                        신고 내용
+                      </div>     
+                      <div>
+                        {{ foundReport ? foundReport.reportContent : '데이터 없음' }}                        
+                      </div>                 
                 </div>
               </table>
             </div>
@@ -27,10 +46,26 @@
                 <div>
                       <div class="playlist-title">
                         {{ playlistReportDetail.playlistName }}
-                      </div>
-                      <div class="playlist-accountWriter">
-                        {{ playlistReportDetail.reportedProfileName }}
-                      </div>
+                      </div>                      
+                        <tr>                       
+                          <td>제작자 :{{ playlistReportDetail.reportedProfileName }}</td>
+                        </tr>                                        
+                        <tr>
+                          <td>노래 {{ playlistReportDetail.songCounts }} 곡</td>
+                        </tr>                                       
+                        <tr>                          
+                          <td>좋아요 {{ playlistReportDetail.likeCounts }} 개</td>
+                        </tr>                     
+                </div>
+              </table>
+              <table class="info-table" style="margin-left: 20px;">
+                <div>
+                      <div>
+                        신고 내용
+                      </div>     
+                      <div>
+                        {{ foundReport ? foundReport.reportContent : '데이터 없음' }}                        
+                      </div>                 
                 </div>
               </table>
             </div>
@@ -58,6 +93,10 @@
                     <td>노래 주소:</td> 
                     <a :href="songReportDetail.link" target="_blank" style="color: white;">{{ songReportDetail.link }}</a> 
                   </tr>
+                  <tr>
+                    <td>신고 내용:</td>
+                    <td>{{ foundReport.reportContent }}</td>    
+                  </tr> 
             </table>
           </v-card>          
           <v-card class="custom-card">
@@ -73,16 +112,12 @@
               </tr>             
             </table>
           </v-card>
-        </v-col>
-        <v-col cols="4" > 
-          <v-card class="button-container">
-            <div class="button-wrapper">
-                <v-btn class="custom-btn" >approve 버튼</v-btn>
-                <v-btn class="custom-btn" style="width: 300px;">return 버튼</v-btn>
-            </div>
-          </v-card>
-        </v-col>
+        </v-col>             
       </v-row>
+      <div class="button-container">
+          <v-btn class="custom-btn">APPROVE</v-btn>
+          <v-btn class="custom-btn">RETURN</v-btn>
+        </div>
     </div>
   </template>
    
@@ -102,6 +137,14 @@
         songReportDetail: {
             type: Object,
             required: false,
+        },
+        reportList: {
+          type: Object,
+          required: true,
+        },
+        reportId: {
+          type: String, 
+          required: true,
         },
       
     },
@@ -148,11 +191,15 @@
       }
     },
     computed: {
+
+      foundReport() {
+        return this.reportList.find(report => report.reportId === this.reportId);
+      }
       
     },
 
     mounted() {
-      
+    
     }
   }
   </script>
@@ -163,6 +210,7 @@
   padding: 20px;
   background-color: #485463;
   color: #ffffff;
+ 
 }
 
 .info-table {
@@ -170,30 +218,19 @@
 }
 
 .button-container {
-  background-color: #485463;
-  color: #ffffff;
-  text-align: center; 
-  height: 100%; 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center; 
-  align-items: center; 
-}
-
-.button-wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  
+  color: #ffffff;
+  justify-content: center;  
+  margin-top: -25px;
+  margin-bottom: 10px;
 }
 
 .custom-btn {
-  background-color: #5b6775c5;
-  color: #ffffff; 
+  background-color: #5b6775c5;  
   width: 300px;
-  
+  margin: 5px; 
 }
+
 .song-info {
   flex-grow: 1;
 }
