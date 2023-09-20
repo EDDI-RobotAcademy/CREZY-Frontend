@@ -246,11 +246,13 @@ export default {
       this.$emit("getStatus", { date });
     },
     async changeBadNickname(accountId) {
-      await this.requestChangeBadNicknameToSpring(accountId)
-      await this.requestAccountInfoForAdminToSpring(accountId);
-      const accountToUpdate = await this.accounts.find(account => account.accountId === accountId);
-      if (accountToUpdate) {
-        accountToUpdate.nickname = this.accountInfo.nickname;
+      if (confirm("닉네임을 바꾸시겠습니까?")) {
+        await this.requestChangeBadNicknameToSpring(accountId)
+        await this.requestAccountInfoForAdminToSpring(accountId);
+        const accountToUpdate = await this.accounts.find(account => account.accountId === accountId);
+        if (accountToUpdate) {
+          accountToUpdate.nickname = this.accountInfo.nickname;
+        }
       }
     },
     removeFromBlacklist() {
