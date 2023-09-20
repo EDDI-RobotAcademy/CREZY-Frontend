@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-form @submit.prevent="onSubmit" ref="form">
+        <v-form @keydown.enter.prevent="onSubmitForm" @submit.prevent="onSubmitForm" ref="form">
             <v-text-field id="playlist-title" type="text" v-model="playlistName" placeholder="제목을 입력하세요"
                 class="input-field"></v-text-field>
             <div class="popup">
@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <v-btn @click="onSubmitForm" rounded class="add-button">생성</v-btn>
+            <v-btn @click.prevent="onSubmitForm" rounded class="add-button">생성</v-btn>
         </v-form>
     </div>
 </template>
@@ -62,18 +62,20 @@ export default {
             }
         },
 
+
         async onSubmitForm() {
-            if (!this.playlistName) {
+            if (this.playlistName.trim() != '') {
+                const { playlistName, thumbnailName } = this;
+
+                this.$emit("submit", { playlistName, thumbnailName });
+
+                if (thumbnailName !== null) {
+                    this.uploadAwsS3()
+                }
+            } else {
                 alert('제목을 입력해주세요!');
                 return;
-            }
 
-            const { playlistName, thumbnailName } = this;
-
-            this.$emit("submit", { playlistName, thumbnailName });
-
-            if (thumbnailName !== null) {
-                this.uploadAwsS3()
             }
         },
 
