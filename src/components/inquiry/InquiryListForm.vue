@@ -78,9 +78,14 @@ export default {
             return typeMap[englishType] || englishType;
         },
         async showInquiryReadForm(inquiryId) {
-            this.isInquiryRead = true
-            this.selectedInquiryId = inquiryId;
-            await this.requestInquiryToSpring(this.selectedInquiryId);
+            if (this.selectedInquiryId === inquiryId) {
+                this.isInquiryRead = false;
+                this.selectedInquiryId = null;
+            } else {
+                this.isInquiryRead = true;
+                this.selectedInquiryId = inquiryId;
+                await this.requestInquiryToSpring(this.selectedInquiryId);
+            }
         },
         handleInquiryDeleted(isDeleted) {
             if (isDeleted) {
@@ -100,7 +105,7 @@ export default {
         answerStyle(isAnswered) {
             return {
                 color: isAnswered ? "white" : "gray",
-                fontSize: "14px"
+                fontWeight: isAnswered ? "bold" : "normal"
             };
         },
     },
