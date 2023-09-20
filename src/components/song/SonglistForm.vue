@@ -24,15 +24,17 @@
                         <td align="center" style="width: 10%;">
                             <v-img :src=getImage(song.link) height="50" width="50"></v-img>
                         </td>
+
                         <td align="center" style="width: 50%;">
                             {{ song.title }}
                         </td>
+
                         <td align="center" style="width: 30%;">
                             {{ song.singer }}
                         </td>
 
                         <td align="center" style="">
-                            <button  v-if="song.statusType.statusType === 'BLOCK'" @click="reModifySongButtonClick(song.songId)"
+                            <button  v-if="song.statusType.statusType === 'BLOCK'" @click="songModify(song)"
                                 style="color: red; margin-right: 70px;" >
                                 <v-icon>mdi-alert-circle</v-icon>
                             </button>
@@ -42,6 +44,7 @@
                             <input type="checkbox" :id="'song-' + song.songId" v-model="checkedSongs" :value="song.songId"
                                 class="checkbox">
                         </td>
+
                         <td v-else style="width: 10%;">
                             <input type="checkbox" :id="'song-' + song.songId" v-model="checkedSongs" :value="song.songId"
                                 class="checkbox invisible-checkbox">
@@ -51,6 +54,13 @@
             </table>
         </v-col>
     </v-row>
+
+    <div v-if="showSongModifyForm" class="modal">
+        <v-card class="modal-content">
+            <SongModifyForm :song="selectedSong" @submit="songModifyForm" @cancelModify="showSongModifyForm = false" />
+        </v-card>
+    </div>
+
     <v-dialog v-model="confirmDeleteDialog" persistent max-width="290">
         <v-card class="confirmDeleteDialog">
             <v-card-text class="headline" style="color: white">선택된 곡: {{ checkedSongs.length }}곡</v-card-text>
@@ -64,7 +74,12 @@
     </v-dialog>
 </template>
 <script>
+import SongModifyForm from "@/components/song/SongModifyForm.vue"
+
 export default {
+    components: {
+        SongModifyForm,
+    },
     props: {
         playlist: {
             type: Object,
@@ -76,12 +91,18 @@ export default {
             checkedSongs: [],
             hoverIndex: null,
             confirmDeleteDialog: false,
-
+            showSongModifyForm: false,
+            selectedSong: null,
         }
     },
     methods: {
-        reModifySongButtonClick(songId) {
-
+        songModify(song) {
+            this.selectedSong = song;  
+            this.showSongModifyForm = true;
+        },
+        songModifyForm() {
+            this.$emit("submitModifySong", payload);
+            this.showSongModifyForm = false;
         },
         showCheckbox(index) {
             this.hoverIndex = index;
@@ -115,6 +136,26 @@ export default {
 }
 </script>
 <style>
+.modal {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.modal-content {
+  width: 600px;
+  height: 440px;
+  margin: auto;
+  padding: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
 input[type=checkbox] {
     visibility: hidden;
     width: 18px;
