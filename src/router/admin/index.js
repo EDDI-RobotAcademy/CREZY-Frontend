@@ -6,6 +6,7 @@ import AdminOverallInquiriesPage from "@/views/admin/inquiry/AdminOverallInquiri
 import AdminParticularPlaylistPage from "@/views/admin/playlist/AdminParticularPlaylistDetailPage.vue"
 import AdminOverallSongsPage from "@/views/admin/song/AdminOverallSongsPage.vue"
 import AdminParticularInquiryAnswerPage from "@/views/admin/inquiry/AdminParticularInquiryAnswerPage.vue"
+import AdminDashboardPage from "@/views/admin/AdminDashboardPage.vue"
 
 const adminRoutes = [
   {
@@ -62,6 +63,10 @@ const adminRoutes = [
     props: {
       default: true
     }
+  },
+    path: "/admin/dashboard",
+    name: "AdminDashboardPage",
+    component: AdminDashboardPage
   },
 ]
 
