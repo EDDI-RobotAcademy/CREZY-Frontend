@@ -1,5 +1,6 @@
 import {
-  REQUEST_RECOMMENDATIONS_TO_SPRING
+  REQUEST_RECOMMENDATIONS_TO_SPRING,
+  REMOVE_RECOMMENDATIONS
 } from "./mutation-types";
 
 import axiosInst from "@/utility/axiosInst";
@@ -27,5 +28,9 @@ export default {
       .then((res) => {
         commit(REQUEST_RECOMMENDATIONS_TO_SPRING, res.data)
       })
-  } 
+  },
+
+  removeRecommendations({ commit }) {
+    return commit(REMOVE_RECOMMENDATIONS)
+  }
 };
