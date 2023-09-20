@@ -57,9 +57,14 @@ export default {
     $route(to) {
       // 라우트 변경 시 네비게이션 및 배경을 설정합니다.
       if (to.path.startsWith('/admin')) {
-        this.currentNavComponent = AdminNavigation;
-        // this.currentVideoBackground = require(`@/assets/vids/vid-background.mp4`);
-        this.isAdmin = true
+        if (localStorage.getItem("roleType") !== "ADMIN") {
+          this.currentNavComponent = null
+          this.isAdmin = true
+        } else {
+          this.currentNavComponent = AdminNavigation;
+          // this.currentVideoBackground = require(`@/assets/vids/vid-background.mp4`);
+          this.isAdmin = true
+        }
       } else {
         this.currentNavComponent = NavigationMenu;
         // this.currentVideoBackground = require(`@/assets/vids/vid-background2_1080.mp4`);
