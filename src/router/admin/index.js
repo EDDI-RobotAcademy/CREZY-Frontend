@@ -64,6 +64,7 @@ const adminRoutes = [
       default: true
     }
   },
+  {
     path: "/admin/dashboard",
     name: "AdminDashboardPage",
     component: AdminDashboardPage

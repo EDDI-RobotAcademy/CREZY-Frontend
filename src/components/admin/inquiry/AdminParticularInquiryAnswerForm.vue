@@ -21,6 +21,24 @@
             </div>
         </v-card>
 
+        <v-card class="particular-playlist-card">
+            <div style="padding: 10px; font-size: 15px;">
+                <div style="margin-bottom: 15px;">{{ inquiry.nickname }}님의 문의에 답변해주세요</div>
+                <v-textarea v-model="inquiryAnswer" bg-color="grey-lighten-3" variant="solo-filled" label="답변 작성">
+                </v-textarea>
+                <v-btn @click="onSubmitInquiryAnswer" color="white" style="font-weight:500;">전송</v-btn>
+            </div>
+        </v-card>
+
+        <v-card v-if="inquiry.inquiryAnswer && inquiry.inquiryAnswer.inquiryAnswer != null"
+            class="particular-playlist-card">
+            <div style="padding: 10px;">
+                <span class="particular-playlist-btn-2">답변</span>
+                <div style="white-space: pre-line; margin-top: 10px;">
+                    {{ inquiry.inquiryAnswer.inquiryAnswer }}</div>
+            </div>
+        </v-card>
+
         <v-dialog v-model="imageModal" max-width="50%">
             <v-card>
                 <v-img style="cursor: pointer;" :src="modalImage" fluid max-width="100%" max-height="100%"
@@ -39,6 +57,7 @@ export default {
 
             imageModal: false,
             modalImage: '',
+            inquiryAnswer: '',
         }
     },
     props: {
@@ -69,6 +88,10 @@ export default {
             };
             return typeMap[englishType] || englishType;
         },
+        async onSubmitInquiryAnswer() {
+            await this.$emit('submitInquiryAnswer', this.inquiryAnswer)
+            this.inquiryAnswer = ''
+        }
     },
 }
 </script>

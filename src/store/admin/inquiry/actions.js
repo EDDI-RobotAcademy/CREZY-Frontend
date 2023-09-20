@@ -54,4 +54,14 @@ export default {
       commit(REQUEST_INQUIRY_FOR_ADMIN_TO_SPRING, res.data)
     })
   },
+
+  requestInquiryAnswerToSpring({ }, payload) {
+    const { inquiryAnswer, inquiryId } = payload
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.post("/admin-inquiry/inquiry-answer",
+      { inquiryAnswer, inquiryId },
+      { headers: { Authorization: userToken } }
+    ).then((res) => {
+    })
+  },
 }
