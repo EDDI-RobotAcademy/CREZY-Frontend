@@ -100,7 +100,7 @@ export default {
             this.selectedSong = song;  
             this.showSongModifyForm = true;
         },
-        songModifyForm() {
+        songModifyForm(payload) {
             this.$emit("submitModifySong", payload);
             this.showSongModifyForm = false;
         },
