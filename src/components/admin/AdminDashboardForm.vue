@@ -353,11 +353,15 @@ export default {
   },
 
   mounted() {
-    this.selectedDay = this.daysOfWeek[this.calculateDay()]
-    this.dayIndex = this.calculateDay()
-    this.getWeekBehavior(0)
-    this.getWeekTraffic(0)
-    this.newCount = this.barData.datasets[0].data[this.dayIndex]
+    if (!localStorage.getItem("roleType") === "ADMIN" || localStorage.getItem("roleType") === null) {
+      this.$router.push({ name: "home" });
+    } else {
+      this.selectedDay = this.daysOfWeek[this.calculateDay()]
+      this.dayIndex = this.calculateDay()
+      this.getWeekBehavior(0)
+      this.getWeekTraffic(0)
+      this.newCount = this.barData.datasets[0].data[this.dayIndex]
+    }
   },
 
   computed: {

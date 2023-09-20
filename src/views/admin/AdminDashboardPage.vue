@@ -48,7 +48,11 @@ export default {
   },
 
   async mounted() {
-    await this.requestDailyStatToSpring()
+    if (!localStorage.getItem("roleType") === "ADMIN" || localStorage.getItem("roleType") === null) {
+      this.$router.push({ name: "home" });
+    } else {
+      await this.requestDailyStatToSpring()
+    }
   }
 }
 </script>
