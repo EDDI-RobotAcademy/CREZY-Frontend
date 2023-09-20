@@ -10,7 +10,7 @@
                         {{ selectedInquiry.inquiryTitle }}
                     </span>
                     <br>
-                    <span style="position: relative; display: flex;">
+                    <span style="position: relative; display: flex; text-align: left; white-space: pre-line;">
                         {{ selectedInquiry.inquiryContent }}
                     </span>
                     <div class="inquiry-image-container">
