@@ -121,7 +121,8 @@
             <tr v-if="selectedReportId === report.reportId">
               <td colspan="6">
                 <AdminParticularReportDetailForm :accountReportDetail="accountReportDetail"
-                  :playlistReportDetail="playlistReportDetail" :songReportDetail="songReportDetail" />
+                  :playlistReportDetail="playlistReportDetail" :songReportDetail="songReportDetail"
+                  :reportList="reportList" :reportId="selectedReportId" />
               </td>
             </tr>
           </template>
