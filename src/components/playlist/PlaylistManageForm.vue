@@ -62,7 +62,7 @@
         <PlaylistModifyForm :playlist="playlist" @submit="onSubmit" @cancel="showSongModificationForm = false" />
       </v-card>
     </div>
-    <SonglistForm :playlist="playlist" @deleteSubmit="deleteSubmit" />
+    <SonglistForm @submitModifySong="submitModifySong" :playlist="playlist" @deleteSubmit="deleteSubmit" />
   </div>
 </template>
 
@@ -72,6 +72,7 @@ import SonglistForm from "@/components/song/SonglistForm.vue";
 import { mapActions } from "vuex";
 import SongRegisterForm from "../song/SongRegisterForm.vue";
 const playlistModule = "playlistModule";
+const songModule = "songModule";
 export default {
   components: {
     PlaylistModifyForm,
@@ -99,7 +100,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(playlistModule, ["requestPlaylistDeleteToSpring"]),
+    ...mapActions(playlistModule, ["requestPlaylistDeleteToSpring","requestPlaylistIncludeBlockSongToSpring"]),
+    ...mapActions(songModule, [ "requestSongModifyToSpring"]),
+    async submitModifySong(payload) {
+      const playlistId = this.playlistId
+      await this.requestSongModifyToSpring(payload)
+      await this.requestPlaylistIncludeBlockSongToSpring(playlistId)
+    },
     getImage(playlist) {
       if (!playlist || playlist.length === 0) {
         return require("@/assets/images/Logo_Text-removebg-preview.png");
