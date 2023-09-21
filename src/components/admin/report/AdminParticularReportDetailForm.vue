@@ -174,14 +174,16 @@
             return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${playlistImageName}`;
         },
         getSongImage(link) {
-          return (
-            "https://img.youtube.com/vi/" +
-            link.substring(link.lastIndexOf("=") + 1) +
-            "/mqdefault.jpg"
-          );
+          if(link)
+            return (
+              "https://img.youtube.com/vi/" +
+              link.substring(link.lastIndexOf("=") + 1) +
+              "/mqdefault.jpg"
+            );
         },
         formatLyrics(lyrics) {
-          return lyrics.replace(/<br>/g, '\n');
+          if(lyrics)
+            return lyrics.replace(/<br>/g, '\n');
         },
         
         
