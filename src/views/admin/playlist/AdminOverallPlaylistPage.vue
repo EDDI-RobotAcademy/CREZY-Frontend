@@ -7,6 +7,7 @@
       :playlistsStatus="playlistsStatus"
       :playlists="playlists"
       :accountId="selectedAccountId"
+      @searchPlaylist="searchPlaylist"
     />
     <v-pagination 
       style="color: white" 
@@ -39,7 +40,8 @@ export default {
     ...mapActions(adminPlaylistModule, [
       "requestPlaylistsStatusToSpring",
       "requestPlaylistsForAdminToSpring",
-      "requestAccountPlaylistsToSpring"
+      "requestAccountPlaylistsToSpring",
+      "requestSearchPlaylistsForAdminToSpring"
     ]),
 
     async getPlaylistsStatus(targetDate) {
@@ -64,6 +66,11 @@ export default {
       const accountId = selectedAccountId
       const page = this.currentPage
       await this.requestAccountPlaylistsToSpring({ accountId, page })
+    },
+    async searchPlaylist(payload) {
+      const keyword = payload
+      const page = this.currentPage
+      await this.requestSearchPlaylistsForAdminToSpring({ page, keyword })
     }
   },
 

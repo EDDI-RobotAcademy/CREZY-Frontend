@@ -73,5 +73,15 @@ export default {
     ).then((res) => {
       commit(REQUEST_PLAYLISTS_FOR_ADMIN_TO_SPRING, res.data)
     })
+  },
+  requestSearchPlaylistsForAdminToSpring({ commit }, payload) {
+    const { page, keyword } = payload
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.post("/admin-playlist/search-playlist",
+      { page, keyword },
+      { headers: { Authorization: userToken } })
+      .then((res) => {
+        commit(REQUEST_PLAYLISTS_FOR_ADMIN_TO_SPRING, res.data)
+      })
   }
 }
