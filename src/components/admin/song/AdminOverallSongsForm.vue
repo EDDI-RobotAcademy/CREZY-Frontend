@@ -88,8 +88,8 @@
                         <tr class="accounts-table-picker-container">
                             <td colspan="12" align="end">
                                 <div>
-                                    <v-icon style="color: #EA78B3; font-size: 46px">mdi-circle-small</v-icon> open
-                                    <v-icon style="color: #7AE5A8; font-size: 46px">mdi-circle-small</v-icon> block
+                                    <v-icon style="color: greenyellow; font-size: 46px">mdi-circle-small</v-icon> open
+                                    <v-icon style="color: gray; font-size: 46px">mdi-circle-small</v-icon> block
                                 </div>
                             </td>
                         </tr>
@@ -410,17 +410,16 @@ export default {
 .open-song-marker {
     height: 50px;
     width: 3px;
-    background-color: #EA78B3;
+    background-color: greenyellow;
     border-radius: 5px;
 }
 
 .block-song-marker {
     height: 50px;
     width: 3px;
-    background-color: #7AE5A8;
+    background-color: gray;
     border-radius: 5px;
 }
-
 
 td:first-child,
 th:first-child {
