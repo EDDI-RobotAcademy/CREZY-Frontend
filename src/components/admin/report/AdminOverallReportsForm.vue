@@ -120,9 +120,14 @@
             </tr>
             <tr v-if="selectedReportId === report.reportId">
               <td colspan="6">
-                <AdminParticularReportDetailForm :accountReportDetail="accountReportDetail"
-                  :playlistReportDetail="playlistReportDetail" :songReportDetail="songReportDetail"
-                  :reportList="reportList" :reportId="selectedReportId" />
+                <AdminParticularReportDetailForm 
+                @changeStatusTypeApprove="changeStatusTypeApprove"
+                @changeStatusTypeReturn="changeStatusTypeReturn"
+                :accountReportDetail="accountReportDetail"
+                :playlistReportDetail="playlistReportDetail" 
+                :songReportDetail="songReportDetail"
+                :reportList="reportList" :reportId="selectedReportId" 
+                />
               </td>
             </tr>
           </template>
@@ -174,6 +179,18 @@ export default {
     },
   },
   methods: {
+
+    changeStatusTypeApprove() {
+      const selectedReportId = this.selectedReportId
+      this.$emit("changeStatusTypeApprove", selectedReportId)
+      console.log("APPROVE 자식")
+    },
+
+    changeStatusTypeReturn() {
+      const selectedReportId = this.selectedReportId
+      this.$emit("changeStatusTypeReturn", selectedReportId)
+    },
+
 
     selectCategory(selectedCategory) {
       this.selectedCategory = selectedCategory

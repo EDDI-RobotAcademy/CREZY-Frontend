@@ -47,5 +47,13 @@ export default {
           commit(REQUEST_SONG_REPORT_DETAIL_TO_SPRING, res.data);
         });
   },
+  requestChangeReportStatusToSpring({}, payload) {
+    const { reportId, reportStatus } = payload
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.post("/admin-report/processing",
+      { reportId, reportStatus },
+      { headers: { Authorization: userToken } })
+      .then((res) => {})    
+  },
  
 }
