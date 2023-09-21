@@ -1,8 +1,14 @@
 <template>
   <div>
-    <AdminOverallReportsForm @openManage="getReportInfo" :reportList="reportList"
-      :accountReportDetail="accountReportDetail" :playlistReportDetail="playlistReportDetail"
-      :songReportDetail="songReportDetail" />
+    <AdminOverallReportsForm 
+    @openManage="getReportInfo" 
+    @changeStatusTypeApprove="changeStatusTypeApprove"
+    @changeStatusTypeReturn="changeStatusTypeReturn"
+    :reportList="reportList"
+    :accountReportDetail="accountReportDetail" 
+    :playlistReportDetail="playlistReportDetail"
+    :songReportDetail="songReportDetail" 
+    />
   </div>
 </template>
   
@@ -22,16 +28,32 @@ export default {
       "requestAccountReportDetailToSpring",
       "requestPlaylistReportDetailToSpring",
       "requestSongReportDetailToSpring",
+      "requestChangeReportStatusToSpring",
     ]),
 
     async getReportInfo(selectedReportId) {
       const reportId = selectedReportId
-      await this.requestAccountReportDetailToSpring(reportId);
-      console.log(this.accountReportDetail.reporterProfileName)
+      await this.requestAccountReportDetailToSpring(reportId);      
       await this.requestPlaylistReportDetailToSpring(reportId);
-      console.log(this.playlistReportDetail.reporterProfileName)
       await this.requestSongReportDetailToSpring(reportId);
 
+    },
+
+    async changeStatusTypeApprove(selectedReportId) {
+      const payload = {
+        reportId: selectedReportId,
+        reportStatus: 'APPROVE' 
+      };
+      await this.requestChangeReportStatusToSpring(payload);
+      await this.requestReportListToSpring();
+    },
+    async changeStatusTypeReturn(selectedReportId) {
+      const payload = {
+        reportId: selectedReportId,
+        reportStatus: 'RETURN', 
+      };
+      await this.requestChangeReportStatusToSpring(payload);
+      await this.requestReportListToSpring();
     },
   },
   computed: {

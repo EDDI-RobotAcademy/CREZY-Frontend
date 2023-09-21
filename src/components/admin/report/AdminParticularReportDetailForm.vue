@@ -115,8 +115,8 @@
         </v-col>             
       </v-row>
       <div class="button-container">
-          <v-btn class="custom-btn">APPROVE</v-btn>
-          <v-btn class="custom-btn">RETURN</v-btn>
+          <v-btn @click="changeStatusTypeApprove" class="custom-btn">APPROVE</v-btn>
+          <v-btn @click="changeStatusTypeReturn" class="custom-btn">RETURN</v-btn>
         </div>
     </div>
   </template>
@@ -153,6 +153,13 @@
     },
 
     methods: {
+
+        changeStatusTypeApprove() {
+        this.$emit("changeStatusTypeApprove")
+        },
+        changeStatusTypeReturn() {
+          this.$emit("changeStatusTypeReturn")
+        },
         getProfileImage(profileImageName) {
             if (!profileImageName) {
                 return require('@/assets/images/Logo_only_small-removebg-preview.png');
