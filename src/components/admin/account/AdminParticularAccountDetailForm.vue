@@ -68,7 +68,7 @@
             <v-btn v-if="accountInfo.accountRoleType === 'BLACKLIST'" class="account-manage-btn"
               @click="removeFromBlacklist">블랙 해제하기</v-btn>
             <v-btn v-else class="account-manage-btn" @click="moveToBlacklist">유저 블랙하기</v-btn>
-            <v-btn class="account-manage-btn">경고 수정 하기</v-btn>
+            <v-btn @click="openWarnings(accountInfo)" class="account-manage-btn">경고 수정 하기</v-btn>
             <v-btn @click="changeBadNickname" class="account-manage-btn">닉네임 지우기</v-btn>
             <v-btn @click="findUserInquiries" class="account-manage-btn">문의 내역 보기</v-btn>
             <v-btn @click="findRegisteredPlaylists" class="account-manage-btn" style="margin: 0;">등록한 플레이리스트</v-btn>
@@ -76,6 +76,14 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="accountWarnings" max-width="600px">
+      <AdminWarningCheckForm
+        :nickname="selectedNickname"
+        :warnings="warnings"
+        @giveWarning="giveWarning"
+        @cancelCheckWarning="cancelCheckWarning"/>
+    </v-dialog>
   </div>
 </template>
 
@@ -92,6 +100,7 @@ import {
   Filler
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
+import AdminWarningCheckForm from "@/components/admin/warning/AdminWarningCheckForm.vue"
 
 ChartJS.register(
   CategoryScale,
@@ -110,9 +119,13 @@ export default {
       type: Object,
       required: true
     },
+    warnings: {
+      type: Array
+    }
   },
   components: {
-    Line
+    Line,
+    AdminWarningCheckForm
   },
   data() {
     return {
@@ -139,6 +152,9 @@ export default {
           },
         }
       },
+
+      accountWarnings: false,
+      selectedNickname: ''
     }
   },
   computed: {
@@ -191,6 +207,25 @@ export default {
         name: "AdminOverallInquiriesPage",
         query: { accountId: this.accountInfo.accountId }
       })
+    },
+
+    openWarnings(account) {
+      this.accountWarnings = true
+      this.selectedNickname = account.nickname
+      const selectedAccountId = account.accountId
+      this.$emit("getAccountWarnings", selectedAccountId)
+    },
+
+    giveWarning(payload) {
+      this.accountWarnings = false
+      const reportedId = this.accountInfo.accountId
+      const { reportedCategoryType, reportContent } = payload
+      console.log(payload)
+      this.$emit("giveWarning", { reportedCategoryType, reportContent, reportedId })
+    },
+
+    cancelCheckWarning() {
+      this.accountWarnings = false
     }
   },
 }

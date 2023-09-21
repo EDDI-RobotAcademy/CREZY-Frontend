@@ -1,8 +1,9 @@
 <template>
   <div>
     <AdminOverallAccountsForm @getStatus="getAccountsStatus" @switchCategory="getCategorizedAccountList"
-      @openManage="getAccountInfo" @removeFromBlacklist="removeFromBlacklist" @moveToBlacklist="moveToBlacklist"
-      :accountsStatus="accountsStatus" :accounts="accountList" :accountInfo="accountInfo" />
+      @openManage="getAccountInfo" @removeFromBlacklist="removeFromBlacklist" @moveToBlacklist="moveToBlacklist" 
+      @getAccountWarnings="getAccountWarnings" @giveWarning="giveWarning"
+      :accountsStatus="accountsStatus" :accounts="accountList" :accountInfo="accountInfo" :warnings="warnings"/>
     <v-pagination style="color: white" v-model="currentPage" :length="accountListCount" @click="getPaginatedAccounts">
     </v-pagination>
   </div>
@@ -33,7 +34,9 @@ export default {
       'requestCategoryAccountListToSpring',
       'requestAccountInfoForAdminToSpring',
       'requestBlacklistAccountToSpring',
-      'requestRemoveBlacklistAccountToSpring'
+      'requestRemoveBlacklistAccountToSpring',
+      'requestAccountWarningsForAdminToSpring',
+      'requestWarningToAccountToSpring'
     ]),
 
     async getAccountsStatus(targetDate) {
@@ -92,6 +95,17 @@ export default {
       await this.requestRemoveBlacklistAccountToSpring(accountId)
       await this.getPaginatedAccounts()
       await this.requestAccountInfoForAdminToSpring(accountId)
+    },
+
+    async getAccountWarnings(selectedAccountId) {
+      const accountId = selectedAccountId
+      await this.requestAccountWarningsForAdminToSpring(accountId)
+    },
+
+    async giveWarning(payload) {
+      const accountId = payload.reportedId
+      await this.requestWarningToAccountToSpring(payload)
+      await this.requestAccountInfoForAdminToSpring(accountId)
     }
   },
   computed: {
@@ -99,7 +113,8 @@ export default {
       'accountsStatus',
       'accountList',
       'accountListCount',
-      'accountInfo'
+      'accountInfo',
+      'warnings'
     ]),
 
   },

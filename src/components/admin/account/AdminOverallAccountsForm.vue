@@ -125,8 +125,14 @@
             </tr>
             <tr v-if="selectedAccountId === account.accountId">
               <td colspan="6">
-                <AdminParticularAccountDetailForm :accountInfo="accountInfo" @isChangeBadNickname="changeBadNickname"
-                  @removeFromBlacklist="removeFromBlacklist" @moveToBlacklist="moveToBlacklist" />
+                <AdminParticularAccountDetailForm 
+                  :accountInfo="accountInfo" 
+                  :warnings="warnings"
+                  @isChangeBadNickname="changeBadNickname"
+                  @removeFromBlacklist="removeFromBlacklist" 
+                  @moveToBlacklist="moveToBlacklist"
+                  @getAccountWarnings="getAccountWarnings"
+                  @giveWarning="giveWarning" />
               </td>
             </tr>
           </template>
@@ -188,8 +194,12 @@ export default {
     accountInfo: {
       type: Object,
       required: false,
+    },
+    warnings: {
+      type: Array
     }
   },
+
   data() {
     return {
       selectedAccountId: '',
@@ -262,8 +272,18 @@ export default {
     moveToBlacklist() {
       const selectedAccountId = this.selectedAccountId
       this.$emit("moveToBlacklist", selectedAccountId)
+    },
+
+    getAccountWarnings(selectedAccountId) {
+      this.$emit("getAccountWarnings", selectedAccountId)
+    },
+
+    giveWarning(payload) {
+      console.log(payload)
+      this.$emit("giveWarning", payload)
     }
   },
+
   watch: {
     searchDate(newValue) {
       this.formattedDate = this.formatDate(newValue);

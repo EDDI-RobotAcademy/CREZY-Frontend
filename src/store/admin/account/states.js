@@ -3,4 +3,5 @@ export default {
     accountList: [],
     accountListCount: 0,
     accountInfo: {},
+    warnings: []
   };
