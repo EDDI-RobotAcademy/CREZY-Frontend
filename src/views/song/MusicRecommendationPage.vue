@@ -1,6 +1,10 @@
 <template>
   <div>
-    <MusicRecommendationForm :musicList="musicList"/>
+    <MusicRecommendationForm 
+      :musicList="musicList"
+      :myPlaylists="myPlaylists"
+      @addSongToPlaylist="addSongToPlaylist"
+      @openAddSongDialog="openAddSongDialog"/>
   </div>
 </template>
 
@@ -10,6 +14,7 @@ import MusicRecommendationForm from "@/components/music/MusicRecommendationForm.
 import { mapActions, mapState } from "vuex";
 
 const songModule = "songModule";
+const playlistModule = "playlistModule"
 
 export default {
   components: {
@@ -23,16 +28,31 @@ export default {
   },
   computed: {
     ...mapState(songModule, ["musicList"]),
+    ...mapState(playlistModule, ["myPlaylists"])
   },
   methods: {
-    ...mapActions(songModule, ["requestRecommendationToSpring", "removeRecommendations"]),
+    ...mapActions(songModule, [
+      "requestRecommendationToSpring", 
+      "removeRecommendations",
+      "requestSongRegisterToSpring"
+    ]),
+
+    ...mapActions(playlistModule, ["requestMyPlaylistsToSpring"]),
 
     async getRecommendation(inputedSentence) {
       const sentence = inputedSentence
       await this.removeRecommendations()
       await this.requestRecommendationToSpring(sentence)
+    },
+
+    async addSongToPlaylist(payload) {
+      await this.requestSongRegisterToSpring(payload)
+      alert("노래가 플레이리스트에 추가됐습니다")
+    },
+
+    async openAddSongDialog() {
+      await this.requestMyPlaylistsToSpring()
     }
-    
   },
   mounted() {
     this.getRecommendation(this.sentence)

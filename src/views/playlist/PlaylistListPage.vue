@@ -17,8 +17,8 @@ export default {
   methods: {
     ...mapActions(playlistModule, ["requestPlaylistsToSpring"]),
     async getPlaylists(payload) {
-      const page = payload
-      await this.requestPlaylistsToSpring(page)
+      const {page, sortType} = payload
+      await this.requestPlaylistsToSpring({page, sortType})
     }
   },
   computed: {
