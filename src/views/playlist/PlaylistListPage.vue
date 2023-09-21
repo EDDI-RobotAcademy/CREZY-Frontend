@@ -1,6 +1,7 @@
 <template>
   <div>
-    <PlaylistListForm :playlists="playlists" :playlistListCount="playlistListCount" @requestPlaylist="getPlaylists" />
+    <PlaylistListForm :playlists="playlists" :playlistListCount="playlistListCount" @requestPlaylist="getPlaylists"
+      @searchPlaylist="searchPlaylist" />
   </div>
 </template>
 
@@ -15,11 +16,15 @@ export default {
     PlaylistListForm,
   },
   methods: {
-    ...mapActions(playlistModule, ["requestPlaylistsToSpring"]),
+    ...mapActions(playlistModule, ["requestPlaylistsToSpring", "requestSearchPlaylistsToSpring"]),
     async getPlaylists(payload) {
-      const {page, sortType} = payload
-      await this.requestPlaylistsToSpring({page, sortType})
+      const { page, sortType } = payload
+      await this.requestPlaylistsToSpring({ page, sortType })
+    },
+    async searchPlaylist(payload) {
+      await this.requestSearchPlaylistsToSpring(payload)
     }
+
   },
   computed: {
     ...mapState(playlistModule, ["playlists", "playlistListCount"]),

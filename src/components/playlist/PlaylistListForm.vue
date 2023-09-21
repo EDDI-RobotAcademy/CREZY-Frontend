@@ -3,6 +3,10 @@
     <v-card class="playlist-list-card" flat>
       <div class="playlist-list-title-container">
         <div class="playlist-list-title">Playlists</div>
+        <div style="width: 250px;">
+          <v-text-field class="playlist-search-field" placeholder="Search Playlist" density="compact" variant="underlined" append-inner-icon="mdi-magnify" single-line hide-details
+            @click:append-inner="onClick" v-model="keyword" @keyup.enter="searchPlaylist"></v-text-field>
+        </div>
         <v-btn-toggle
           rounded="xl"
           v-model="selectedBtn"
@@ -74,7 +78,8 @@ export default {
       awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
       awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
 
-      selectedBtn: 'recent'
+      selectedBtn: 'recent',
+      keyword: ''
     };
   },
   props: {
@@ -121,11 +126,23 @@ export default {
     selectCategory() {
       this.currentPage = 1
       this.getPaginatedPlaylist()
+    },
+    searchPlaylist() {
+      if (this.keyword.trim() != '') {
+        let keywordInfo = {
+          page: this.currentPage,
+          keyword: this.keyword
+        }
+        this.$emit("searchPlaylist", keywordInfo)
+        this.keyword = ''
+      } else {
+        alert('공백이 입력되었습니다.')
+      }
     }
   },
   mounted() {
     this.getPaginatedPlaylist()
-  }
+  },
 };
 </script>
 
@@ -138,8 +155,8 @@ export default {
 }
 
 .playlist-list-title-container {
-  display: flex; 
-  justify-content: space-between; 
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -215,9 +232,14 @@ export default {
   text-transform: none;
 }
 
-.selected-toggle-btn{
+.selected-toggle-btn {
   color: greenyellow !important;
   background-color: transparent;
 
+}
+
+.playlist-search-field {
+  color: greenyellow;
+  font-size: 12px;
 }
 </style>
