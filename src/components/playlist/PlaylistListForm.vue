@@ -1,7 +1,20 @@
 <template lang="">
   <v-container>
     <v-card class="playlist-list-card" flat>
-      <div class="playlist-list-title">Playlists</div>
+      <div class="playlist-list-title-container">
+        <div class="playlist-list-title">Playlists</div>
+        <v-btn-toggle
+          rounded="xl"
+          v-model="selectedBtn"
+          class="btn-toggle"
+          selected-class="selected-toggle-btn"
+          mandatory="force"
+          @click="selectCategory">
+          <v-btn class="toggle-btn" value="recent">Recent</v-btn>
+          <v-btn class="toggle-btn" value="trending">Trending</v-btn>
+        </v-btn-toggle>
+      </div>
+
       <div class="playlist-list">
         <v-row>
           <v-col
@@ -40,11 +53,11 @@
           </v-col>
         </v-row>
         <v-pagination 
-              style="color: white; bottom: 0;" 
-              v-model="currentPage" 
-              :length="playlistListCount" 
-              @click="getPaginatedPlaylist">
-            </v-pagination>
+          style="color: white; bottom: 0;" 
+          v-model="currentPage" 
+          :length="playlistListCount" 
+          @click="getPaginatedPlaylist">
+        </v-pagination>
       </div>
     </v-card>
   </v-container>
@@ -60,6 +73,8 @@ export default {
       awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
       awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
       awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
+
+      selectedBtn: 'recent'
     };
   },
   props: {
@@ -94,12 +109,18 @@ export default {
     },
     getPaginatedPlaylist() {
       const page = this.currentPage
-      this.$emit("requestPlaylist", page)
+      const sortType = this.selectedBtn
+      this.$emit("requestPlaylist", { page, sortType })
     },
     isYoutubeLink(link) {
       const youtubeUrlPattern = /^https:\/\/www\.youtube\.com\/watch\?v=[A-Za-z0-9_-]{11}$/;
 
       return youtubeUrlPattern.test(link);
+    },
+
+    selectCategory() {
+      this.currentPage = 1
+      this.getPaginatedPlaylist()
     }
   },
   mounted() {
@@ -114,6 +135,12 @@ export default {
   padding: 18px;
   width: 900px;
   background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.playlist-list-title-container {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
 }
 
 .playlist-list-title {
@@ -175,5 +202,22 @@ export default {
 .description-icons {
   font-size: 16px;
   margin: 5px;
+}
+
+.btn-toggle {
+  height: 40px !important;
+}
+
+.toggle-btn {
+  color: white !important;
+  background-color: rgba(114, 114, 114, 0.2);
+  width: 90px;
+  text-transform: none;
+}
+
+.selected-toggle-btn{
+  color: greenyellow !important;
+  background-color: transparent;
+
 }
 </style>
