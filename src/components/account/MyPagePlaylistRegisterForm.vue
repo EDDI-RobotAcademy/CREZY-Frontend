@@ -6,7 +6,6 @@
             <div class="popup">
                 <div v-if="!file" class="image-box">
                     <div>
-                        <!-- 이미지 하나만 등록할 수 있도록 해두었어요 -->
                         <label class="custom-file-upload" for="file-selector">사진 등록</label>
                         <input type="file" id="file-selector" ref="file" style="display: none" @change="handleFileUpload" />
                     </div>
@@ -151,18 +150,17 @@ export default {
 
 .image-container {
     position: relative;
-    display: inline-block;
+    display: flex;
 }
 
 .preview-image {
     max-width: 200px;
-    max-height: 200px;
+    max-height: 100px;
     margin-bottom: 10px;
 }
 
 .custom-file-upload {
     display: inline-block;
-    /* padding: 9px 13px; */
     cursor: pointer;
     font-weight: bold;
     background-color: rgba(0, 0, 0, 0.912) !important;
