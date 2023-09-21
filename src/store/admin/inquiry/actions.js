@@ -51,6 +51,7 @@ export default {
     return axiosInst.springAxiosInst.get(`/admin-inquiry/${inquiryId}`, {
       headers: { Authorization: userToken }
     }).then((res) => {
+      console.log(res.data)
       commit(REQUEST_INQUIRY_FOR_ADMIN_TO_SPRING, res.data)
     })
   },
@@ -73,5 +74,12 @@ export default {
       { headers: { Authorization: userToken } }
     ).then((res) => {
     })
+  },
+
+  requestDeleteInquiryAnswerToSpring({ }, inquiryAnswerId) {
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.delete(`/admin-inquiry/${inquiryAnswerId}`, {
+      headers: { Authorization: userToken }
+    }).then((res) => { })
   },
 }

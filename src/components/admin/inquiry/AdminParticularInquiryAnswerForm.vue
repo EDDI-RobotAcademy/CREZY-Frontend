@@ -25,7 +25,7 @@
         <v-card v-if="!inquiry.inquiryAnswer" class="particular-inquiry-read-card">
             <div style="padding: 10px; font-size: 15px;">
                 <div style="margin-bottom: 15px;">{{ inquiry.nickname }}님의 문의에 답변해주세요</div>
-                <v-textarea v-model="inquiryAnswer" bg-color="grey-lighten-3" variant="solo-filled" label="답변 작성">
+                <v-textarea v-model="originalInquiryAnswer" bg-color="grey-lighten-3" variant="solo-filled" label="답변 작성">
                 </v-textarea>
                 <v-btn @click="onSubmitInquiryAnswer" color="white" style="font-weight:500;">전송</v-btn>
             </div>
@@ -70,7 +70,7 @@ export default {
 
             imageModal: false,
             modalImage: '',
-            inquiryAnswer: '',
+            originalInquiryAnswer: '',
 
             isModifyInquiryAnswer: false,
             newInquiryAnswer: '',
@@ -105,8 +105,7 @@ export default {
             return typeMap[englishType] || englishType;
         },
         onSubmitInquiryAnswer() {
-            this.$emit('submitInquiryAnswer', this.inquiryAnswer)
-            this.inquiryAnswer = ''
+            this.$emit('submitInquiryAnswer', this.originalInquiryAnswer)
         },
         toggleModifyInquiryAnswerForm() {
             this.isModifyInquiryAnswer = !this.isModifyInquiryAnswer;
@@ -115,6 +114,9 @@ export default {
             this.isModifyInquiryAnswer = false;
             this.$emit('modifyInquiryAnswer', this.newInquiryAnswer);
             this.inquiryAnswer = this.newInquiryAnswer;
+        },
+        async deleteInquiryAnswerButton() {
+            this.$emit("deleteInquiryAnswer", true);
         }
     },
 }
