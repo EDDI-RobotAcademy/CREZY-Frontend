@@ -98,4 +98,9 @@ export default {
         return res.data
       })
   },
-};
+  requestSearchPlaylistsToSpring({ commit }, payload) {
+    return axiosInst.springAxiosInst.post("/playlist/search-playlist", payload).then((res) => {
+      commit(REQUEST_PLAYLISTS_TO_SPRING, res.data);
+    })
+  }
+}
