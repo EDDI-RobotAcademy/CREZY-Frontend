@@ -60,7 +60,8 @@
                     </div>
                     <div style="width: 400px; margin-left: 80px">
                         <v-text-field class="admin-song-search-field" variant="outlined" append-inner-icon="mdi-magnify"
-                            single-line hide-details @click:append-inner="onClick"></v-text-field>
+                            single-line hide-details @click:append-inner="onClick" v-model="keyword"
+                            @keyup.enter="searchSong"></v-text-field>
                     </div>
                     <div style="width: 300px; ">
                         <v-text-field variant="outlined" append-inner-icon="mdi-menu-down-outline"
@@ -214,6 +215,7 @@ export default {
 
             songThumbnail: '',
             selectedSongId: '',
+            keyword: ''
         }
     },
     methods: {
@@ -266,6 +268,16 @@ export default {
 
         blockSong(selectedSongId) {
             this.$emit('blockSong', selectedSongId)
+        },
+        searchSong() {
+            if (this.keyword.trim() != '') {
+                const keyword = this.keyword
+                this.$emit("searchSong", keyword)
+                this.keyword = ''
+                this.selectedCategory = 'search'
+            } else {
+                alert('공백이 입력되었습니다.')
+            }
         },
     },
     watch: {
