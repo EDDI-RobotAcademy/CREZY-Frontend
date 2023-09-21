@@ -1,8 +1,8 @@
 <template>
     <div style="margin-top: 15px">
-        <v-card class="particular-playlist-card">
+        <v-card class="particular-inquiry-read-card">
             <div style="padding: 10px;">
-                <span class="particular-playlist-btn">{{ mapToKoreanInquiryType(inquiry.inquiryCategoryType) }}</span>
+                <span class="particular-inquiry-read">{{ mapToKoreanInquiryType(inquiry.inquiryCategoryType) }}</span>
                 <span style=" margin-left: 10px; font-size: 20px;">{{ inquiry.inquiryTitle }}</span>
                 <div style="margin-left: 5px; margin-top:10px; color: rgb(163, 161, 161); font-size: 13px;">
                     <span>{{ inquiry.nickname }}</span>
@@ -12,16 +12,17 @@
             <div style="padding: 10px; margin-top:10px;">
                 <span style="white-space: pre-line;">{{ inquiry.inquiryContent }}</span>
             </div>
-            <div class="inquiry-image-container">
-                <div class="inquiry-image-list">
-                    <v-img class="inquiry-preview-container" v-for="(inquiryImageName, idx) in inquiry.inquiryImageNames"
-                        :key="idx" :src="getInquiryImages(inquiryImageName)" style="width: 100px; height: 100px;"
+            <div class="admin-inquiry-image-container">
+                <div class="admin-inquiry-image-list">
+                    <v-img class="admin-inquiry-preview-container"
+                        v-for="(inquiryImageName, idx) in inquiry.inquiryImageNames" :key="idx"
+                        :src="getInquiryImages(inquiryImageName)" style="width: 100px; height: 100px;"
                         @click="showImageModal(inquiryImageName)"></v-img>
                 </div>
             </div>
         </v-card>
 
-        <v-card class="particular-playlist-card">
+        <v-card class="particular-inquiry-read-card">
             <div style="padding: 10px; font-size: 15px;">
                 <div style="margin-bottom: 15px;">{{ inquiry.nickname }}님의 문의에 답변해주세요</div>
                 <v-textarea v-model="inquiryAnswer" bg-color="grey-lighten-3" variant="solo-filled" label="답변 작성">
@@ -31,9 +32,9 @@
         </v-card>
 
         <v-card v-if="inquiry.inquiryAnswer && inquiry.inquiryAnswer.inquiryAnswer != null"
-            class="particular-playlist-card">
+            class="particular-inquiry-read-card">
             <div style="padding: 10px;">
-                <span class="particular-playlist-btn-2">답변</span>
+                <span class="particular-inquiry-answer">답변</span>
                 <div style="white-space: pre-line; margin-top: 10px;">
                     {{ inquiry.inquiryAnswer.inquiryAnswer }}</div>
             </div>
@@ -96,7 +97,7 @@ export default {
 }
 </script>
 <style>
-.particular-playlist-card {
+.particular-inquiry-read-card {
     background-color: #292E37;
     border-radius: 5px;
     color: white;
@@ -104,39 +105,39 @@ export default {
     padding: 15px;
 }
 
-.particular-playlist-btn {
+.particular-inquiry-read {
     border-radius: 5px;
     background-color: #5F6871;
     text-align: center;
     padding: 10px;
 }
 
-.particular-playlist-btn-2 {
+.particular-inquiry-answer {
     border-radius: 5px;
     background-color: #5F6871;
     text-align: center;
     padding: 5px;
 }
 
-.inquiry-image-container {
+.admin-inquiry-image-container {
     overflow: hidden;
     padding: 10px;
 }
 
-.inquiry-image-list {
+.admin-inquiry-image-list {
     position: relative;
     display: flex;
     flex-direction: row;
     float: left;
 }
 
-.inquiry-preview-container {
+.admin-inquiry-preview-container {
     margin-right: 20px;
     border: 1px solid white;
     cursor: pointer;
 }
 
-.inquiry-preview-container img {
+.admin-inquiry-preview-container img {
     width: 100%;
     height: 100%;
     object-fit: fill;
