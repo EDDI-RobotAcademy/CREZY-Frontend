@@ -55,7 +55,7 @@
                         <v-icon v-if="isPlaying">mdi-pause</v-icon>
                         <v-icon v-else>mdi-play</v-icon>
                       </button>
-                      <button style="color: white">
+                      <button style="color: white" @click="selectSongForAdd(song)">
                         <v-icon>mdi-playlist-music</v-icon>
                       </button>
                     </div>
@@ -85,18 +85,30 @@
       </div>
     </v-card>
     <iframe ref="ytPlayer" frameborder="0" allow="autoplay" width="0" height="0"></iframe>
+
+    <v-dialog v-model="showAddSongDialog" max-width="500px">
+      <SongAddForm
+        :myPlaylists="myPlaylists"
+        @cancel="cancelAddSong"
+        @addSongToPlaylist="addSongToPlaylist"/>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import VideoBackground from "vue-responsive-video-background-player";
+import SongAddForm from "@/components/song/SongAddForm.vue"
 
 export default {
   components: {
     VideoBackground,
+    SongAddForm
   },
   props: {
     musicList: {
+      type: Array
+    },
+    myPlaylists: {
       type: Array
     }
   },
@@ -121,6 +133,9 @@ export default {
 
       selectedSongId: '',
       showDescription: false,
+
+      showAddSongDialog: false,
+      currentSong: {}
     }
   },
   methods: {
@@ -207,6 +222,18 @@ export default {
       console.log("onPlayerReady");
       this.currentIframe = event.target;
 
+      // if (this.progressInterval) {
+      //   clearInterval(this.progressInterval);
+      // }
+
+      // this.progressInterval = setInterval(() => {
+      //   this.updateProgressBar();
+      //   this.currentTimeText = this.formatTime(this.currentTime);
+      //   this.totalTimeText = this.formatTime(this.duration);
+      // }, 1000);
+    },
+
+    playSong(index) {
       if (this.progressInterval) {
         clearInterval(this.progressInterval);
       }
@@ -216,9 +243,6 @@ export default {
         this.currentTimeText = this.formatTime(this.currentTime);
         this.totalTimeText = this.formatTime(this.duration);
       }, 1000);
-    },
-
-    playSong(index) {
       this.currentIdx = index;
       this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[index]}?autoplay=1&mute=0&enablejsapi=1`;
       this.isPlaying = true;
@@ -287,6 +311,32 @@ export default {
       const seconds = Math.floor(time - minutes * 60);
       return ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
     },
+
+    selectSongForAdd(song) {
+      if (localStorage.getItem("userToken") === null) {
+        alert("로그인해야 이용할 수 있습니다")
+      }
+      else {
+        this.currentSong = song
+        this.$emit("openAddSongDialog")
+        this.showAddSongDialog = true
+      }
+    },
+
+    cancelAddSong() {
+      this.showAddSongDialog = false
+      this.currentSong = {}
+    },
+
+    addSongToPlaylist(playlistId) {
+      const title = this.currentSong.title
+      const singer = this.currentSong.singer
+      const link = this.currentSong.link
+      const lyrics = this.currentSong.lyrics
+      
+      this.showAddSongDialog = false
+      this.$emit("addSongToPlaylist", { playlistId, title, singer, link, lyrics })
+    }
   },
   watch: {
     musicList: {
