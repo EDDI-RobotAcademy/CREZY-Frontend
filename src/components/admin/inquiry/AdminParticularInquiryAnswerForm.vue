@@ -22,7 +22,7 @@
             </div>
         </v-card>
 
-        <v-card class="particular-inquiry-read-card">
+        <v-card v-if="!inquiry.inquiryAnswer" class="particular-inquiry-read-card">
             <div style="padding: 10px; font-size: 15px;">
                 <div style="margin-bottom: 15px;">{{ inquiry.nickname }}님의 문의에 답변해주세요</div>
                 <v-textarea v-model="inquiryAnswer" bg-color="grey-lighten-3" variant="solo-filled" label="답변 작성">
@@ -31,12 +31,24 @@
             </div>
         </v-card>
 
-        <v-card v-if="inquiry.inquiryAnswer && inquiry.inquiryAnswer.inquiryAnswer != null"
-            class="particular-inquiry-read-card">
+        <v-card v-else class="particular-inquiry-read-card">
             <div style="padding: 10px;">
                 <span class="particular-inquiry-answer">답변</span>
                 <div style="white-space: pre-line; margin-top: 10px;">
-                    {{ inquiry.inquiryAnswer.inquiryAnswer }}</div>
+                    {{ inquiry.inquiryAnswer.inquiryAnswer }}
+                </div>
+            </div>
+            <div class="inquiry-answer-modify-delete-button">
+                <button @click="toggleModifyInquiryAnswerForm" style="margin-right: 20px;">
+                    {{ isModifyInquiryAnswer ? '취소' : '수정' }}
+                </button>
+                <span>│</span>
+                <button @click="deleteInquiryAnswerButton" style="margin-left: 20px;">삭제</button>
+            </div>
+            <div v-if="isModifyInquiryAnswer" style="padding: 10px;">
+                <v-textarea v-model="newInquiryAnswer" bg-color="grey-lighten-3" variant="solo-filled" label="답변 수정">
+                </v-textarea>
+                <v-btn @click="onModifyInquiryAnswer" color="white" style="font-weight:500;">전송</v-btn>
             </div>
         </v-card>
 
@@ -59,6 +71,9 @@ export default {
             imageModal: false,
             modalImage: '',
             inquiryAnswer: '',
+
+            isModifyInquiryAnswer: false,
+            newInquiryAnswer: '',
         }
     },
     props: {
@@ -89,9 +104,17 @@ export default {
             };
             return typeMap[englishType] || englishType;
         },
-        async onSubmitInquiryAnswer() {
-            await this.$emit('submitInquiryAnswer', this.inquiryAnswer)
+        onSubmitInquiryAnswer() {
+            this.$emit('submitInquiryAnswer', this.inquiryAnswer)
             this.inquiryAnswer = ''
+        },
+        toggleModifyInquiryAnswerForm() {
+            this.isModifyInquiryAnswer = !this.isModifyInquiryAnswer;
+        },
+        onModifyInquiryAnswer() {
+            this.isModifyInquiryAnswer = false;
+            this.$emit('modifyInquiryAnswer', this.newInquiryAnswer);
+            this.inquiryAnswer = this.newInquiryAnswer;
         }
     },
 }
@@ -141,5 +164,12 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: fill;
+}
+
+.inquiry-answer-modify-delete-button {
+    color: rgb(152, 150, 150);
+    font-size: 13px;
+    padding: 10px;
+    margin-left: 2px;
 }
 </style>
