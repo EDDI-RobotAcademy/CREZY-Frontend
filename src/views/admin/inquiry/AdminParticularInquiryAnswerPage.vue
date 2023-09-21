@@ -1,6 +1,7 @@
 <template>
     <div>
-        <AdminParticularInquiryAnswerForm :inquiry="inquiry" @submitInquiryAnswer="onSubmitInquiryAnswer" />
+        <AdminParticularInquiryAnswerForm :inquiry="inquiry" @submitInquiryAnswer="onSubmitInquiryAnswer"
+            @modifyInquiryAnswer="onModifyInquiryAnswer" />
     </div>
 </template>
 <script>
@@ -22,14 +23,19 @@ export default {
     methods: {
         ...mapActions(adminInquiryModule, [
             "requestInquiryForAdminToSpring",
-            "requestInquiryAnswerToSpring"
+            "requestInquiryAnswerToSpring",
+            "requestModifyInquiryAnswerToSpring",
         ]),
-
         async onSubmitInquiryAnswer(inquiryAnswer) {
             const inquiryId = this.selectedInquiryId
             await this.requestInquiryAnswerToSpring({ inquiryAnswer, inquiryId })
             await this.requestInquiryForAdminToSpring(this.selectedInquiryId)
         },
+        async onModifyInquiryAnswer(newInquiryAnswer) {
+            const inquiryAnswerId = this.inquiry.inquiryAnswer.inquiryAnswerId
+            await this.requestModifyInquiryAnswerToSpring({ answer: newInquiryAnswer, inquiryAnswerId })
+            await this.requestInquiryForAdminToSpring(this.selectedInquiryId)
+        }
     },
     computed: {
         ...mapState(adminInquiryModule, ['inquiry'])
