@@ -20,14 +20,35 @@
                                 :src="getInquiryImages(inquiryImageName)" style="width: 100px; height: 100px;"></v-img>
                         </div>
                     </div>
-                    <div class="inquiry-modify-delete-button"
+                    <div class="inquiry-modify-delete-button" v-if="selectedInquiry.inquiryAnswer == null"
                         :style="selectedInquiry.inquiryImageNames && selectedInquiry.inquiryImageNames.length > 0 ? 'margin-top:30px;' : 'margin-top:0px;'">
                         <button @click="modifyInquiryButton" style="margin-right: 20px;">수정</button>
                         <span>│</span>
                         <button @click="deleteInquiryButton" style="margin-left: 20px;">삭제</button>
                     </div>
+                    <div class="inquiry-modify-delete-button" v-else
+                        :style="selectedInquiry.inquiryImageNames && selectedInquiry.inquiryImageNames.length > 0 ? 'margin-top:30px;' : 'margin-top:0px;'">
+                        <button @click="deleteInquiryButton">삭제</button>
+                    </div>
                 </div>
             </v-row>
+
+            <div v-if="selectedInquiry.inquiryAnswer && selectedInquiry.inquiryAnswer.inquiryAnswer
+                && selectedInquiry.inquiryAnswer.createInquiryAnswerDate != null">
+                <v-divider style="margin-top: 20px;"></v-divider>
+                <div class="inquiry-read-title" style="margin-top:20px;">
+                    문의 답변
+                </div>
+                <v-row style="margin-bottom: 10px;">
+                    <div class="iquiry-answer-container">
+                        <span
+                            style="position: relative; display: flex; text-align: left; white-space: pre-line; margin-top: 20px;">
+                            {{ selectedInquiry.inquiryAnswer.inquiryAnswer }} </span>
+                        <span style="position: relative; display: flex; font-size: 12px; color: gray; margin-top: 30px; ">
+                            {{ selectedInquiry.inquiryAnswer.createInquiryAnswerDate }} </span>
+                    </div>
+                </v-row>
+            </div>
         </div>
 
         <div v-else>
@@ -123,6 +144,15 @@ export default {
     float: left;
     margin-left: -110px;
     padding: 30px;
+}
+
+.iquiry-answer-container {
+    margin-top: 90px;
+    margin-left: -90px;
+    padding: 20px;
+    width: 745px;
+    background-color: rgba(128, 128, 128, 0.295);
+    border-radius: 10px;
 }
 
 .inquiry-image-container {
