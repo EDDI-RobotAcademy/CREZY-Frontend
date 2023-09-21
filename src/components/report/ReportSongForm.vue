@@ -95,7 +95,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .font-color {
   color: white;
 }
