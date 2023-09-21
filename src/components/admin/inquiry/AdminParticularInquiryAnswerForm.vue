@@ -106,7 +106,6 @@ export default {
         },
         onSubmitInquiryAnswer() {
             this.$emit('submitInquiryAnswer', this.inquiryAnswer)
-            this.inquiryAnswer = ''
         },
         toggleModifyInquiryAnswerForm() {
             this.isModifyInquiryAnswer = !this.isModifyInquiryAnswer;
@@ -115,6 +114,10 @@ export default {
             this.isModifyInquiryAnswer = false;
             this.$emit('modifyInquiryAnswer', this.newInquiryAnswer);
             this.inquiryAnswer = this.newInquiryAnswer;
+        },
+        async deleteInquiryAnswerButton() {
+            this.$emit("deleteInquiryAnswer", true);
+            this.inquiryAnswer = ''
         }
     },
 }
