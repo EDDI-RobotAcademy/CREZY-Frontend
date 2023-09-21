@@ -64,4 +64,14 @@ export default {
     ).then((res) => {
     })
   },
+
+  requestModifyInquiryAnswerToSpring({ }, payload) {
+    const { answer, inquiryAnswerId } = payload
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.post("/admin-inquiry/modify-inquiry-answer",
+      { answer, inquiryAnswerId },
+      { headers: { Authorization: userToken } }
+    ).then((res) => {
+    })
+  },
 }
