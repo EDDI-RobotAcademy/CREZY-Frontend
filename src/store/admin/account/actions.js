@@ -1,7 +1,6 @@
 import {
   REQUEST_ACCOUNTS_STATUS_TO_SPRING,
   REQUEST_ACCOUNT_LIST_FOR_ADMIN_TO_SPRING,
-  REQUEST_ACCOUNT_LIST_TOTAL_TO_SPRING,
   REQUEST_ACCOUNT_INFO_FOR_ADMIN_TO_SPRING,
   REQUEST_CATEGORY_ACCOUNT_LIST_TO_SPRING,
   REQUEST_ACCOUNT_WARNINGS_FOR_ADMIN_TO_SPRING
@@ -22,21 +21,14 @@ export default {
   },
 
   requestAccountListForAdminToSpring({ commit }, payload) {
-    const currentPage = payload
+    const page = payload
     const userToken = localStorage.getItem("userToken")
     return axiosInst.springAxiosInst.get("/admin-account/account-list", {
-      params: { page: currentPage },
+      params: { page: page },
       headers: { Authorization: userToken }
     }).then((res) => {
       commit(REQUEST_ACCOUNT_LIST_FOR_ADMIN_TO_SPRING, res.data)
     })
-  },
-
-  requestAccountListTotalToSpring({ commit }) {
-    return axiosInst.springAxiosInst.get("/admin-account/list/total-page")
-      .then((res) => {
-        commit(REQUEST_ACCOUNT_LIST_TOTAL_TO_SPRING, res.data)
-      })
   },
 
   requestCategoryAccountListToSpring({ commit }, payload) {
@@ -70,20 +62,20 @@ export default {
     })
   },
 
-  requestBlacklistAccountToSpring({}, accountId) {
+  requestBlacklistAccountToSpring({ }, accountId) {
     const userToken = localStorage.getItem("userToken")
     return axiosInst.springAxiosInst.get("/admin-account/account-change-RoleType-blacklist", {
       params: { accountId: accountId },
       headers: { Authorization: userToken }
-    }).then((res) => {})
+    }).then((res) => { })
   },
 
-  requestRemoveBlacklistAccountToSpring({}, accountId) {
+  requestRemoveBlacklistAccountToSpring({ }, accountId) {
     const userToken = localStorage.getItem("userToken")
     return axiosInst.springAxiosInst.get("/admin-account/account-change-RoleType-normal", {
       params: { accountId: accountId },
       headers: { Authorization: userToken }
-    }).then((res) => {})
+    }).then((res) => { })
   },
 
   requestAccountWarningsForAdminToSpring({ commit }, accountId) {
@@ -96,11 +88,22 @@ export default {
     })
   },
 
-  requestWarningToAccountToSpring({}, payload) {
+  requestWarningToAccountToSpring({ }, payload) {
     const { reportedCategoryType, reportContent, reportedId } = payload
     const userToken = localStorage.getItem("userToken")
-    return axiosInst.springAxiosInst.post("/warning/regist-warning", 
-    { reportedCategoryType, reportContent, reportedId },
-    { headers: { Authorization: userToken }}).then((res) => {})
+    return axiosInst.springAxiosInst.post("/warning/regist-warning",
+      { reportedCategoryType, reportContent, reportedId },
+      { headers: { Authorization: userToken } }).then((res) => { })
+  },
+
+  requestSearchAccountListForAdminToSpring({ commit }, payload) {
+    const { page, keyword } = payload
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.post("/admin-account/search-account",
+      { page, keyword },
+      { headers: { Authorization: userToken } })
+      .then((res) => {
+        commit(REQUEST_ACCOUNT_LIST_FOR_ADMIN_TO_SPRING, res.data)
+      })
   }
 }

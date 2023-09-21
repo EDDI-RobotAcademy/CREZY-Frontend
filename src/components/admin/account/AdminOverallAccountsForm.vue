@@ -60,7 +60,7 @@
         </div>
         <div style="width: 400px; margin-left: 80px">
           <v-text-field class="admin-playlist-search-field" variant="outlined" append-inner-icon="mdi-magnify" single-line
-            hide-details @click:append-inner="onClick"></v-text-field>
+            hide-details @click:append-inner="onClick" v-model="keyword" @keyup.enter="searchAccount"></v-text-field>
         </div>
         <div style="width: 300px; ">
           <v-text-field variant="outlined" append-inner-icon="mdi-menu-down-outline"
@@ -125,13 +125,9 @@
             </tr>
             <tr v-if="selectedAccountId === account.accountId">
               <td colspan="6">
-                <AdminParticularAccountDetailForm 
-                  :accountInfo="accountInfo" 
-                  :warnings="warnings"
-                  @isChangeBadNickname="changeBadNickname"
-                  @removeFromBlacklist="removeFromBlacklist" 
-                  @moveToBlacklist="moveToBlacklist"
-                  @getAccountWarnings="getAccountWarnings"
+                <AdminParticularAccountDetailForm :accountInfo="accountInfo" :warnings="warnings"
+                  @isChangeBadNickname="changeBadNickname" @removeFromBlacklist="removeFromBlacklist"
+                  @moveToBlacklist="moveToBlacklist" @getAccountWarnings="getAccountWarnings"
                   @giveWarning="giveWarning" />
               </td>
             </tr>
@@ -211,6 +207,7 @@ export default {
       selectedColor: 'teal',
       searchDate: '',
       formattedDate: '',
+      keyword: '',
 
       accountsOptions: {
         responsive: true,
@@ -281,6 +278,16 @@ export default {
     giveWarning(payload) {
       console.log(payload)
       this.$emit("giveWarning", payload)
+    },
+    searchAccount() {
+      if (this.keyword.trim() != '') {
+        const keyword = this.keyword
+        this.$emit("searchAccount", keyword)
+        this.keyword = ''
+        this.selectedCategory = 'search'
+      } else {
+        alert('공백이 입력되었습니다.')
+      }
     }
   },
 
@@ -297,6 +304,7 @@ export default {
       this.searchDate = new Date()
       const targetDate = this.formatDate(this.searchDate)
       await this.getStatus(targetDate)
+      // await this.requestAccountListForAdminToSpring(this.currentPage)
     }
   },
   computed: {

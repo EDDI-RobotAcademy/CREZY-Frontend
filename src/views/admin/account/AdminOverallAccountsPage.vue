@@ -1,9 +1,9 @@
 <template>
   <div>
     <AdminOverallAccountsForm @getStatus="getAccountsStatus" @switchCategory="getCategorizedAccountList"
-      @openManage="getAccountInfo" @removeFromBlacklist="removeFromBlacklist" @moveToBlacklist="moveToBlacklist" 
-      @getAccountWarnings="getAccountWarnings" @giveWarning="giveWarning"
-      :accountsStatus="accountsStatus" :accounts="accountList" :accountInfo="accountInfo" :warnings="warnings"/>
+      @openManage="getAccountInfo" @removeFromBlacklist="removeFromBlacklist" @moveToBlacklist="moveToBlacklist"
+      @getAccountWarnings="getAccountWarnings" @giveWarning="giveWarning" :accountsStatus="accountsStatus"
+      :accounts="accountList" :accountInfo="accountInfo" :warnings="warnings" @searchAccount="searchAccount" />
     <v-pagination style="color: white" v-model="currentPage" :length="accountListCount" @click="getPaginatedAccounts">
     </v-pagination>
   </div>
@@ -36,7 +36,8 @@ export default {
       'requestBlacklistAccountToSpring',
       'requestRemoveBlacklistAccountToSpring',
       'requestAccountWarningsForAdminToSpring',
-      'requestWarningToAccountToSpring'
+      'requestWarningToAccountToSpring',
+      'requestSearchAccountListForAdminToSpring'
     ]),
 
     async getAccountsStatus(targetDate) {
@@ -50,8 +51,8 @@ export default {
         await this.requestCategoryAccountListToSpring({ warningCounts, page })
       }
       else {
-        const currentPage = this.currentPage
-        await this.requestAccountListForAdminToSpring(currentPage)
+        const page = this.currentPage
+        await this.requestAccountListForAdminToSpring(page)
       }
     },
     async getCategorizedAccountList(selectedCategory) {
@@ -59,7 +60,6 @@ export default {
       if (selectedCategory === "recent") {
         this.warningCounts = 0
         await this.requestAccountListForAdminToSpring(this.currentPage)
-        await this.requestAccountListTotalToSpring()
       }
       if (selectedCategory === "blacklisted") {
         this.warningCounts = 3
@@ -106,6 +106,11 @@ export default {
       const accountId = payload.reportedId
       await this.requestWarningToAccountToSpring(payload)
       await this.requestAccountInfoForAdminToSpring(accountId)
+    },
+    async searchAccount(payload) {
+      const keyword = payload
+      const page = this.currentPage
+      await this.requestSearchAccountListForAdminToSpring({ page, keyword })
     }
   },
   computed: {
@@ -123,7 +128,6 @@ export default {
       this.$router.push({ name: "home" });
     } else {
       await this.requestAccountListForAdminToSpring(this.currentPage)
-      await this.requestAccountListTotalToSpring()
     }
   }
 }
