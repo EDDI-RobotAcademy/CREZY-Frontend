@@ -108,7 +108,7 @@ export default {
       }
 
       await this.requestChangeReportStatusToSpring(payload);
-      await this.requestReportListToSpring();
+      await this.requestReportListToSpring(this.currentPage);
       
     },
 
@@ -118,11 +118,11 @@ export default {
         reportStatus: "RETURN",
       };
       await this.requestChangeReportStatusToSpring(payload);
-      await this.requestReportListToSpring();
+      await this.requestReportListToSpring(this.currentPage);
     },
 
     async foundReport(selectedReportId) {
-      await this.requestReportListToSpring(); 
+      await this.requestReportListToSpring(this.currentPage); 
       return this.reportList.find(report => report.reportId === selectedReportId); 
     },
 
