@@ -69,8 +69,8 @@
       </div>
 
       <div class="custom-radio-group">
-        <input type="radio" id="reportContent7" value="과도한 홍보" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent7" class="custom-radio-label">과도한 홍보</label>
+        <input type="radio" id="reportContent7" value="유해한 플레이리스트 사진" v-model="reportContent" class="custom-radio" />
+        <label for="reportContent7" class="custom-radio-label">유해한 플레이리스트 사진</label>
       </div>
 
       <div class="custom-radio-group">
@@ -147,7 +147,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .font-color {
   color: white;
 }

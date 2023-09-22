@@ -9,8 +9,8 @@ import axiosInst from "@/utility/axiosInst";
 
 export default {
   requestPlaylistsToSpring({ commit }, payload) {
-    const currentPage = payload
-    return axiosInst.springAxiosInst.get("/playlist/list", { params: { page: currentPage } }).then((res) => {
+    const { page, sortType } = payload
+    return axiosInst.springAxiosInst.post("/playlist/list", { page, sortType }).then((res) => {
       commit(REQUEST_PLAYLISTS_TO_SPRING, res.data);
     });
   },
@@ -98,4 +98,9 @@ export default {
         return res.data
       })
   },
-};
+  requestSearchPlaylistsToSpring({ commit }, payload) {
+    return axiosInst.springAxiosInst.post("/playlist/search-playlist", payload).then((res) => {
+      commit(REQUEST_PLAYLISTS_TO_SPRING, res.data);
+    })
+  }
+}

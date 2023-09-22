@@ -1,7 +1,7 @@
 <template>
     <div>
         <AdminParticularInquiryAnswerForm :inquiry="inquiry" @submitInquiryAnswer="onSubmitInquiryAnswer"
-            @modifyInquiryAnswer="onModifyInquiryAnswer" />
+            @modifyInquiryAnswer="onModifyInquiryAnswer" @deleteInquiryAnswer="onDeleteInquiryAnswer" />
     </div>
 </template>
 <script>
@@ -25,6 +25,7 @@ export default {
             "requestInquiryForAdminToSpring",
             "requestInquiryAnswerToSpring",
             "requestModifyInquiryAnswerToSpring",
+            "requestDeleteInquiryAnswerToSpring",
         ]),
         async onSubmitInquiryAnswer(inquiryAnswer) {
             const inquiryId = this.selectedInquiryId
@@ -35,7 +36,14 @@ export default {
             const inquiryAnswerId = this.inquiry.inquiryAnswer.inquiryAnswerId
             await this.requestModifyInquiryAnswerToSpring({ answer: newInquiryAnswer, inquiryAnswerId })
             await this.requestInquiryForAdminToSpring(this.selectedInquiryId)
-        }
+        },
+        async onDeleteInquiryAnswer() {
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                const inquiryAnswerId = this.inquiry.inquiryAnswer.inquiryAnswerId;
+                await this.requestDeleteInquiryAnswerToSpring(inquiryAnswerId)
+                await this.requestInquiryForAdminToSpring(this.selectedInquiryId)
+            }
+        },
     },
     computed: {
         ...mapState(adminInquiryModule, ['inquiry'])
