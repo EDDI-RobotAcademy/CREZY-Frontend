@@ -32,9 +32,9 @@
             </v-col>
             <v-col cols="6" v-if="accountInfo.warningCounts > 0">
               <div align="center">
-                <v-card class="account-warning-card" v-for=" ( warning, index ) in accountInfo.warnings">
+                <v-card class="account-warning-card" v-for=" ( warning, index ) in accountInfo.warninglist">
                   {{ index + 1 }}번 경고 <br>
-                  {{ warning.warnedDate }}
+                  {{ warning.createWarningDate }}
                 </v-card>
               </div>
             </v-col>
