@@ -78,35 +78,7 @@ export default {
       const payload = {
         reportId: selectedReportId,
         reportStatus: "APPROVE",
-      };
-      const foundReportInfo = await this.foundReport(selectedReportId);
-        
-
-      if (this.accountReportDetail.reportedCategoryType == 'ACCOUNT'){
-        if(foundReportInfo.reportContent == '부적절한 닉네임') {
-          await this.requestChangeBadNicknameToSpring(this.accountReportDetail.reportedAccountId);
-
-        } if(foundReportInfo.reportContent == '유해한 프로필 사진') {
-          console.log('프사 바꿔')
-          await this.requestRemoveProfileImageToSpring(this.accountReportDetail.reportedAccountId);
-        }
-        await this.requestAccountReportDetailToSpring(selectedReportId);
-        
-      } else if (this.accountReportDetail.reportedCategoryType == 'PLAYLIST'){
-        if(foundReportInfo.reportContent == '부적절한 제목') {
-          console.log('플리 이름 바꿔')
-          await this.requestChangePlaylistNameToSpring(this.playlistReportDetail.reportedPlaylistId);
-        } if(foundReportInfo.reportContent == '유해한 플레이리스트 사진') {
-          console.log('프사 바꿔')
-          await this.requestRemovePlaylistThumbnailToSpring(this.playlistReportDetail.reportedPlaylistId);
-        }
-        await this.requestPlaylistReportDetailToSpring(selectedReportId);
-
-      } else if (this.accountReportDetail.reportedCategoryType == 'SONG'){        
-        console.log('노래 막어')
-        await this.requestBlockSongToSpring(this.songReportDetail.reportedSongId);
-      }
-
+      };        
       await this.requestChangeReportStatusToSpring(payload);
       await this.requestReportListToSpring(this.currentPage);
       
