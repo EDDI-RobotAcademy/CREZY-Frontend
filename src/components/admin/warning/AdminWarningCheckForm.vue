@@ -11,14 +11,14 @@
     <v-list v-else lines="three" v-model:opened="open" class="admin-warning-check-list">
       <v-list-group v-for="warning in warnings" :value="warning.warningId">
         <template v-slot:activator="{ props }">
-          <v-list-item v-bind="props" :title="warning.name" :subtitle="warning.reportDate"></v-list-item>
+          <v-list-item v-bind="props" :title="warning.name" :subtitle="warning.createWarningDate"></v-list-item>
         </template>
 
         <div class="admin-warning-content-container">
           <div class="admin-warning-content">
             <div class="admin-warning-report-content">
-              <div>{{ warning.reportType }} 관련</div>
-              <div>신고 날짜: {{ warning.reportDate }}</div>
+              <div>{{ warning.reportedCategoryType }} 관련</div>
+              <div>신고 날짜: {{ warning.createReportDate }}</div>
             </div>
             <div>
               <div>{{ warning.reportContent }} 의 사유로 경고를 받았습니다.</div>
