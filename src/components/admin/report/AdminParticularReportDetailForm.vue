@@ -6,7 +6,7 @@
             <div class="card-title" style="margin-bottom: 15px;">신고 사항</div>
             <div class="card-content" style="display: flex; align-items: flex-start; margin-left: 100px;">
               <div style="margin-right: 15px;">
-                <img :src="getProfileImage(accountReportDetail.reportedProfileImageName)" style="height: 250px;">
+                <img :src="getProfileImage(accountReportDetail.reportedProfileImageName)" style="height: 250px; max-width:400px;">
               </div>
               <table class="info-table" style="margin-left: 20px;">
                 <div>
@@ -40,7 +40,7 @@
             <div class="card-title" style="margin-bottom: 15px;">신고 사항</div>
             <div class="card-content" style="display: flex; align-items: flex-start; margin-left: 100px;">
               <div style="margin-right: 15px;">
-                <img :src="getPlaylistImage(playlistReportDetail.thumbnailName)" style="height: 250px;">
+                <img :src="getPlaylistImage(playlistReportDetail.thumbnailName)" style="height: 250px; max-width:400px;">
               </div>
               <table class="info-table" style="margin-left: 20px;">
                 <div>
@@ -74,7 +74,7 @@
             <div class="card-title" style="margin-bottom: 15px;">신고 사항</div>
             <div class="card-content" style="display: flex;">
               <div style="margin-right: 15px;">
-                <img :src="getSongImage(songReportDetail.link)" style="height: 250px;">
+                <img :src="getSongImage(songReportDetail.link)" style="height: 250px; max-width:400px;">
               </div>
               <div class="song-info">                
                 <pre class="lyrics-container"><span v-html="formatLyrics(songReportDetail.lyrics)"></span></pre>
