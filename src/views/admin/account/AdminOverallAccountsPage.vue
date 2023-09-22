@@ -1,9 +1,19 @@
 <template>
   <div>
-    <AdminOverallAccountsForm @getStatus="getAccountsStatus" @switchCategory="getCategorizedAccountList"
-      @openManage="getAccountInfo" @removeFromBlacklist="removeFromBlacklist" @moveToBlacklist="moveToBlacklist"
-      @getAccountWarnings="getAccountWarnings" @giveWarning="giveWarning" :accountsStatus="accountsStatus"
-      :accounts="accountList" :accountInfo="accountInfo" :warnings="warnings" @searchAccount="searchAccount" />
+    <AdminOverallAccountsForm 
+      :accountsStatus="accountsStatus"
+      :accounts="accountList" 
+      :accountInfo="accountInfo" 
+      :warnings="warnings"
+      @getStatus="getAccountsStatus" 
+      @switchCategory="getCategorizedAccountList"
+      @openManage="getAccountInfo" 
+      @removeFromBlacklist="removeFromBlacklist" 
+      @moveToBlacklist="moveToBlacklist"
+      @getAccountWarnings="getAccountWarnings" 
+      @giveWarning="giveWarning"  
+      @searchAccount="searchAccount"
+      @removeWarning="removeWarning" />
     <v-pagination style="color: white" v-model="currentPage" :length="accountListCount" @click="getPaginatedAccounts">
     </v-pagination>
   </div>
@@ -37,7 +47,8 @@ export default {
       'requestRemoveBlacklistAccountToSpring',
       'requestAccountWarningsForAdminToSpring',
       'requestWarningToAccountToSpring',
-      'requestSearchAccountListForAdminToSpring'
+      'requestSearchAccountListForAdminToSpring',
+      'requestRemoveWarningToSpring'
     ]),
 
     async getAccountsStatus(targetDate) {
@@ -111,6 +122,14 @@ export default {
       const keyword = payload
       const page = this.currentPage
       await this.requestSearchAccountListForAdminToSpring({ page, keyword })
+    },
+
+    async removeWarning(payload) {
+      const warningId = payload.warningId
+      const accountId = payload.accountId
+      await this.requestRemoveWarningToSpring(warningId)
+      await this.requestAccountInfoForAdminToSpring(accountId)
+      await this.requestAccountWarningsForAdminToSpring(accountId)
     }
   },
   computed: {

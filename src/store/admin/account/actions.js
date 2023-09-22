@@ -96,6 +96,14 @@ export default {
       { headers: { Authorization: userToken } }).then((res) => { })
   },
 
+  requestRemoveWarningToSpring({ }, warningId) {
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.delete("/warning/delete-warning",{
+      params: { warningId: warningId },
+      headers: { Authorization: userToken }
+    }).then((res) => { })
+  },
+
   requestSearchAccountListForAdminToSpring({ commit }, payload) {
     const { page, keyword } = payload
     const userToken = localStorage.getItem("userToken")
