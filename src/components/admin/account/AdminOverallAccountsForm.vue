@@ -128,7 +128,7 @@
                 <AdminParticularAccountDetailForm :accountInfo="accountInfo" :warnings="warnings"
                   @isChangeBadNickname="changeBadNickname" @removeFromBlacklist="removeFromBlacklist"
                   @moveToBlacklist="moveToBlacklist" @getAccountWarnings="getAccountWarnings"
-                  @giveWarning="giveWarning" />
+                  @giveWarning="giveWarning" @removeWarning="removeWarning"/>
               </td>
             </tr>
           </template>
@@ -288,6 +288,10 @@ export default {
       } else {
         alert('공백이 입력되었습니다.')
       }
+    },
+
+    removeWarning(payload) {
+      this.$emit("removeWarning", payload)
     }
   },
 
