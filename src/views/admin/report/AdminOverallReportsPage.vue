@@ -9,6 +9,8 @@
       :playlistReportDetail="playlistReportDetail"
       :songReportDetail="songReportDetail"      
     />
+    <v-pagination style="color: white" v-model="currentPage" :length="this.reportListNum" @click="getPaginatedReports">
+    </v-pagination>
     
   </div>
 </template>
@@ -23,6 +25,11 @@ const adminPlaylistModule = "adminPlaylistModule";
 const adminSongModule = "adminSongModule";
 
 export default {
+  data() {
+        return {
+            currentPage: 1,       
+        }
+    },    
   components: {
     AdminOverallReportsForm,
   },
@@ -34,6 +41,7 @@ export default {
       "requestPlaylistReportDetailToSpring",
       "requestSongReportDetailToSpring",
       "requestChangeReportStatusToSpring",
+      "requestReportListTotalToSpring",
     ]),
 
     ...mapActions(  
@@ -52,6 +60,12 @@ export default {
       adminSongModule, [
         "requestBlockSongToSpring"
     ]),
+
+    async getPaginatedReports() {
+      const page = this.currentPage
+      await this.requestReportListToSpring(page)
+      
+      },
 
     async getReportInfo(selectedReportId) {
       const reportId = selectedReportId;
@@ -120,6 +134,7 @@ export default {
         "accountReportDetail",
         "playlistReportDetail",
         "songReportDetail",
+        "reportListNum"
       ],
      
     ),
@@ -133,8 +148,9 @@ export default {
     ) {
       this.$router.push({ name: "home" });
     } else {
-      await this.requestReportListToSpring();
+      await this.requestReportListToSpring(this.currentPage);
     }
+    await this.requestReportListTotalToSpring();
   },
 };
 </script>

@@ -3,5 +3,6 @@ export default {
     accountReportDetail: {},
     playlistReportDetail: {},
     songReportDetail: {},
+    reportListNum: 0
  };
   
