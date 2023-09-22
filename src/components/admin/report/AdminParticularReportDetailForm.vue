@@ -2,7 +2,7 @@
     <div>
       <v-row>
         <v-col cols="8" style="margin: auto;">
-          <v-card v-if= "accountReportDetail.reportedCategoryType === 'ACCOUNT'" class="custom-card">
+          <v-card v-if= "foundReport.reportedCategoryType === 'ACCOUNT'" class="custom-card">
             <div class="card-title" style="margin-bottom: 15px;">신고 사항</div>
             <div class="card-content" style="display: flex; align-items: flex-start; margin-left: 100px;">
               <div style="margin-right: 15px;">
@@ -30,13 +30,13 @@
                         신고 내용
                       </div>     
                       <div>
-                        {{ foundReport ? foundReport.reportContent : '데이터 없음' }}                        
+                        {{ foundReport.reportContent }}                        
                       </div>                 
                 </div>
               </table>
             </div>
           </v-card>
-          <v-card v-if="accountReportDetail.reportedCategoryType === 'PLAYLIST'" class="custom-card">
+          <v-card v-else-if="foundReport.reportedCategoryType === 'PLAYLIST'" class="custom-card">
             <div class="card-title" style="margin-bottom: 15px;">신고 사항</div>
             <div class="card-content" style="display: flex; align-items: flex-start; margin-left: 100px;">
               <div style="margin-right: 15px;">
@@ -64,13 +64,13 @@
                         신고 내용
                       </div>     
                       <div>
-                        {{ foundReport ? foundReport.reportContent : '데이터 없음' }}                        
+                        {{ foundReport.reportContent }}                        
                       </div>                 
                 </div>
               </table>
             </div>
           </v-card>
-          <v-card v-if="accountReportDetail.reportedCategoryType === 'SONG'" class="custom-card">
+          <v-card v-else-if="foundReport.reportedCategoryType === 'SONG'" class="custom-card">
             <div class="card-title" style="margin-bottom: 15px;">신고 사항</div>
             <div class="card-content" style="display: flex;">
               <div style="margin-right: 15px;">
@@ -112,6 +112,7 @@
               </tr>             
             </table>
           </v-card>
+          
         </v-col>             
       </v-row>
       <div class="button-container">

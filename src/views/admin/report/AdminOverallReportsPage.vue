@@ -69,46 +69,23 @@ export default {
 
     async getReportInfo(selectedReportId) {
       const reportId = selectedReportId;
-      await this.requestAccountReportDetailToSpring(reportId);
-      await this.requestPlaylistReportDetailToSpring(reportId);
-      await this.requestSongReportDetailToSpring(reportId);
+      const foundReportInfo = await this.foundReport(reportId);
+      if(foundReportInfo.reportedCategoryType === 'ACCOUNT') {
+        await this.requestAccountReportDetailToSpring(reportId);
+      }else if (foundReportInfo.reportedCategoryType === 'PLAYLIST') {
+          await this.requestPlaylistReportDetailToSpring(reportId);
+      }else if (foundReportInfo.reportedCategoryType === 'SONG') {
+        await this.requestSongReportDetailToSpring(reportId);
+      }
     },
 
     async changeStatusTypeApprove(selectedReportId) {
       const payload = {
         reportId: selectedReportId,
         reportStatus: "APPROVE",
-      };
-      const foundReportInfo = await this.foundReport(selectedReportId);
-        
-
-      if (this.accountReportDetail.reportedCategoryType == 'ACCOUNT'){
-        if(foundReportInfo.reportContent == '부적절한 닉네임') {
-          await this.requestChangeBadNicknameToSpring(this.accountReportDetail.reportedAccountId);
-
-        } if(foundReportInfo.reportContent == '유해한 프로필 사진') {
-          console.log('프사 바꿔')
-          await this.requestRemoveProfileImageToSpring(this.accountReportDetail.reportedAccountId);
-        }
-        await this.requestAccountReportDetailToSpring(selectedReportId);
-        
-      } else if (this.accountReportDetail.reportedCategoryType == 'PLAYLIST'){
-        if(foundReportInfo.reportContent == '부적절한 제목') {
-          console.log('플리 이름 바꿔')
-          await this.requestChangePlaylistNameToSpring(this.playlistReportDetail.reportedPlaylistId);
-        } if(foundReportInfo.reportContent == '유해한 플레이리스트 사진') {
-          console.log('프사 바꿔')
-          await this.requestRemovePlaylistThumbnailToSpring(this.playlistReportDetail.reportedPlaylistId);
-        }
-        await this.requestPlaylistReportDetailToSpring(selectedReportId);
-
-      } else if (this.accountReportDetail.reportedCategoryType == 'SONG'){        
-        console.log('노래 막어')
-        await this.requestBlockSongToSpring(this.songReportDetail.reportedSongId);
-      }
-
+      };        
       await this.requestChangeReportStatusToSpring(payload);
-      await this.requestReportListToSpring();
+      await this.requestReportListToSpring(this.currentPage);
       
     },
 
@@ -118,11 +95,11 @@ export default {
         reportStatus: "RETURN",
       };
       await this.requestChangeReportStatusToSpring(payload);
-      await this.requestReportListToSpring();
+      await this.requestReportListToSpring(this.currentPage);
     },
 
     async foundReport(selectedReportId) {
-      await this.requestReportListToSpring(); 
+      await this.requestReportListToSpring(this.currentPage); 
       return this.reportList.find(report => report.reportId === selectedReportId); 
     },
 
