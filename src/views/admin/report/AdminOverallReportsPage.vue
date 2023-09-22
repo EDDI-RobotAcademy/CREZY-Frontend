@@ -69,9 +69,14 @@ export default {
 
     async getReportInfo(selectedReportId) {
       const reportId = selectedReportId;
-      await this.requestAccountReportDetailToSpring(reportId);
-      await this.requestPlaylistReportDetailToSpring(reportId);
-      await this.requestSongReportDetailToSpring(reportId);
+      const foundReportInfo = await this.foundReport(reportId);
+      if(foundReportInfo.reportedCategoryType === 'ACCOUNT') {
+        await this.requestAccountReportDetailToSpring(reportId);
+      }else if (foundReportInfo.reportedCategoryType === 'PLAYLIST') {
+          await this.requestPlaylistReportDetailToSpring(reportId);
+      }else if (foundReportInfo.reportedCategoryType === 'SONG') {
+        await this.requestSongReportDetailToSpring(reportId);
+      }
     },
 
     async changeStatusTypeApprove(selectedReportId) {
