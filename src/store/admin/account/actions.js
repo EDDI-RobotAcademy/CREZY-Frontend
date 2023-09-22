@@ -105,5 +105,12 @@ export default {
       .then((res) => {
         commit(REQUEST_ACCOUNT_LIST_FOR_ADMIN_TO_SPRING, res.data)
       })
-  }
+  },
+  requestRemoveProfileImageToSpring({ }, accountId) {
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.get("/admin-account/change-profileImageName", {
+      params: { accountId: accountId },
+      headers: { Authorization: userToken }
+    }).then((res) => { })
+  },
 }
