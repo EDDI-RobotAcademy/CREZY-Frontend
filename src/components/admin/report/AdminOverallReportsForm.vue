@@ -68,7 +68,7 @@
             class="admin-playlist-search-field" v-model="selectedCategory"></v-text-field>
           <v-menu v-model="chooseReportCategory">
             <template v-slot:activator="{ on }">
-              <v-list class="report-select-field" v-if="chooseReportCategory">
+              <v-list class="report-category-select-field" v-if="chooseReportCategory">
                 <v-list-item class="report-category-selection" v-for="reportCategory in reportCategories"
                   @click="selectCategory(reportCategory)">
                   <v-list-item-title style="font-size: 13px">{{ reportCategory }}</v-list-item-title>
@@ -126,7 +126,8 @@
                 :accountReportDetail="accountReportDetail"
                 :playlistReportDetail="playlistReportDetail" 
                 :songReportDetail="songReportDetail"
-                :reportList="reportList" :reportId="selectedReportId" 
+                :reportList="reportList" 
+                :reportId="selectedReportId" 
                 />
               </td>
             </tr>
@@ -183,7 +184,6 @@ export default {
     changeStatusTypeApprove() {
       const selectedReportId = this.selectedReportId
       this.$emit("changeStatusTypeApprove", selectedReportId)
-      console.log("APPROVE 자식")
     },
 
     changeStatusTypeReturn() {
@@ -305,6 +305,7 @@ export default {
   top: 82px;
   position: absolute;
   z-index: 9999;
+  color: #ffffff;
 
 }
 
