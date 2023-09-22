@@ -126,7 +126,8 @@
                 :accountReportDetail="accountReportDetail"
                 :playlistReportDetail="playlistReportDetail" 
                 :songReportDetail="songReportDetail"
-                :reportList="reportList" :reportId="selectedReportId" 
+                :reportList="reportList" 
+                :reportId="selectedReportId" 
                 />
               </td>
             </tr>
@@ -183,7 +184,6 @@ export default {
     changeStatusTypeApprove() {
       const selectedReportId = this.selectedReportId
       this.$emit("changeStatusTypeApprove", selectedReportId)
-      console.log("APPROVE 자식")
     },
 
     changeStatusTypeReturn() {
