@@ -1,23 +1,9 @@
 <template>
     <v-form @inquirySubmit.prevent="onInquirySubmit" ref="form">
-
         <div class="inquiry-reigister-table">
             <div class="inquiry-register-select">
-                <v-text-field label="문의 유형을 선택하세요" variant="outlined" append-inner-icon="mdi-menu-down-outline"
-                    @click="chooseInquiryCategory = !chooseInquiryCategory" readonly
-                    @click:append-inner="chooseInquiryCategory = !chooseInquiryCategory"
-                    v-model="inquiryType"></v-text-field>
-                <v-menu v-model="chooseInquiryCategory">
-                    <template v-slot:activator="{ on }">
-                        <v-list class="inquiry-category-selection-field" v-if="chooseInquiryCategory">
-                            <v-list-item class="inquiry-category-selection" v-for="inquiryCategory in inquiryCategories"
-                                @click="selectCategory(inquiryCategory)">
-                                <v-list-item-title style="font-size: 15px">{{ inquiryCategory
-                                }}</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </template>
-                </v-menu>
+                <v-select v-model="inquiryType" variant="outlined" label="문의 유형을 선택하세요" :items="inquiryTypes">
+                </v-select>
             </div>
             <div class="inquiry-register-title">
                 <v-text-field variant="outlined" type="text" v-model="inquiryTitle" label="제목을 입력하세요" />
@@ -57,7 +43,14 @@
 export default {
     data() {
         return {
-            inquiryType: '',
+            inquiryType: null,
+            inquiryTypes: [
+                '재생목록 문의',
+                '계정 문의',
+                '노래 문의',
+                '서비스 이용 문의',
+            ],
+
             inquiryTitle: '',
             inquiryContent: '',
             inquiryImageNames: [],
@@ -146,8 +139,12 @@ export default {
                 alert('문의 유형을 선택해주세요!');
                 return;
             }
+            if (!this.inquiryTitle) {
+                alert('문의 제목을 입력해주세요!');
+                return;
+            }
             if (!this.inquiryContent) {
-                alert('내용을 입력해주세요!');
+                alert('문의 내용을 입력해주세요!');
                 return;
             }
 
