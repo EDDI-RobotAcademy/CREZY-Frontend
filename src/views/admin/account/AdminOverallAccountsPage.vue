@@ -25,6 +25,7 @@ import { mapActions, mapState } from "vuex";
 import AdminOverallAccountsForm from "@/components/admin/account/AdminOverallAccountsForm.vue"
 
 const adminAccountModule = 'adminAccountModule'
+const adminWarningModule = 'adminWarningModule'
 
 export default {
   data() {
@@ -45,10 +46,13 @@ export default {
       'requestAccountInfoForAdminToSpring',
       'requestBlacklistAccountToSpring',
       'requestRemoveBlacklistAccountToSpring',
-      'requestAccountWarningsForAdminToSpring',
       'requestWarningToAccountToSpring',
       'requestSearchAccountListForAdminToSpring',
       'requestRemoveWarningToSpring'
+    ]),
+
+    ...mapActions(adminWarningModule, [
+      'requestAccountWarningsForAdminToSpring',
     ]),
 
     async getAccountsStatus(targetDate) {
@@ -138,8 +142,11 @@ export default {
       'accountList',
       'accountListCount',
       'accountInfo',
-      'warnings'
     ]),
+
+    ...mapState(adminWarningModule, [
+      'warnings'
+    ])
 
   },
   async mounted() {
