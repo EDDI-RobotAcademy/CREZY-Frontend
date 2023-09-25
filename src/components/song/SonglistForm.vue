@@ -19,7 +19,9 @@
                     </tr>
                     <tr v-else v-for="(song, index) in playlist.songlist" :key="song.songId"
                         :class="{ 'playing': checkedSongs.includes(song.songId), }" style="cursor: pointer"
-                        @mouseover="showCheckbox(index)" @mouseleave="hideCheckbox(index)">
+                        @mouseover="showCheckbox(index)" @mouseleave="hideCheckbox(index)" draggable="true"
+                        @dragstart="startDrag(index)" @dragover="dragOver(index)" @drop="drop(index)" @dragenter="dragEnter"
+                        @dragleave="dragLeave">
 
                         <td align="center" style="width: 10%;">
                             <v-img :src=getImage(song.link) height="50" width="50"></v-img>
@@ -34,8 +36,8 @@
                         </td>
 
                         <td align="center" style="">
-                            <button  v-if="song.statusType.statusType === 'BLOCK'" @click="songModify(song)"
-                                style="color: red; margin-right: 70px;" >
+                            <button v-if="song.statusType.statusType === 'BLOCK'" @click="songModify(song)"
+                                style="color: red; margin-right: 70px;">
                                 <v-icon>mdi-alert-circle</v-icon>
                             </button>
                         </td>
@@ -51,7 +53,12 @@
                         </td>
                     </tr>
                 </tbody>
+
             </table>
+            <v-btn v-if="isChangeSongOrder" @click="onSaveSongOrder"
+                style="float: right; margin-right: 30px; margin-bottom: 15px;" size="small" rounded color="white">
+                저장
+            </v-btn>
         </v-col>
     </v-row>
 
@@ -93,11 +100,15 @@ export default {
             confirmDeleteDialog: false,
             showSongModifyForm: false,
             selectedSong: null,
+
+            draggedIndex: null,
+            dragOverIndex: null,
+            isChangeSongOrder: false,
         }
     },
     methods: {
         songModify(song) {
-            this.selectedSong = song;  
+            this.selectedSong = song;
             this.showSongModifyForm = true;
         },
         songModifyForm(payload) {
@@ -131,29 +142,60 @@ export default {
                 "/mqdefault.jpg"
             );
         },
-    }
+        startDrag(index) {
+            this.draggedIndex = index;
+        },
+        dragOver(index) {
+            event.preventDefault();
+            this.dragOverIndex = index;
+        },
+        drop(index) {
+            if (this.draggedIndex !== null) {
+                const draggedSong = this.playlist.songlist[this.draggedIndex];
+                this.playlist.songlist.splice(this.draggedIndex, 1);
+                this.playlist.songlist.splice(index, 0, draggedSong);
 
+                this.draggedIndex = null;
+                this.dragOverIndex = null;
+
+                this.isChangeSongOrder = true;
+            }
+        },
+        dragEnter(event) {
+            event.preventDefault();
+        },
+        dragLeave() {
+            this.dragOverIndex = null;
+        },
+        onSaveSongOrder() {
+            if (this.isChangeSongOrder) {
+                const changedOrder = this.playlist.songlist.map(song => song.songId);
+                this.$emit("saveSongOrder", changedOrder);
+                this.isChangeSongOrder = false;
+            }
+        }
+    }
 }
 </script>
 <style>
 .modal {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5) !important;
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
 .modal-content {
-  width: 600px;
-  height: 440px;
-  margin: auto;
-  padding: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.8) !important;
+    width: 600px;
+    height: 440px;
+    margin: auto;
+    padding: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.8) !important;
 }
 
 input[type=checkbox] {

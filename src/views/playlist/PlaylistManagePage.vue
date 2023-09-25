@@ -1,7 +1,7 @@
 <template>
   <div>
     <PlaylistManageForm v-if="playlist" :playlist="playlist" :playlistId="playlistId" @submitPlaylist="submitPlaylist"
-      @submitSong="submitSong" @deleteSubmit="deleteSubmit" />
+      @submitSong="submitSong" @deleteSubmit="deleteSubmit" @saveSongOrder="onSaveSongOrder" />
   </div>
 </template>
 <script>
@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     ...mapActions(playlistModule, ["requestPlaylistIncludeBlockSongToSpring", "requestPlaylistModifyToSpring"]),
-    ...mapActions(songModule, ["requestSongRegisterToSpring", "requestDeleteSelectedSongsToSpring"]),
+    ...mapActions(songModule, ["requestSongRegisterToSpring", "requestDeleteSelectedSongsToSpring", "requestSaveSongOrderToSpring"]),
     async submitPlaylist(payload) {
       const playlistId = this.playlistId
       console.log(playlistId)
@@ -37,6 +37,9 @@ export default {
     },
     async deleteSubmit(payload) {
       await this.requestDeleteSelectedSongsToSpring(payload)
+    },
+    async onSaveSongOrder(payload) {
+      await this.requestSaveSongOrderToSpring(payload);
     }
   },
   computed: {
