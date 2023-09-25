@@ -43,7 +43,7 @@
       <v-col cols="7">
         <div class="playlist-player">
           <v-sheet class="song-thumbnail-sheet">
-            <v-img class="mx-auto" height="400" :src="getImage"> </v-img>
+            <v-img class="mx-auto" height="400" :src="getImageUrl"> </v-img>
           </v-sheet>
           <iframe ref="ytPlayer" frameborder="0" allow="autoplay" width="0" height="0"></iframe>
           <div class="controls-container">
@@ -88,7 +88,7 @@
                 <td>{{ song.singer }}</td>
                 <td>
                   <div style="position: relative; display: flex;">
-                    <v-menu>
+                    <v-menu v-model="menuIsOpen" @click:outside="closeMenu(currentIdx)">
                       <template v-slot:activator="{ attrs, on }">
                         <div class="playlist-button-container">
                           <button small @click="playlistButton(index)" v-bind="attrs" v-on="on"
@@ -103,7 +103,7 @@
                                   <v-list-item-content style="font-size: 13px">신고</v-list-item-content>
                                 </v-list-item>
                                 <v-list-item @click="selectSongForAdd(song)" style=" color: white">
-                                  <v-list-item-content style="font-size: 13px">공유</v-list-item-content>
+                                  <v-list-item-content style="font-size: 13px">저장</v-list-item-content>
                                 </v-list-item>
                               </v-list>
                             </div>
@@ -193,6 +193,7 @@ export default {
   data() {
     return {
       isPlaylistButton: {},
+      menuIsOpen: false,
       showAddSongDialog: false,
       currentSong: {},
       reportedSongIndex: null,
@@ -337,9 +338,11 @@ export default {
     },
 
     playSong(index) {
-      this.currentIdx = index;
-      this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[index]}?autoplay=1&mute=0&enablejsapi=1`;
-      this.isPlaying = true;
+      if (this.currentIdx !== index) {
+        this.currentIdx = index;
+        this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[index]}?autoplay=1&mute=0&enablejsapi=1`;
+        this.isPlaying = true;
+      } 
     },
 
     onPlayerStateChange() {
@@ -433,9 +436,15 @@ export default {
     },
 
     playlistButton(index) {
+      this.menuIsOpen = !this.menuIsOpen
       this.isPlaylistButton[index] = !this.isPlaylistButton[index];
       // this.$set(this.isPlaylistButton, index, !this.isPlaylistButton[index]);
     },
+    closeMenu(index) {
+      this.menuIsOpen = false
+      this.isPlaylistButton[index] = !this.isPlaylistButton[index];
+    },
+
     selectSongForAdd(song) {
       this.currentSong = song
       this.$emit("openAddSongDialog")
@@ -459,6 +468,7 @@ export default {
     },
     startDrag(index) {
       this.draggedIndex = index;
+      this.isPlaylistButton = {}
     },
     dragOver(index) {
       event.preventDefault();
@@ -473,6 +483,7 @@ export default {
 
         this.draggedIndex = null;
         this.dragOverIndex = null;
+
       }
     },
     dragEnter(event) {
@@ -497,19 +508,31 @@ export default {
       })
     }
   },
-  computed: {
-    getImage() {
-      if (this.playlist && this.playlist.songlist) {
-        const link = this.playlist.songlist[this.currentIdx].link;
+    getImage(link) {
+      if (link) {
         return (
           "https://img.youtube.com/vi/" +
           link.substring(link.lastIndexOf("=") + 1) +
           "/mqdefault.jpg"
         );
       } else {
-        return ""; // 데이터를 아직 불러오지 않았을 때의 처리
+        return require("@/assets/images/Logo_only_small-removebg-preview.png"); // 데이터를 아직 불러오지 않았을 때의 처리
       }
     },
+  },
+  computed: {
+    getImageUrl() {
+      if (
+        this.playlist &&
+        this.playlist.songlist &&
+        this.playlist.songlist.length > this.currentIdx
+      ) {
+        return this.getImage(this.playlist.songlist[this.currentIdx].link);
+      } else {
+        // 기본 이미지 또는 오류 처리 로직을 여기에 추가
+        return require("@/assets/images/Logo_only_small-removebg-preview.png");;
+      }
+    }
   },
 
   watch: {
