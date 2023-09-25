@@ -60,7 +60,7 @@
         </div>
         <div style="width: 400px; margin-left: 80px">
           <v-text-field class="admin-playlist-search-field" variant="outlined" append-inner-icon="mdi-magnify" single-line
-            hide-details @click:append-inner="onClick" v-model="keyword" @keyup.enter="searchAccount"></v-text-field>
+            hide-details @click:append-inner="searchAccount" v-model="keyword" @keyup.enter="searchAccount"></v-text-field>
         </div>
         <div style="width: 300px; ">
           <v-text-field variant="outlined" append-inner-icon="mdi-menu-down-outline"
