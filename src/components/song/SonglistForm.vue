@@ -146,11 +146,15 @@ export default {
             await this.$emit("deleteSubmit", songlist)
         },
         getImage(link) {
-            return (
+            if (!link) {
+                return require("@/assets/images/Logo_only_small-removebg-preview.png")
+            } else {
+                return (
                 "https://img.youtube.com/vi/" +
                 link.substring(link.lastIndexOf("=") + 1) +
                 "/mqdefault.jpg"
-            );
+                );
+            }
         },
         startDrag(index) {
             this.draggedIndex = index;
