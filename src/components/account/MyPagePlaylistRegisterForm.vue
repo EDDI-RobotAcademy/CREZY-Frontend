@@ -14,7 +14,8 @@
                     <div>
                         <div class="image-container">
                             <img :src="imagePreview" class="preview-image" />
-                            <div class="file-close-button" @click="deleteImage">x</div>
+                            <div class="file-close-button" style="color: black; font-weight: 300;" @click="deleteImage">
+                                x</div>
                         </div>
                     </div>
                 </div>
@@ -143,8 +144,6 @@ export default {
     cursor: pointer;
     z-index: 1;
     display: flex;
-    font-weight: 300;
-    color: black;
     margin-top: -5px;
 }
 
@@ -155,7 +154,7 @@ export default {
 
 .preview-image {
     max-width: 200px;
-    max-height: 100px;
+    height: 140px;
     margin-bottom: 10px;
 }
 
@@ -178,7 +177,7 @@ export default {
 
 .add-button {
     position: absolute;
-    margin-bottom: 12px;
+    /* margin-bottom: 12px; */
     margin-left: 210px;
     font-weight: bolder;
 }

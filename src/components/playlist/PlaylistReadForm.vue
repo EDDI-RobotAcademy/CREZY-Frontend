@@ -148,7 +148,8 @@
     </v-card>
   </v-dialog>
   <v-dialog v-model="showAddSongDialog" max-width="500px">
-    <SongAddForm :myPlaylists="myPlaylists" @cancel="cancelAddSong" @addSongToPlaylist="addSongToPlaylist" />
+    <SongAddForm :myPlaylists="myPlaylists" @submit="onSubmitForm" @cancel="cancelAddSong"
+      @addSongToPlaylist="addSongToPlaylist" />
   </v-dialog>
 </template>
 
@@ -491,7 +492,22 @@ export default {
     dragLeave() {
       this.dragOverIndex = null;
     },
+    async onSubmitForm(payload) {
+      const newPlaylist = {
+        playlistName: payload.playlistName,
+        playlistThumbnail: payload.playlistThumbnail,
+      };
 
+      const title = this.currentSong.title
+      const singer = this.currentSong.singer
+      const link = this.currentSong.link
+      const lyrics = this.currentSong.lyrics
+
+      await this.$emit("submit", {
+        newPlaylist, title, singer, link, lyrics
+      })
+    }
+  },
     getImage(link) {
       if (link) {
         return (
@@ -755,15 +771,5 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.v-menu__content {
-  position: absolute;
-  z-index: 1000;
-  /* 팝업의 z-index 설정 */
-  right: 0;
-  /* 원하는 위치로 조절 (예: 오른쪽 끝) */
-  top: 100%;
-  /* 원하는 위치로 조절 (예: 아래) */
 }
 </style>

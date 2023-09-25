@@ -29,13 +29,13 @@
 
                         <td align="center" style="width: 50%;">
                             <div @click="songModify(song)">
-                            {{ song.title }}
+                                {{ song.title }}
                             </div>
                         </td>
 
                         <td align="center" style="width: 30%;">
                             <div @click="songModify(song)">
-                            {{ song.singer }}
+                                {{ song.singer }}
                             </div>
                         </td>
 
@@ -45,7 +45,7 @@
                                 <v-icon>mdi-alert-circle</v-icon>
                             </button>
                         </td>
-                        
+
 
                         <td v-if="hoverIndex == index || checkedSongs.includes(song.songId)" style="width: 10%;">
                             <input type="checkbox" :id="'song-' + song.songId" v-model="checkedSongs" :value="song.songId"
@@ -101,7 +101,11 @@ export default {
         playlist: {
             type: Object,
             required: true,
-        }
+        },
+        playlistId: {
+            type: String,
+            required: true,
+        },
     },
     data() {
         return {
@@ -150,9 +154,9 @@ export default {
                 return require("@/assets/images/Logo_only_small-removebg-preview.png")
             } else {
                 return (
-                "https://img.youtube.com/vi/" +
-                link.substring(link.lastIndexOf("=") + 1) +
-                "/mqdefault.jpg"
+                    "https://img.youtube.com/vi/" +
+                    link.substring(link.lastIndexOf("=") + 1) +
+                    "/mqdefault.jpg"
                 );
             }
         },
@@ -183,8 +187,10 @@ export default {
         },
         onSaveSongOrder() {
             if (this.isChangeSongOrder) {
-                const changedOrder = this.playlist.songlist.map(song => song.songId);
-                this.$emit("saveSongOrder", changedOrder);
+                const playlistId = this.playlistId
+                const changedOrder = this.playlist.songlist.map(song => song.songIndex);
+                const payload = { playlistId, songIndexList: changedOrder }
+                this.$emit("saveSongOrder", payload);
                 this.isChangeSongOrder = false;
             }
         },
