@@ -88,7 +88,7 @@
                 <td>{{ song.singer }}</td>
                 <td>
                   <div style="position: relative; display: flex;">
-                    <v-menu>
+                    <v-menu v-model="menuIsOpen" @click:outside="closeMenu(currentIdx)">
                       <template v-slot:activator="{ attrs, on }">
                         <div class="playlist-button-container">
                           <button small @click="playlistButton(index)" v-bind="attrs" v-on="on"
@@ -103,7 +103,7 @@
                                   <v-list-item-content style="font-size: 13px">신고</v-list-item-content>
                                 </v-list-item>
                                 <v-list-item @click="selectSongForAdd(song)" style=" color: white">
-                                  <v-list-item-content style="font-size: 13px">공유</v-list-item-content>
+                                  <v-list-item-content style="font-size: 13px">저장</v-list-item-content>
                                 </v-list-item>
                               </v-list>
                             </div>
@@ -192,6 +192,7 @@ export default {
   data() {
     return {
       isPlaylistButton: {},
+      menuIsOpen: false,
       showAddSongDialog: false,
       currentSong: {},
       reportedSongIndex: null,
@@ -336,9 +337,11 @@ export default {
     },
 
     playSong(index) {
-      this.currentIdx = index;
-      this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[index]}?autoplay=1&mute=0&enablejsapi=1`;
-      this.isPlaying = true;
+      if (this.currentIdx !== index) {
+        this.currentIdx = index;
+        this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[index]}?autoplay=1&mute=0&enablejsapi=1`;
+        this.isPlaying = true;
+      } 
     },
 
     onPlayerStateChange() {
@@ -432,9 +435,15 @@ export default {
     },
 
     playlistButton(index) {
+      this.menuIsOpen = !this.menuIsOpen
       this.isPlaylistButton[index] = !this.isPlaylistButton[index];
       // this.$set(this.isPlaylistButton, index, !this.isPlaylistButton[index]);
     },
+    closeMenu(index) {
+      this.menuIsOpen = false
+      this.isPlaylistButton[index] = !this.isPlaylistButton[index];
+    },
+
     selectSongForAdd(song) {
       this.currentSong = song
       this.$emit("openAddSongDialog")
@@ -458,6 +467,7 @@ export default {
     },
     startDrag(index) {
       this.draggedIndex = index;
+      this.isPlaylistButton = {}
     },
     dragOver(index) {
       event.preventDefault();
@@ -472,6 +482,7 @@ export default {
 
         this.draggedIndex = null;
         this.dragOverIndex = null;
+
       }
     },
     dragEnter(event) {
