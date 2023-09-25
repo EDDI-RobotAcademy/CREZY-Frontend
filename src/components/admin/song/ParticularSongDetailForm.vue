@@ -43,11 +43,24 @@
           삭제
         </v-btn>
       </div>
+      <div v-if="!isLyricModify">
+        <v-btn class="particular-song-btn" @click="openGiveWarningModal">
+          경고 주기
+        </v-btn>
+      </div>
     </div>
+    <v-dialog v-model="openGiveWarning" max-width="600px">
+      <AdminGiveWarningForm 
+        :selectedWarningCategory="selectedWarningCategory"
+        @giveWarning="giveWarning"
+        @cancelWarning="cancelWarning"/>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import AdminGiveWarningForm from "@/components/admin/warning/AdminGiveWarningForm.vue"
+
 export default {
   props: {
     songInfo: {
@@ -59,10 +72,15 @@ export default {
       required: true
     }
   },
+  components: {
+    AdminGiveWarningForm
+  },
   data() {
     return {
       isLyricModify: false,
-      modifiedLyrics: ""
+      modifiedLyrics: "",
+
+      openGiveWarning: false
     }
   },
   methods: {
@@ -102,7 +120,21 @@ export default {
     blockSong() {
       const selectedSongId = this.songInfo.songId
       this.$emit('blockSong', selectedSongId)
-    }
+    },
+
+    openGiveWarningModal() {
+      this.selectedWarningCategory = "SONG"
+      this.openGiveWarning = true
+    },
+
+    giveWarning(payload) {
+      this.$emit("giveWarning", payload)
+      this.openGiveWarning = false
+    },
+
+    cancelWarning() {
+      this.openGiveWarning = false
+    },
   },
   watch: {
     isLyricModify(newVal) {

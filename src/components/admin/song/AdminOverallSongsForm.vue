@@ -126,7 +126,7 @@
                                 <td style="color: white;" colspan="6">
                                     <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail"
                                         @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" @openSong="openSong"
-                                        @blockSong="blockSong" />
+                                        @blockSong="blockSong" @giveWarning="giveWarning"/>
                                 </td>
                             </tr>
                         </template>
@@ -276,6 +276,12 @@ export default {
                 alert('공백이 입력되었습니다.')
             }
         },
+
+        giveWarning(payload) {
+            const reportedId = this.songInfo.songId
+            const { reportedCategoryType, reportContent } = payload
+            this.$emit("giveWarning", { reportedCategoryType, reportContent, reportedId })
+        }
     },
     watch: {
         searchDate(newValue) {
