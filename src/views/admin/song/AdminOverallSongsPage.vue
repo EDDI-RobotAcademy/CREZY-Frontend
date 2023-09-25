@@ -3,7 +3,7 @@
         <AdminOverallSongsForm @getStatus="getSongsStatus" @switchCategory="getCategorizedSongList" :songs="songs"
             :songInfo="songInfo" :songsStatus="songsStatus" @openManage="getSongInfo" @modifyLyrics="modifyLyrics"
             @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" @switchSort="getSortedSongList"
-            @searchSong="searchSong" />
+            @searchSong="searchSong" @giveWarning="giveWarning"/>
         <v-pagination style="color: white" v-model="currentPage" :length="songListCount" @click="getPaginatedSongs">
         </v-pagination>
     </div>
@@ -15,6 +15,7 @@ import { mapActions, mapState } from "vuex";
 import AdminOverallSongsForm from "@/components/admin/song/AdminOverallSongsForm.vue"
 
 const adminSongModule = "adminSongModule"
+const adminWarningModule = "adminWarningModule"
 
 export default {
     data() {
@@ -38,6 +39,10 @@ export default {
             "requestOpenSongToSpring",
             "requestBlockSongToSpring",
             "requestSearchSongForAdminToSpring"]),
+
+        ...mapActions(adminWarningModule, [
+            'requestGiveWarningToSpring',
+        ]),
 
         async getCategorizedSongList(selectedCategory) {
             this.currentCategory = selectedCategory;
@@ -104,6 +109,12 @@ export default {
             const page = this.currentPage
             await this.requestSearchSongForAdminToSpring({ page, keyword })
         },
+        async giveWarning(payload) {
+            const songId = payload.reportedId
+            await this.requestGiveWarningToSpring(payload)
+            await this.getPaginatedSongs()
+            await this.getSongInfo(songId)
+        }
     },
     computed: {
         ...mapState(adminSongModule, [

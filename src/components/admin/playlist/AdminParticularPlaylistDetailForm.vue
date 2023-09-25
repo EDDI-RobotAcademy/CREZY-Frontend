@@ -52,6 +52,7 @@
                   @deleteSong="deleteSong"
                   @openSong="openSong"
                   @blockSong="blockSong"
+                  @giveWarning="giveSongWarning"
                   />
               </td>
             </tr>
@@ -166,6 +167,12 @@ export default {
 
     blockSong(selectedSongId) {
       this.$emit('blockSong', selectedSongId)
+    },
+
+    giveSongWarning(payload) {
+      const reportedId = this.songInfo.songId
+      const { reportedCategoryType, reportContent } = payload
+      this.$emit("giveSongWarning", { reportedCategoryType, reportContent, reportedId })
     }
   },
   watch: {
