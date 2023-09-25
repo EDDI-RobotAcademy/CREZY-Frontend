@@ -55,10 +55,15 @@
                 </tbody>
 
             </table>
-            <v-btn v-if="isChangeSongOrder" @click="onSaveSongOrder"
-                style="float: right; margin-right: 30px; margin-bottom: 15px;" size="small" rounded color="white">
-                저장
-            </v-btn>
+            <div v-if="isChangeSongOrder" style="float: right; margin-right: 30px; margin-bottom: 15px;">
+                <v-btn @click="onSaveSongOrder" size="small" rounded color="white">
+                    저장
+                </v-btn>
+                <v-btn @click="cancelChangeSongOrder" size="small" rounded color="white" style="margin-left: 10px;">
+                    취소
+                </v-btn>
+
+            </div>
         </v-col>
     </v-row>
 
@@ -173,6 +178,9 @@ export default {
                 this.$emit("saveSongOrder", changedOrder);
                 this.isChangeSongOrder = false;
             }
+        },
+        cancelChangeSongOrder() {
+            this.isChangeSongOrder = false
         }
     }
 }
