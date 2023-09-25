@@ -43,7 +43,7 @@
       <v-col cols="7">
         <div class="playlist-player">
           <v-sheet class="song-thumbnail-sheet">
-            <v-img class="mx-auto" height="400" :src="getImage"> </v-img>
+            <v-img class="mx-auto" height="400" :src="getImageUrl"> </v-img>
           </v-sheet>
           <iframe ref="ytPlayer" frameborder="0" allow="autoplay" width="0" height="0"></iframe>
           <div class="controls-container">
@@ -475,20 +475,32 @@ export default {
     dragLeave() {
       this.dragOverIndex = null;
     },
-  },
-  computed: {
-    getImage() {
-      if (this.playlist && this.playlist.songlist) {
-        const link = this.playlist.songlist[this.currentIdx].link;
+
+    getImage(link) {
+      if (link) {
         return (
           "https://img.youtube.com/vi/" +
           link.substring(link.lastIndexOf("=") + 1) +
           "/mqdefault.jpg"
         );
       } else {
-        return ""; // 데이터를 아직 불러오지 않았을 때의 처리
+        return require("@/assets/images/Logo_only_small-removebg-preview.png"); // 데이터를 아직 불러오지 않았을 때의 처리
       }
     },
+  },
+  computed: {
+    getImageUrl() {
+      if (
+        this.playlist &&
+        this.playlist.songlist &&
+        this.playlist.songlist.length > this.currentIdx
+      ) {
+        return this.getImage(this.playlist.songlist[this.currentIdx].link);
+      } else {
+        // 기본 이미지 또는 오류 처리 로직을 여기에 추가
+        return require("@/assets/images/Logo_only_small-removebg-preview.png");;
+      }
+    }
   },
 
   watch: {
