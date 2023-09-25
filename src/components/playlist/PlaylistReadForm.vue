@@ -69,7 +69,7 @@
           </div>
         </div>
       </v-col>
-      <v-col cols="5">
+      <v-col cols="5" style="display: flex; justify-content: flex-end z-index: 1000;">
         <div class="playlist-table" v-if="currentBtn === 'LIST'">
           <table style="
               color: white;
@@ -85,11 +85,26 @@
                 <td>{{ song.title }}</td>
                 <td align="end">{{ song.singer }}</td>
                 <td>
-                  <div style="display: flex; justify-content: flex-end; cursor: pointer;">
-                    <v-btn rounded flat class="report-btn" @click.stop="reportSong(song.songId)">
-                      ⚑
-                    </v-btn>
-                  </div>
+                  <v-menu>
+                    <template v-slot:activator="{ on, attrs }">ㄹㄹ
+                      <div class="playlist-button-container" v-bind="attrs" v-on="on">
+                        <v-btn small @click="playlistButton(index)" class="description-btn" icon depressed>
+                          <v-icon style="color: white">mdi-playlist-music</v-icon>
+                        </v-btn>
+                        <div v-if="isPlaylistButton[index]" class="playlist-menu-items">
+                          <v-list style="background-color: rgba(0, 0, 0, 0) !important">
+                            <v-list-item @click="reportSong(song.songId, index)" style="color: white">
+                              <v-list-item-content style="font-size: 13px">신고</v-list-item-content>
+                            </v-list-item>
+                            <v-list-item @click="selectSongForAdd(song)" style=" color: white">
+                              <v-list-item-content style="font-size: 13px">공유</v-list-item-content>
+                            </v-list-item>
+                          </v-list>
+                        </div>
+                      </div>
+                    </template>
+
+                  </v-menu>
                 </td>
               </tr>
             </tbody>
@@ -125,11 +140,15 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="showAddSongDialog" max-width="500px">
+    <SongAddForm :myPlaylists="myPlaylists" @cancel="cancelAddSong" @addSongToPlaylist="addSongToPlaylist" />
+  </v-dialog>
 </template>
 
 <script>
 import ReportAccountPlaylistForm from '@/components/report/ReportAccountPlaylistForm.vue'
 import ReportSongForm from '@/components/report/ReportSongForm.vue'
+import SongAddForm from "@/components/song/SongAddForm.vue"
 import { mapActions } from 'vuex';
 
 const reportModule = "reportModule"
@@ -151,15 +170,23 @@ export default {
     playlistId: {
       type: String,
       required: true
+    },
+    myPlaylists: {
+      type: Array,
+      required: true
     }
   },
   components: {
     ReportAccountPlaylistForm,
-    ReportSongForm
+    ReportSongForm,
+    SongAddForm
   }
   ,
   data() {
     return {
+      isPlaylistButton: {},
+      showAddSongDialog: false,
+      currentSong: {},
       reportedSongIndex: null,
       showReportSongDialog: false,
       showReportAccountPlaylistDialog: false,
@@ -200,9 +227,10 @@ export default {
   methods: {
     ...mapActions(reportModule, ["requestReportAccountAndPlaylistAndSongToSpring"]),
 
-    reportSong(songId) {
+    reportSong(songId, index) {
       this.songId = songId
       this.showReportSongDialog = true;
+      // this.$set(this.showReportSongDialog, index, true)
       // alert(songId)
     },
     async onSubmitReportSongForm(payload) {
@@ -391,7 +419,34 @@ export default {
         const isLike = true
         this.$emit("like", isLike);
       }
+    },
+
+    playlistButton(index) {
+      this.isPlaylistButton[index] = !this.isPlaylistButton[index];
+      // this.$set(this.isPlaylistButton, index, !this.isPlaylistButton[index]);
+    },
+    selectSongForAdd(song) {
+      this.currentSong = song
+      this.$emit("openAddSongDialog")
+      this.showAddSongDialog = true
+    },
+    cancelAddSong() {
+      this.showAddSongDialog = false
+      this.currentSong = {}
+    },
+    async openAddSongDialog() {
+      await this.requestMyPlaylistsToSpring()
+    },
+    addSongToPlaylist(playlistId) {
+      const title = this.currentSong.title
+      const singer = this.currentSong.singer
+      const link = this.currentSong.link
+      const lyrics = this.currentSong.lyrics
+
+      this.showAddSongDialog = false
+      this.$emit("addSongToPlaylist", { playlistId, title, singer, link, lyrics })
     }
+
   },
   computed: {
     getImage() {
@@ -467,12 +522,12 @@ export default {
 }
 
 .playlist {
-  padding: 20px;
+  padding: 10px;
 }
 
 .playlist-table {
   overflow: scroll;
-  padding-right: 15px;
+  /* padding-right: 15px; */
   height: 450px !important;
 }
 
@@ -630,6 +685,17 @@ export default {
   display: flex;
   justify-content: flex-end;
   color: white;
+}
+
+.playlist-button-container {
+  display: flex;
+  align-items: center;
+}
+
+.playlist-menu-items {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 신고폼 스타일 끝 */
