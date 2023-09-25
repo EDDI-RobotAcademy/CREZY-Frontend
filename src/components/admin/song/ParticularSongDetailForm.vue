@@ -2,7 +2,7 @@
   <div style="display: flex; justify-content: space-between;">
     <div class="d-flex">
       <div class="admin-song-img-wrapper">
-        <v-img class="mx-auto" height="200" :src="songThumbnail"> </v-img>
+        <v-img class="mx-auto" height="200" :src="getSongImage(songInfo.link)"> </v-img>
       </div>
       <div style="margin: 8px">
         <div>{{ songInfo.title }}</div>
@@ -88,12 +88,16 @@ export default {
       this.modifiedLyrics = this.songInfo.lyrics
       this.isLyricModify = false
     },
-    getImage(link) {
-      return (
-        "https://img.youtube.com/vi/" +
-        link.substring(link.lastIndexOf("=") + 1) +
-        "/mqdefault.jpg"
-      );
+    getSongImage(link) {
+      if (!link) {
+        return require("@/assets/images/Logo_only_small-removebg-preview.png")
+      } else {
+        return (
+          "https://img.youtube.com/vi/" +
+          link.substring(link.lastIndexOf("=") + 1) +
+          "/mqdefault.jpg"
+        );
+      }
     },
     modifyLyrics() {
       const songId = this.songInfo.songId

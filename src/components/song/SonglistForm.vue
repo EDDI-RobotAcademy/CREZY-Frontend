@@ -24,15 +24,19 @@
                         @dragleave="dragLeave">
 
                         <td align="center" style="width: 10%;">
-                            <v-img :src=getImage(song.link) height="50" width="50"></v-img>
+                            <v-img :src=getImage(song.link) height="50" width="50" @click="songModify(song)"></v-img>
                         </td>
 
                         <td align="center" style="width: 50%;">
+                            <div @click="songModify(song)">
                             {{ song.title }}
+                            </div>
                         </td>
 
                         <td align="center" style="width: 30%;">
+                            <div @click="songModify(song)">
                             {{ song.singer }}
+                            </div>
                         </td>
 
                         <td align="center" style="">
@@ -41,6 +45,7 @@
                                 <v-icon>mdi-alert-circle</v-icon>
                             </button>
                         </td>
+                        
 
                         <td v-if="hoverIndex == index || checkedSongs.includes(song.songId)" style="width: 10%;">
                             <input type="checkbox" :id="'song-' + song.songId" v-model="checkedSongs" :value="song.songId"
@@ -141,11 +146,15 @@ export default {
             await this.$emit("deleteSubmit", songlist)
         },
         getImage(link) {
-            return (
+            if (!link) {
+                return require("@/assets/images/Logo_only_small-removebg-preview.png")
+            } else {
+                return (
                 "https://img.youtube.com/vi/" +
                 link.substring(link.lastIndexOf("=") + 1) +
                 "/mqdefault.jpg"
-            );
+                );
+            }
         },
         startDrag(index) {
             this.draggedIndex = index;

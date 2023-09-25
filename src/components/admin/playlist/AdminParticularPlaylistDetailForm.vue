@@ -48,7 +48,6 @@
               <td colspan="6">
                 <ParticularSongDetailForm 
                   :songInfo="songInfo" 
-                  :songThumbnail="songThumbnail"
                   @modifyLyrics="modifyLyrics"
                   @deleteSong="deleteSong"
                   @openSong="openSong"
@@ -118,13 +117,7 @@ export default {
       }
       return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${this.playlist.thumbnailName}`;
     },
-    getSongImage(link) {
-      return (
-        "https://img.youtube.com/vi/" +
-        link.substring(link.lastIndexOf("=") + 1) +
-        "/mqdefault.jpg"
-      );
-    },
+    
     awsS3Config() {
       AWS.config.update({
         region: this.awsBucketRegion,
@@ -200,15 +193,6 @@ export default {
       this.openGiveWarning = false
     },
   },
-  watch: {
-    songInfo: {
-      handler(newVal) {
-        if (newVal && newVal.link) {
-          this.songThumbnail = this.getSongImage(newVal.link) 
-        }
-      }
-    }
-  }
 }
 </script>
 
