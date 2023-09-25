@@ -47,6 +47,10 @@
           </v-sheet>
           <iframe ref="ytPlayer" frameborder="0" allow="autoplay" width="0" height="0"></iframe>
           <div class="controls-container">
+            <button style="color: white" @click="toggleSetShuffle()">
+              <v-icon v-if="isShuffled">mdi-shuffle</v-icon>
+              <v-icon v-else>mdi-shuffle-disabled</v-icon>
+            </button>
             <button style="color: white" @click="previousVideo()">
               <v-icon>mdi-skip-previous</v-icon>
             </button>
@@ -56,6 +60,10 @@
             </button>
             <button style="color: white" @click="nextVideo()">
               <v-icon>mdi-skip-next</v-icon>
+            </button>
+            <button style="color: white" @click="toggleSetRepeat()">
+              <v-icon v-if="isRepeatOne">mdi-repeat-once</v-icon>
+              <v-icon v-else>mdi-repeat</v-icon>
             </button>
           </div>
           <div class="progress-container">
@@ -169,6 +177,8 @@ export default {
       videoIds: [],
 
       isPlaying: false,
+      isShuffled: false,
+      isRepeatOne: false,
       currentIframe: {},
 
       duration: 0,
@@ -302,15 +312,36 @@ export default {
       this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[index]}?autoplay=1&mute=0&enablejsapi=1`;
       this.isPlaying = true;
     },
-
+    
     onPlayerStateChange() {
       console.log("onPlayerStateChange");
-      this.currentIdx++;
-      if (this.currentIdx >= this.videoIds.length) {
-        this.currentIdx = 0;
+      if (this.isRepeatOne) {
+        this.currentIdx;
+      } else {
+        this.currentIdx++;
+      
+        if (this.currentIdx >= this.videoIds.length) {
+          this.currentIdx = 0;
+        }
       }
       this.playSong(this.currentIdx);
+    },    
+
+    toggleSetRepeat() {
+      this.isRepeatOne = !this.isRepeatOne;
     },
+
+    toggleSetShuffle() {
+      this.isShuffled = !this.isShuffled;
+    },
+
+    // 랜덤으로 인덱스 설정
+    shuffleVideoIdx() {
+      
+            
+    },
+
+
 
     togglePlay() {
       if (this.totalTimeText !== "0000") {
