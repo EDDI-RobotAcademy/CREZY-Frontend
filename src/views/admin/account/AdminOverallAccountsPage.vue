@@ -25,6 +25,7 @@ import { mapActions, mapState } from "vuex";
 import AdminOverallAccountsForm from "@/components/admin/account/AdminOverallAccountsForm.vue"
 
 const adminAccountModule = 'adminAccountModule'
+const adminWarningModule = 'adminWarningModule'
 
 export default {
   data() {
@@ -45,9 +46,12 @@ export default {
       'requestAccountInfoForAdminToSpring',
       'requestBlacklistAccountToSpring',
       'requestRemoveBlacklistAccountToSpring',
-      'requestAccountWarningsForAdminToSpring',
-      'requestWarningToAccountToSpring',
       'requestSearchAccountListForAdminToSpring',
+    ]),
+
+    ...mapActions(adminWarningModule, [
+      'requestAccountWarningsForAdminToSpring',
+      'requestGiveWarningToSpring',
       'requestRemoveWarningToSpring'
     ]),
 
@@ -115,7 +119,8 @@ export default {
 
     async giveWarning(payload) {
       const accountId = payload.reportedId
-      await this.requestWarningToAccountToSpring(payload)
+      await this.requestGiveWarningToSpring(payload)
+      await this.getPaginatedAccounts()
       await this.requestAccountInfoForAdminToSpring(accountId)
     },
     async searchAccount(payload) {
@@ -130,6 +135,7 @@ export default {
       await this.requestRemoveWarningToSpring(warningId)
       await this.requestAccountInfoForAdminToSpring(accountId)
       await this.requestAccountWarningsForAdminToSpring(accountId)
+      await this.getPaginatedAccounts()
     }
   },
   computed: {
@@ -138,8 +144,11 @@ export default {
       'accountList',
       'accountListCount',
       'accountInfo',
-      'warnings'
     ]),
+
+    ...mapState(adminWarningModule, [
+      'warnings'
+    ])
 
   },
   async mounted() {

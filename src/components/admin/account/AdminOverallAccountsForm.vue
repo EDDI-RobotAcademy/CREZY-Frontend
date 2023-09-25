@@ -276,7 +276,6 @@ export default {
     },
 
     giveWarning(payload) {
-      console.log(payload)
       this.$emit("giveWarning", payload)
     },
     searchAccount() {
