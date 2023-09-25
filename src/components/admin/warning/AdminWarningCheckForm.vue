@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="admin-warning-actions">
-            <v-btn class="admin-warning-btn">경고 철회하기</v-btn>
+            <v-btn class="admin-warning-btn" @click="removeWarning(warning.warningId)">경고 철회하기</v-btn>
           </div>
         </div>
 
@@ -81,6 +81,12 @@ export default {
 
     cancelCheckWarning() {
       this.$emit("cancelCheckWarning")
+    },
+
+    removeWarning(warningId) {
+      if ( confirm("경고를 철회하시겠습니까?")) {
+        this.$emit("removeWarning", warningId)
+      }
     }
   }
 }

@@ -82,7 +82,8 @@
         :nickname="selectedNickname"
         :warnings="warnings"
         @giveWarning="giveWarning"
-        @cancelCheckWarning="cancelCheckWarning"/>
+        @cancelCheckWarning="cancelCheckWarning"
+        @removeWarning="removeWarning"/>
     </v-dialog>
   </div>
 </template>
@@ -226,6 +227,11 @@ export default {
 
     cancelCheckWarning() {
       this.accountWarnings = false
+    },
+
+    removeWarning(warningId) {
+      const accountId = this.accountInfo.accountId
+      this.$emit("removeWarning", {warningId, accountId})
     }
   },
 }
