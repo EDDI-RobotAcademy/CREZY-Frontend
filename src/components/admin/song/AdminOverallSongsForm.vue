@@ -60,7 +60,7 @@
                     </div>
                     <div style="width: 400px; margin-left: 80px">
                         <v-text-field class="admin-song-search-field" variant="outlined" append-inner-icon="mdi-magnify"
-                            single-line hide-details @click:append-inner="onClick" v-model="keyword"
+                            single-line hide-details @click:append-inner="searchSong" v-model="keyword"
                             @keyup.enter="searchSong"></v-text-field>
                     </div>
                     <div style="width: 300px; ">
@@ -219,9 +219,6 @@ export default {
         }
     },
     methods: {
-        onClick() {
-            alert("yay")
-        },
         selectCategory(category) {
             this.selectedCategory = category
             const selectedCategory = category
