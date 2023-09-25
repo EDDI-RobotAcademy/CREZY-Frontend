@@ -468,6 +468,7 @@ export default {
     },
     startDrag(index) {
       this.draggedIndex = index;
+      this.menuIsOpen = false
       this.isPlaylistButton = {}
     },
     dragOver(index) {
@@ -483,7 +484,6 @@ export default {
 
         this.draggedIndex = null;
         this.dragOverIndex = null;
-
       }
     },
     dragEnter(event) {
@@ -506,8 +506,8 @@ export default {
       await this.$emit("submit", {
         newPlaylist, title, singer, link, lyrics
       })
-    }
-  },
+    },
+  
     getImage(link) {
       if (link) {
         return (
@@ -548,6 +548,7 @@ export default {
       this.loadYouTubeApi();
     }
   },
+
 };
 </script>
 
