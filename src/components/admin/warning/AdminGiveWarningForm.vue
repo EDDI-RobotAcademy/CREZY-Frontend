@@ -87,6 +87,27 @@ export default {
         ]
         return accountWarnings
       }
+      if (this.reportedCategoryType === "SONG") {
+          const  songWarnings = [
+          { name: "노래 가사 오류"},
+          { name: "저작권 침해"},
+          { name: "잘못된 링크"},
+          { name: "불쾌한 콘텐츠"},
+          { name: "허위"},
+          { name: "기타"},
+        ]
+        return songWarnings
+      }
+      if (this.reportedCategoryType === "PLAYLIST") {
+          const  playlistWarnings = [
+          { name: "부적절한 제목"},
+          { name: "유해한 플레이리스트 사진"},
+          { name: "허위 콘텐츠"},
+          { name: "기만적인 정보"},
+          { name: "기타"},
+        ]
+        return playlistWarnings
+      }
     }
   },
 
