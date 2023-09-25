@@ -2,7 +2,7 @@
   <div>
     <PlaylistReadForm :playlist="playlist" :playlistId="playlistId" :isPlaylistLiked="isPlaylistLiked" @like="toggleLike"
       :playlistLikes="playlistLikes" :myPlaylists="myPlaylists" @addSongToPlaylist="addSongToPlaylist"
-      @openAddSongDialog="openAddSongDialog" />
+      @openAddSongDialog="openAddSongDialog" @submit="onSubmitForm" />
   </div>
 </template>
 <script>
@@ -38,7 +38,8 @@ export default {
       "checkIsPlaylistLikedToSpring",
       "requestLikePlaylistToSpring",
       "requestUnlikePlaylistToSpring",
-      "requestMyPlaylistsToSpring"
+      "requestMyPlaylistsToSpring",
+      "requestPlaylistRegisterToSpring"
     ]),
     ...mapActions(songModule, ["requestSongRegisterToSpring"]),
     async checkIsPlaylistLiked() {
@@ -63,7 +64,25 @@ export default {
 
     async openAddSongDialog() {
       await this.requestMyPlaylistsToSpring()
-    }
+    },
+    async onSubmitForm(payload) {
+      const newPlaylist = {
+        playlistName: payload.newPlaylist.playlistName,
+        playlistThumbnail: payload.newPlaylist.playlistThumbnail,
+      };
+      const newPlaylistId = await this.requestPlaylistRegisterToSpring(newPlaylist);
+
+      const songToAdd = {
+        playlistId: newPlaylistId,
+        title: payload.title,
+        singer: payload.singer,
+        link: payload.link,
+        lyrics: payload.lyrics,
+      };
+      await this.addSongToPlaylist(songToAdd);
+
+      await this.requestMyPlaylistsToSpring();
+    },
   },
   computed: {
     ...mapState(playlistModule, ["playlist", "myPlaylists"]),

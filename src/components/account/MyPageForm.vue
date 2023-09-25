@@ -10,11 +10,9 @@
             </div>
             <div class="profile-name">{{ account.nickname }}의 MUSE</div>
             <div class="warnings-icon" style="font-size: small;">
-            ⚠️ 회원님은 경고를 {{ account.warningCounts }}회 받았습니다
+              ⚠️ 회원님은 경고를 {{ account.warningCounts }}회 받았습니다
             </div>
           </div>
-
-
           <v-col class="my-page-menu-icon" style="display: flex; justify-content: flex-end;">
             <v-menu offset-y v-model="isMyPageMenuButton">
               <template v-slot:activator="{ on, attrs }">
@@ -41,7 +39,6 @@
               </template>
             </v-menu>
           </v-col>
-
         </v-row>
         <v-col cols="5">
           <v-btn rounded @click="addPlaylist()" class="add-playlist-button">✛ 새 재생목록</v-btn>
@@ -70,7 +67,7 @@
                 border-collapse: separate;
                 border-spacing: 0 15px;
               ">
-                  <tbody>
+                  <tbody style="cursor: pointer;">
                     <td>
                       <v-img class="playlist-img" src="@/assets/images/free-icon-playlist-3567882.png"></v-img>
                     </td>
@@ -158,9 +155,11 @@ export default {
       awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
       awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
       awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
+
+      warningCount: 0,
+
       isMyPageMenuButton: false,
-      warningCount: 0
-    };
+    }
   },
 
   methods: {
@@ -226,8 +225,8 @@ export default {
 
     goToCustomerServicePage() {
       this.$router.push({ name: "CustomerInquiryPage" });
-    }
-  }
+    },
+  },
 }
 </script>
     
@@ -267,6 +266,7 @@ export default {
 .playlist-dialog {
   background-color: rgba(0, 0, 0, 0.912) !important;
   padding: 10px;
+  height: 400px;
 }
 
 .playlist-dialog-title {
@@ -283,7 +283,7 @@ export default {
 .cancel-button {
   color: white;
   margin-right: 90px;
-  margin-bottom: 11px;
+  /* margin-top: 20px; */
 }
 
 .playlist-name-button {
