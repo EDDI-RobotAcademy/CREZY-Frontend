@@ -69,7 +69,7 @@
           </div>
         </div>
       </v-col>
-      <v-col cols="5" style="display: flex; justify-content: flex-end z-index: 1000;">
+      <v-col cols="5">
         <div class="playlist-table" v-if="currentBtn === 'LIST'">
           <table style="
               color: white;
@@ -84,29 +84,34 @@
                 draggable="true" @dragstart="startDrag(index)" @dragover="dragOver(index)" @drop="drop(index)"
                 @dragenter="dragEnter" @dragleave="dragLeave">
                 <td style="padding-right: 10px">{{ index + 1 }}</td>
-                <td>{{ song.title }}</td>
-                <td align="end">{{ song.singer }}</td>
+                <td style="padding-right: 10px">{{ song.title }}</td>
+                <td>{{ song.singer }}</td>
                 <td>
-                  <v-menu>
-                    <template v-slot:activator="{ on, attrs }">
-                      <div class="playlist-button-container" v-bind="attrs" v-on="on">
-                        <v-btn small @click="playlistButton(index)" class="description-btn" icon depressed>
-                          <v-icon style="color: white">mdi-playlist-music</v-icon>
-                        </v-btn>
-                        <div v-if="isPlaylistButton[index]" class="playlist-menu-items">
-                          <v-list style="background-color: rgba(0, 0, 0, 0) !important">
-                            <v-list-item @click="reportSong(song.songId, index)" style="color: white">
-                              <v-list-item-content style="font-size: 13px">신고</v-list-item-content>
-                            </v-list-item>
-                            <v-list-item @click="selectSongForAdd(song)" style=" color: white">
-                              <v-list-item-content style="font-size: 13px">공유</v-list-item-content>
-                            </v-list-item>
-                          </v-list>
+                  <div style="position: relative; display: flex;">
+                    <v-menu>
+                      <template v-slot:activator="{ attrs, on }">
+                        <div class="playlist-button-container">
+                          <button small @click="playlistButton(index)" v-bind="attrs" v-on="on"
+                            style="margin-left: 10px;">
+                            <v-icon style="color: white">mdi-playlist-music</v-icon>
+                          </button>
+                          <v-card
+                            style="position:absolute; top: 30px; left: 10px; width: 60px; height: auto; background-color: rgb(84, 82, 82); z-index: 1000 !important;">
+                            <div v-if="isPlaylistButton[index]" class="playlist-menu-items">
+                              <v-list style="background-color: rgba(0, 0, 0, 0) !important">
+                                <v-list-item @click="reportSong(song.songId, index)" style="color: white">
+                                  <v-list-item-content style="font-size: 13px">신고</v-list-item-content>
+                                </v-list-item>
+                                <v-list-item @click="selectSongForAdd(song)" style=" color: white">
+                                  <v-list-item-content style="font-size: 13px">공유</v-list-item-content>
+                                </v-list-item>
+                              </v-list>
+                            </div>
+                          </v-card>
                         </div>
-                      </div>
-                    </template>
-
-                  </v-menu>
+                      </template>
+                    </v-menu>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -715,7 +720,10 @@ export default {
   color: white;
 }
 
+/* 신고폼 스타일 끝 */
+
 .playlist-button-container {
+  position: relative;
   display: flex;
   align-items: center;
 }
@@ -726,5 +734,13 @@ export default {
   text-overflow: ellipsis;
 }
 
-/* 신고폼 스타일 끝 */
+.v-menu__content {
+  position: absolute;
+  z-index: 1000;
+  /* 팝업의 z-index 설정 */
+  right: 0;
+  /* 원하는 위치로 조절 (예: 오른쪽 끝) */
+  top: 100%;
+  /* 원하는 위치로 조절 (예: 아래) */
+}
 </style>
