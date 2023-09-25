@@ -9,7 +9,11 @@
                 width="100%" height="100%"></v-img>
             </div>
             <div class="profile-name">{{ account.nickname }}의 MUSE</div>
+            <div class="warnings-icon" style="font-size: small;">
+            ⚠️ 회원님은 경고를 {{ account.warningCounts }}회 받았습니다
+            </div>
           </div>
+
 
           <v-col class="my-page-menu-icon" style="display: flex; justify-content: flex-end;">
             <v-menu offset-y v-model="isMyPageMenuButton">
@@ -154,9 +158,9 @@ export default {
       awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
       awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
       awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
-
-      isMyPageMenuButton: false
-    }
+      isMyPageMenuButton: false,
+      warningCount: 0
+    };
   },
 
   methods: {
@@ -228,6 +232,10 @@ export default {
 </script>
     
 <style scoped>
+.warnings-icon {
+  margin-left: 270px;
+}
+
 .nickname {
   padding: 20px;
   font-size: 22px;
