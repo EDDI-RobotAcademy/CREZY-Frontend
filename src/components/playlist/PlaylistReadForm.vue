@@ -86,7 +86,7 @@
                 <td align="end">{{ song.singer }}</td>
                 <td>
                   <v-menu>
-                    <template v-slot:activator="{ on, attrs }">ㄹㄹ
+                    <template v-slot:activator="{ on, attrs }">
                       <div class="playlist-button-container" v-bind="attrs" v-on="on">
                         <v-btn small @click="playlistButton(index)" class="description-btn" icon depressed>
                           <v-icon style="color: white">mdi-playlist-music</v-icon>
