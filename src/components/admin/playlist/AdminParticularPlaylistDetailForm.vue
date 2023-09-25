@@ -17,6 +17,7 @@
             <v-btn class="particular-playlist-btn" @click="deletePlaylistThumbnail">사진 변경</v-btn>
             <v-btn class="particular-playlist-btn" @click="changePlaylistName">이름 변경</v-btn>
             <v-btn class="particular-playlist-btn" @click="deletePlaylist">삭제</v-btn>
+            <v-btn class="particular-playlist-btn" @click="openGiveWarningModal">경고 주기</v-btn>
           </div>
         </div>
       </div>
@@ -60,6 +61,12 @@
         </table>
       </div>
     </v-card>
+    <v-dialog v-model="openGiveWarning" max-width="600px">
+      <AdminGiveWarningForm 
+        :selectedWarningCategory="selectedWarningCategory"
+        @giveWarning="givePlaylistWarning"
+        @cancelWarning="cancelWarning"/>
+    </v-dialog>
   </div>
 </template>
 
@@ -67,6 +74,7 @@
 import AWS from "aws-sdk";
 
 import ParticularSongDetailForm from "@/components/admin/song/ParticularSongDetailForm.vue"
+import AdminGiveWarningForm from "@/components/admin/warning/AdminGiveWarningForm.vue"
 
 export default {
   props: {
@@ -87,10 +95,13 @@ export default {
       awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
       awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOLID,
       s3: null,
+
+      openGiveWarning: false
     }
   },
   components: {
-    ParticularSongDetailForm
+    ParticularSongDetailForm,
+    AdminGiveWarningForm
   },
   methods: {
     manageSong(songId) {
@@ -169,11 +180,25 @@ export default {
       this.$emit('blockSong', selectedSongId)
     },
 
+    openGiveWarningModal() {
+      this.selectedWarningCategory = "PLAYLIST"
+      this.openGiveWarning = true
+    },
+
     giveSongWarning(payload) {
       const reportedId = this.songInfo.songId
       const { reportedCategoryType, reportContent } = payload
       this.$emit("giveSongWarning", { reportedCategoryType, reportContent, reportedId })
-    }
+    },
+
+    givePlaylistWarning(payload) {
+      this.$emit("givePlaylistWarning", payload)
+      this.openGiveWarning = false
+    },
+
+    cancelWarning() {
+      this.openGiveWarning = false
+    },
   },
   watch: {
     songInfo: {

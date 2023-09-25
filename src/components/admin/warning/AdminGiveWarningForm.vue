@@ -98,6 +98,16 @@ export default {
         ]
         return songWarnings
       }
+      if (this.reportedCategoryType === "PLAYLIST") {
+          const  playlistWarnings = [
+          { name: "부적절한 제목"},
+          { name: "유해한 플레이리스트 사진"},
+          { name: "허위 콘텐츠"},
+          { name: "기만적인 정보"},
+          { name: "기타"},
+        ]
+        return playlistWarnings
+      }
     }
   },
 

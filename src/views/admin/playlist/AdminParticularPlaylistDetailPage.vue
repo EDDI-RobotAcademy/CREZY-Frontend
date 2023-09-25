@@ -2,7 +2,8 @@
   <div>
     <AdminParticularPlaylistDetailForm :playlist="playlist" :songInfo="songInfo" @openManage="getSongInfo"
       @deleteThumbnail="removeThumbnail" @changePlaylistName="changePlaylistName" @deletePlaylist="deletePlaylist"
-      @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" @giveSongWarning="giveSongWarning"/>
+      @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" 
+      @giveSongWarning="giveSongWarning" @givePlaylistWarning="givePlaylistWarning"/>
   </div>
 </template>
 
@@ -106,6 +107,13 @@ export default {
       await this.requestGiveWarningToSpring(payload)
       await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
       await this.getSongInfo(songId)
+    },
+
+    async givePlaylistWarning(payload) {
+      const reportedId = this.selectedPlaylistId
+      const { reportedCategoryType, reportContent } = payload
+      await this.requestGiveWarningToSpring({ reportedCategoryType, reportContent, reportedId })
+      await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
     }
   },
   computed: {
