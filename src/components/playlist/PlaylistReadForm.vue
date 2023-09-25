@@ -80,7 +80,9 @@
             ">
             <tbody>
               <tr v-for="(song, index) in playlist.songlist" :key="index" @click="playSong(index)"
-                :class="{ playing: index === currentIdx, 'not-playing': index !== currentIdx }" style="cursor: pointer">
+                :class="{ playing: index === currentIdx, 'not-playing': index !== currentIdx }" style="cursor: pointer"
+                draggable="true" @dragstart="startDrag(index)" @dragover="dragOver(index)" @drop="drop(index)"
+                @dragenter="dragEnter" @dragleave="dragLeave">
                 <td style="padding-right: 10px">{{ index + 1 }}</td>
                 <td>{{ song.title }}</td>
                 <td align="end">{{ song.singer }}</td>
@@ -212,6 +214,9 @@ export default {
         { label: "LIST", class: "clicked-song-btn" },
         { label: "LYRICS", class: "song-btn" },
       ],
+
+      draggedIndex: null,
+      dragOverIndex: null,
     };
   },
   beforeUnmount() {
@@ -445,8 +450,31 @@ export default {
 
       this.showAddSongDialog = false
       this.$emit("addSongToPlaylist", { playlistId, title, singer, link, lyrics })
-    }
+    },
+    startDrag(index) {
+      this.draggedIndex = index;
+    },
+    dragOver(index) {
+      event.preventDefault();
+      this.dragOverIndex = index;
+    },
+    drop(index) {
+      if (this.draggedIndex !== null) {
 
+        const draggedSong = this.playlist.songlist[this.draggedIndex];
+        this.playlist.songlist.splice(this.draggedIndex, 1);
+        this.playlist.songlist.splice(index, 0, draggedSong);
+
+        this.draggedIndex = null;
+        this.dragOverIndex = null;
+      }
+    },
+    dragEnter(event) {
+      event.preventDefault();
+    },
+    dragLeave() {
+      this.dragOverIndex = null;
+    },
   },
   computed: {
     getImage() {

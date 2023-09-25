@@ -62,7 +62,8 @@
         <PlaylistModifyForm :playlist="playlist" @submit="onSubmit" @cancel="showSongModificationForm = false" />
       </v-card>
     </div>
-    <SonglistForm @submitModifySong="submitModifySong" :playlist="playlist" @deleteSubmit="deleteSubmit" />
+    <SonglistForm @submitModifySong="submitModifySong" :playlist="playlist" @deleteSubmit="deleteSubmit"
+      @saveSongOrder="onSaveSongOrder" />
   </div>
 </template>
 
@@ -100,8 +101,8 @@ export default {
     };
   },
   methods: {
-    ...mapActions(playlistModule, ["requestPlaylistDeleteToSpring","requestPlaylistIncludeBlockSongToSpring"]),
-    ...mapActions(songModule, [ "requestSongModifyToSpring"]),
+    ...mapActions(playlistModule, ["requestPlaylistDeleteToSpring", "requestPlaylistIncludeBlockSongToSpring"]),
+    ...mapActions(songModule, ["requestSongModifyToSpring"]),
     async submitModifySong(payload) {
       const playlistId = this.playlistId
       await this.requestSongModifyToSpring(payload)
@@ -150,6 +151,9 @@ export default {
       this.$emit("deleteSubmit", payload);
       console.log("Sdfsf", payload);
     },
+    onSaveSongOrder(payload) {
+      this.$emit("saveSongOrder", payload)
+    }
   },
 };
 </script>

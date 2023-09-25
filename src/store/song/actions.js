@@ -39,5 +39,12 @@ export default {
 
   removeRecommendations({ commit }) {
     return commit(REMOVE_RECOMMENDATIONS)
+  },
+  requestSaveSongOrderToSpring({ }, payload) {
+    const userToken = localStorage.getItem("userToken")
+    return axiosInst.springAxiosInst.post("/song/order", payload, { headers: { Authorization: userToken } })
+      .then((res) => {
+        return res.data
+      });
   }
 };
