@@ -34,13 +34,14 @@
     </v-list>
 
     <div class="admin-warning-actions">
-      <v-btn class="admin-warning-btn" @click="openGiveWarning = !openGiveWarning">경고 주기</v-btn>
+      <v-btn class="admin-warning-btn" @click="openGiveWarningModal">경고 주기</v-btn>
       <v-btn class="admin-warning-btn" @click="cancelCheckWarning">취소</v-btn>
     </div>
 
   </v-card>
   <v-dialog v-model="openGiveWarning" max-width="600px">
     <AdminGiveWarningForm 
+      :selectedWarningCategory="selectedWarningCategory"
       @giveWarning="giveWarning"
       @cancelWarning="cancelWarning"/>
   </v-dialog>
@@ -65,13 +66,12 @@ export default {
   data() {
     return {
       open: [],
-      openGiveWarning: false
+      openGiveWarning: false,
     }
   },
 
   methods: {
     giveWarning(payload) {
-      console.log(payload)
       this.$emit("giveWarning", payload)
     },
 
@@ -87,6 +87,11 @@ export default {
       if ( confirm("경고를 철회하시겠습니까?")) {
         this.$emit("removeWarning", warningId)
       }
+    },
+
+    openGiveWarningModal() {
+      this.selectedWarningCategory = "ACCOUNT"
+      this.openGiveWarning = true
     }
   }
 }

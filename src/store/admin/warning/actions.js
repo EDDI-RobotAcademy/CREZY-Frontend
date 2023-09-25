@@ -15,7 +15,7 @@ export default {
     })
   },
     
-  requestWarningToAccountToSpring({ }, payload) {
+  requestGiveWarningToSpring({ }, payload) {
     const { reportedCategoryType, reportContent, reportedId } = payload
     const userToken = localStorage.getItem("userToken")
     return axiosInst.springAxiosInst.post("/warning/regist-warning",

@@ -46,13 +46,13 @@ export default {
       'requestAccountInfoForAdminToSpring',
       'requestBlacklistAccountToSpring',
       'requestRemoveBlacklistAccountToSpring',
-      'requestWarningToAccountToSpring',
       'requestSearchAccountListForAdminToSpring',
       'requestRemoveWarningToSpring'
     ]),
 
     ...mapActions(adminWarningModule, [
       'requestAccountWarningsForAdminToSpring',
+      'requestGiveWarningToSpring',
     ]),
 
     async getAccountsStatus(targetDate) {
@@ -119,7 +119,8 @@ export default {
 
     async giveWarning(payload) {
       const accountId = payload.reportedId
-      await this.requestWarningToAccountToSpring(payload)
+      await this.requestGiveWarningToSpring(payload)
+      await this.getPaginatedAccounts()
       await this.requestAccountInfoForAdminToSpring(accountId)
     },
     async searchAccount(payload) {
