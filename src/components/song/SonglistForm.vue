@@ -22,15 +22,19 @@
                         @mouseover="showCheckbox(index)" @mouseleave="hideCheckbox(index)">
 
                         <td align="center" style="width: 10%;">
-                            <v-img :src=getImage(song.link) height="50" width="50"></v-img>
+                            <v-img :src=getImage(song.link) height="50" width="50" @click="songModify(song)"></v-img>
                         </td>
 
                         <td align="center" style="width: 50%;">
+                            <div @click="songModify(song)">
                             {{ song.title }}
+                            </div>
                         </td>
 
                         <td align="center" style="width: 30%;">
+                            <div @click="songModify(song)">
                             {{ song.singer }}
+                            </div>
                         </td>
 
                         <td align="center" style="">
@@ -39,6 +43,7 @@
                                 <v-icon>mdi-alert-circle</v-icon>
                             </button>
                         </td>
+                        
 
                         <td v-if="hoverIndex == index || checkedSongs.includes(song.songId)" style="width: 10%;">
                             <input type="checkbox" :id="'song-' + song.songId" v-model="checkedSongs" :value="song.songId"
