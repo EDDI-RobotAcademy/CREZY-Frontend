@@ -1,18 +1,9 @@
 <template>
   <div>
-    <AdminOverallAccountsForm 
-      :accountsStatus="accountsStatus"
-      :accounts="accountList" 
-      :accountInfo="accountInfo" 
-      :warnings="warnings"
-      @getStatus="getAccountsStatus" 
-      @switchCategory="getCategorizedAccountList"
-      @openManage="getAccountInfo" 
-      @removeFromBlacklist="removeFromBlacklist" 
-      @moveToBlacklist="moveToBlacklist"
-      @getAccountWarnings="getAccountWarnings" 
-      @giveWarning="giveWarning"  
-      @searchAccount="searchAccount"
+    <AdminOverallAccountsForm :accountsStatus="accountsStatus" :accounts="accountList" :accountInfo="accountInfo"
+      :warnings="warnings" @getStatus="getAccountsStatus" @switchCategory="getCategorizedAccountList"
+      @openManage="getAccountInfo" @removeFromBlacklist="removeFromBlacklist" @moveToBlacklist="moveToBlacklist"
+      @getAccountWarnings="getAccountWarnings" @giveWarning="giveWarning" @searchAccount="searchAccount"
       @removeWarning="removeWarning" />
     <v-pagination style="color: white" v-model="currentPage" :length="accountListCount" @click="getPaginatedAccounts">
     </v-pagination>
@@ -83,13 +74,13 @@ export default {
         await this.requestCategoryAccountListToSpring({ warningCounts, page })
       }
       if (selectedCategory === "1 warning") {
-        this.warningCounts = 2
+        this.warningCounts = 1
         const warningCounts = this.warningCounts
         const page = this.currentPage
         await this.requestCategoryAccountListToSpring({ warningCounts, page })
       }
       if (selectedCategory === "2 warnings") {
-        this.warningCounts = 1
+        this.warningCounts = 2
         const warningCounts = this.warningCounts
         const page = this.currentPage
         await this.requestCategoryAccountListToSpring({ warningCounts, page })
