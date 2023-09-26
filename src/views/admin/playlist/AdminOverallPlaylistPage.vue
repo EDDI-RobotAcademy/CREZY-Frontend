@@ -51,8 +51,9 @@ export default {
 
     async getCategorizedPlaylistList(selectedCategory) {
       this.currentCategory = selectedCategory
+      this.currentPage = 1
       const sortType = selectedCategory
-      const page = 1
+      const page = this.currentPage
       await this.requestPlaylistsForAdminToSpring({ sortType, page })
     },
 
