@@ -3,7 +3,7 @@
         <AdminOverallSongsForm @getStatus="getSongsStatus" @switchCategory="getCategorizedSongList" :songs="songs"
             :songInfo="songInfo" :songsStatus="songsStatus" @openManage="getSongInfo" @modifyLyrics="modifyLyrics"
             @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" @switchSort="getSortedSongList"
-            @searchSong="searchSong" />
+            @searchSong="searchSong" @giveWarning="giveWarning"/>
         <v-pagination style="color: white" v-model="currentPage" :length="songListCount" @click="getPaginatedSongs">
         </v-pagination>
     </div>
@@ -15,13 +15,15 @@ import { mapActions, mapState } from "vuex";
 import AdminOverallSongsForm from "@/components/admin/song/AdminOverallSongsForm.vue"
 
 const adminSongModule = "adminSongModule"
+const adminWarningModule = "adminWarningModule"
 
 export default {
     data() {
         return {
             currentPage: 1,
             currentSort: 'ASC',
-            currentCategory: 'TOTAL'
+            currentCategory: 'TOTAL',
+            searchKeyword: ''
         }
     },
     components: {
@@ -39,8 +41,14 @@ export default {
             "requestBlockSongToSpring",
             "requestSearchSongForAdminToSpring"]),
 
+        ...mapActions(adminWarningModule, [
+            'requestGiveWarningToSpring',
+        ]),
+
         async getCategorizedSongList(selectedCategory) {
             this.currentCategory = selectedCategory;
+            this.currentPage = 1;
+            this.searchKeyword = ''
 
             const songStatusType = selectedCategory;
             const sortType = this.currentSort
@@ -58,10 +66,17 @@ export default {
         },
 
         async getPaginatedSongs() {
-            const sortType = this.currentSort;
-            const page = this.currentPage;
-            const songStatusType = this.currentCategory;
-            await this.requestSongListForAdminToSpring({ songStatusType, sortType, page });
+            if (this.searchKeyword !== '') {
+                const keyword = this.searchKeyword
+                const page = this.currentPage
+                await this.requestSearchSongForAdminToSpring({ page, keyword })
+            } 
+            else {
+                const sortType = this.currentSort;
+                const page = this.currentPage;
+                const songStatusType = this.currentCategory;
+                await this.requestSongListForAdminToSpring({ songStatusType, sortType, page });
+            }
         },
 
         async getSongInfo(selectedSongId) {
@@ -100,10 +115,18 @@ export default {
             await this.getSongInfo(selectedSongId)
         },
         async searchSong(payload) {
-            const keyword = payload
+            this.currentPage = 1
+            this.searchKeyword = payload
+            const keyword = this.searchKeyword
             const page = this.currentPage
             await this.requestSearchSongForAdminToSpring({ page, keyword })
         },
+        async giveWarning(payload) {
+            const songId = payload.reportedId
+            await this.requestGiveWarningToSpring(payload)
+            await this.getPaginatedSongs()
+            await this.getSongInfo(songId)
+        }
     },
     computed: {
         ...mapState(adminSongModule, [

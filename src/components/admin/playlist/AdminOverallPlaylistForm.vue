@@ -60,7 +60,7 @@
           </div>
           <div style="width: 400px; margin-left: 80px">
             <v-text-field class="admin-playlist-search-field" variant="outlined" append-inner-icon="mdi-magnify"
-              single-line hide-details @click:append-inner="onClick" v-model="keyword"
+              single-line hide-details @click:append-inner="searchPlaylist" v-model="keyword"
               @keyup.enter="searchPlaylist"></v-text-field>
           </div>
           <div style="width: 300px; ">
@@ -191,9 +191,6 @@ export default {
     }
   },
   methods: {
-    onClick() {
-      alert("yay")
-    },
     selectCategory(category) {
       this.selectedCategory = category
       const selectedCategory = category
@@ -352,7 +349,8 @@ export default {
   background-color: #485463;
   color: white;
   height: 100px;
-  padding: 20px
+  padding: 20px;
+  cursor: pointer;
 }
 
 .overall-playlist-song-marker-container {

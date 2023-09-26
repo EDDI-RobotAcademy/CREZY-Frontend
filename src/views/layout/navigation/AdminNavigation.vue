@@ -55,7 +55,7 @@
       </v-btn>
       <div class="admin-nav-content">
         <div class="nav-page-title">
-          대충 페이지 제목
+          {{ currentPage }}
         </div>
         <div style="color: white; margin-right: 50px;">
           어서 오세요 {{ nickname }}님
@@ -76,6 +76,8 @@ export default {
   data() {
     return {
       navigation_drawer: true,
+      currentPage: '',
+
       links: [
         { icon: "mdi-developer-board", text: "Dashboard", class: "clicked-nav-drawer-item", route: "AdminDashboardPage" },
         { icon: "mdi-music-box-multiple", text: "Playlists", class: "nav-drawer-items", route: "AdminOverallPlaylistPage" },
@@ -104,11 +106,20 @@ export default {
       localStorage.removeItem("nickname")
       localStorage.removeItem("roleType")
       await this.$router.push({ name: "home" })
+    },
+
+    getCurrentPage(currentRoute) {
+      this.links.forEach((link) => {
+        if (link.route === currentRoute) {
+          this.currentPage = link.text
+        }
+      })
     }
   },
   watch: {
     $route(to) {
       this.handleNav(to.name);
+      this.getCurrentPage(to.name)
     },
   },
   created() {

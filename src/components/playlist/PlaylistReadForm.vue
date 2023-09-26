@@ -43,7 +43,7 @@
       <v-col cols="7">
         <div class="playlist-player">
           <v-sheet class="song-thumbnail-sheet">
-            <v-img class="mx-auto" height="400" :src="getImage"> </v-img>
+            <v-img class="mx-auto" height="400" :src="getImageUrl"> </v-img>
           </v-sheet>
           <iframe ref="ytPlayer" frameborder="0" allow="autoplay" width="0" height="0"></iframe>
           <div class="controls-container">
@@ -88,15 +88,37 @@
             ">
             <tbody>
               <tr v-for="(song, index) in playlist.songlist" :key="index" @click="playSong(index)"
-                :class="{ playing: index === currentIdx, 'not-playing': index !== currentIdx }" style="cursor: pointer">
+                :class="{ playing: index === currentIdx, 'not-playing': index !== currentIdx }" style="cursor: pointer"
+                draggable="true" @dragstart="startDrag(index)" @dragover="dragOver(index)" @drop="drop(index)"
+                @dragenter="dragEnter" @dragleave="dragLeave">
                 <td style="padding-right: 10px">{{ index + 1 }}</td>
-                <td>{{ song.title }}</td>
-                <td align="end">{{ song.singer }}</td>
+                <td style="padding-right: 10px">{{ song.title }}</td>
+                <td>{{ song.singer }}</td>
                 <td>
-                  <div style="display: flex; justify-content: flex-end; cursor: pointer;">
-                    <v-btn rounded flat class="report-btn" @click.stop="reportSong(song.songId)">
-                      ⚑
-                    </v-btn>
+                  <div style="position: relative; display: flex;">
+                    <v-menu v-model="menuIsOpen" @click:outside="closeMenu(currentIdx)">
+                      <template v-slot:activator="{ attrs, on }">
+                        <div class="playlist-button-container">
+                          <button small @click="playlistButton(index)" v-bind="attrs" v-on="on"
+                            style="margin-left: 10px;">
+                            <v-icon style="color: white">mdi-playlist-music</v-icon>
+                          </button>
+                          <v-card
+                            class="song-actions-modal">
+                            <div v-if="isPlaylistButton[index]" class="playlist-menu-items">
+                              <v-list style="background-color: rgba(0, 0, 0, 0) !important">
+                                <v-list-item @click="reportSong(song.songId, index)" style="color: white">
+                                  <v-list-item-content style="font-size: 13px">신고</v-list-item-content>
+                                </v-list-item>
+                                <v-list-item @click="selectSongForAdd(song)" style=" color: white">
+                                  <v-list-item-content style="font-size: 13px">저장</v-list-item-content>
+                                </v-list-item>
+                              </v-list>
+                            </div>
+                          </v-card>
+                        </div>
+                      </template>
+                    </v-menu>
                   </div>
                 </td>
               </tr>
@@ -133,11 +155,16 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="showAddSongDialog" max-width="500px">
+    <SongAddForm :myPlaylists="myPlaylists" @submit="onSubmitForm" @cancel="cancelAddSong"
+      @addSongToPlaylist="addSongToPlaylist" />
+  </v-dialog>
 </template>
 
 <script>
 import ReportAccountPlaylistForm from '@/components/report/ReportAccountPlaylistForm.vue'
 import ReportSongForm from '@/components/report/ReportSongForm.vue'
+import SongAddForm from "@/components/song/SongAddForm.vue"
 import { mapActions } from 'vuex';
 
 const reportModule = "reportModule"
@@ -159,15 +186,24 @@ export default {
     playlistId: {
       type: String,
       required: true
+    },
+    myPlaylists: {
+      type: Array,
+      required: true
     }
   },
   components: {
     ReportAccountPlaylistForm,
-    ReportSongForm
+    ReportSongForm,
+    SongAddForm
   }
   ,
   data() {
     return {
+      isPlaylistButton: {},
+      menuIsOpen: false,
+      showAddSongDialog: false,
+      currentSong: {},
       reportedSongIndex: null,
       showReportSongDialog: false,
       showReportAccountPlaylistDialog: false,
@@ -195,6 +231,9 @@ export default {
         { label: "LIST", class: "clicked-song-btn" },
         { label: "LYRICS", class: "song-btn" },
       ],
+
+      draggedIndex: null,
+      dragOverIndex: null,
     };
   },
   beforeUnmount() {
@@ -210,9 +249,10 @@ export default {
   methods: {
     ...mapActions(reportModule, ["requestReportAccountAndPlaylistAndSongToSpring"]),
 
-    reportSong(songId) {
+    reportSong(songId, index) {
       this.songId = songId
       this.showReportSongDialog = true;
+      // this.$set(this.showReportSongDialog, index, true)
       // alert(songId)
     },
     async onSubmitReportSongForm(payload) {
@@ -308,9 +348,11 @@ export default {
     },
 
     playSong(index) {
-      this.currentIdx = index;
-      this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[index]}?autoplay=1&mute=0&enablejsapi=1`;
-      this.isPlaying = true;
+      if (this.currentIdx !== index) {
+        this.currentIdx = index;
+        this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[index]}?autoplay=1&mute=0&enablejsapi=1`;
+        this.isPlaying = true;
+      } 
     },
     
     onPlayerStateChange() {
@@ -422,21 +464,106 @@ export default {
         const isLike = true
         this.$emit("like", isLike);
       }
-    }
-  },
-  computed: {
-    getImage() {
-      if (this.playlist && this.playlist.songlist) {
-        const link = this.playlist.songlist[this.currentIdx].link;
+    },
+
+    playlistButton(index) {
+      this.menuIsOpen = !this.menuIsOpen
+      this.isPlaylistButton[index] = !this.isPlaylistButton[index];
+      // this.$set(this.isPlaylistButton, index, !this.isPlaylistButton[index]);
+    },
+    closeMenu(index) {
+      this.menuIsOpen = false
+      this.isPlaylistButton[index] = !this.isPlaylistButton[index];
+    },
+
+    selectSongForAdd(song) {
+      this.currentSong = song
+      this.$emit("openAddSongDialog")
+      this.showAddSongDialog = true
+    },
+    cancelAddSong() {
+      this.showAddSongDialog = false
+      this.currentSong = {}
+    },
+    async openAddSongDialog() {
+      await this.requestMyPlaylistsToSpring()
+    },
+    addSongToPlaylist(playlistId) {
+      const title = this.currentSong.title
+      const singer = this.currentSong.singer
+      const link = this.currentSong.link
+      const lyrics = this.currentSong.lyrics
+
+      this.showAddSongDialog = false
+      this.$emit("addSongToPlaylist", { playlistId, title, singer, link, lyrics })
+    },
+    startDrag(index) {
+      this.draggedIndex = index;
+      this.menuIsOpen = false
+      this.isPlaylistButton = {}
+    },
+    dragOver(index) {
+      event.preventDefault();
+      this.dragOverIndex = index;
+    },
+    drop(index) {
+      if (this.draggedIndex !== null) {
+
+        const draggedSong = this.playlist.songlist[this.draggedIndex];
+        this.playlist.songlist.splice(this.draggedIndex, 1);
+        this.playlist.songlist.splice(index, 0, draggedSong);
+
+        this.draggedIndex = null;
+        this.dragOverIndex = null;
+      }
+    },
+    dragEnter(event) {
+      event.preventDefault();
+    },
+    dragLeave() {
+      this.dragOverIndex = null;
+    },
+    async onSubmitForm(payload) {
+      const newPlaylist = {
+        playlistName: payload.playlistName,
+        playlistThumbnail: payload.playlistThumbnail,
+      };
+
+      const title = this.currentSong.title
+      const singer = this.currentSong.singer
+      const link = this.currentSong.link
+      const lyrics = this.currentSong.lyrics
+
+      await this.$emit("submit", {
+        newPlaylist, title, singer, link, lyrics
+      })
+    },
+  
+    getImage(link) {
+      if (link) {
         return (
           "https://img.youtube.com/vi/" +
           link.substring(link.lastIndexOf("=") + 1) +
           "/mqdefault.jpg"
         );
       } else {
-        return ""; // 데이터를 아직 불러오지 않았을 때의 처리
+        return require("@/assets/images/Logo_only_small-removebg-preview.png"); // 데이터를 아직 불러오지 않았을 때의 처리
       }
     },
+  },
+  computed: {
+    getImageUrl() {
+      if (
+        this.playlist &&
+        this.playlist.songlist &&
+        this.playlist.songlist.length > this.currentIdx
+      ) {
+        return this.getImage(this.playlist.songlist[this.currentIdx].link);
+      } else {
+        // 기본 이미지 또는 오류 처리 로직을 여기에 추가
+        return require("@/assets/images/Logo_only_small-removebg-preview.png");;
+      }
+    }
   },
 
   watch: {
@@ -452,6 +579,7 @@ export default {
       this.loadYouTubeApi();
     }
   },
+
 };
 </script>
 
@@ -498,12 +626,12 @@ export default {
 }
 
 .playlist {
-  padding: 20px;
+  padding: 10px;
 }
 
 .playlist-table {
   overflow: scroll;
-  padding-right: 15px;
+  /* padding-right: 15px; */
   height: 450px !important;
 }
 
@@ -643,10 +771,11 @@ export default {
 
 /* 신고폼 스타일 시작 */
 .report-dialog {
-  background-color: #3a3838;
+  background-color: rgba(23, 23, 23, 0.9);
   /* 다이얼로그 배경색 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   /* 그림자 효과 */
+  border: 1px solid rgba(46, 46, 46)
 }
 
 .report-dialog-title {
@@ -664,4 +793,26 @@ export default {
 }
 
 /* 신고폼 스타일 끝 */
+
+.playlist-button-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.playlist-menu-items {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-actions-modal {
+  position:absolute; 
+  top: 30px; 
+  left: 10px; 
+  width: 60px; 
+  height: auto; 
+  background-color: rgba(23, 23, 23, 0.9); 
+  z-index: 1000 !important;
+}
 </style>

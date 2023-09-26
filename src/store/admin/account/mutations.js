@@ -3,7 +3,6 @@ import {
   REQUEST_ACCOUNT_LIST_FOR_ADMIN_TO_SPRING,
   REQUEST_ACCOUNT_INFO_FOR_ADMIN_TO_SPRING,
   REQUEST_CATEGORY_ACCOUNT_LIST_TO_SPRING,
-  REQUEST_ACCOUNT_WARNINGS_FOR_ADMIN_TO_SPRING
 } from "./mutation-types";
 
 export default {
@@ -21,7 +20,4 @@ export default {
     state.accountList = receivedData.content
     state.accountListCount = receivedData.totalPages
   },
-  [REQUEST_ACCOUNT_WARNINGS_FOR_ADMIN_TO_SPRING](state, receivedData) {
-    state.warnings = receivedData
-  }
 };

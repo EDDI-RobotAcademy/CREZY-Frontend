@@ -60,7 +60,7 @@
                     </div>
                     <div style="width: 400px; margin-left: 80px">
                         <v-text-field class="admin-song-search-field" variant="outlined" append-inner-icon="mdi-magnify"
-                            single-line hide-details @click:append-inner="onClick" v-model="keyword"
+                            single-line hide-details @click:append-inner="searchSong" v-model="keyword"
                             @keyup.enter="searchSong"></v-text-field>
                     </div>
                     <div style="width: 300px; ">
@@ -126,7 +126,7 @@
                                 <td style="color: white;" colspan="6">
                                     <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail"
                                         @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" @openSong="openSong"
-                                        @blockSong="blockSong" />
+                                        @blockSong="blockSong" @giveWarning="giveWarning"/>
                                 </td>
                             </tr>
                         </template>
@@ -219,9 +219,6 @@ export default {
         }
     },
     methods: {
-        onClick() {
-            alert("yay")
-        },
         selectCategory(category) {
             this.selectedCategory = category
             const selectedCategory = category
@@ -279,6 +276,12 @@ export default {
                 alert('공백이 입력되었습니다.')
             }
         },
+
+        giveWarning(payload) {
+            const reportedId = this.songInfo.songId
+            const { reportedCategoryType, reportContent } = payload
+            this.$emit("giveWarning", { reportedCategoryType, reportContent, reportedId })
+        }
     },
     watch: {
         searchDate(newValue) {

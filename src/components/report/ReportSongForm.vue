@@ -6,34 +6,9 @@
         <label for="reportContent" class="font-color">신고 유형</label>
       </div>
 
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent1" value="노래 가사 오류" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent1" class="custom-radio-label">노래 가사 오류</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent2" value="저작권 침해" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent2" class="custom-radio-label">저작권 침해</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent3" value="잘못된 링크" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent3" class="custom-radio-label">잘못된 링크</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent4" value="불쾌한 콘텐츠" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent4" class="custom-radio-label">불쾌한 콘텐츠</label>
-      </div>
-
-      <div class="custom-radio-group">
-          <input type="radio" id="reportContent4" value="허위" v-model="reportContent" class="custom-radio" />
-          <label for="reportContent4" class="custom-radio-label">허위</label>
-        </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent5" value="기타" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent5" class="custom-radio-label">기타</label>
+      <div class="custom-radio-group" v-for="songReport in songReportTypes">
+        <input type="radio" :value="songReport.name" v-model="reportContent" class="custom-radio" />
+        <label class="custom-radio-label">{{ songReport.name }}</label>
       </div>
 
       <div class="custom-section">
@@ -48,7 +23,7 @@
   </div>
   <div>
     <v-card-actions class="custom-submit-button">
-      <v-btn :disabled="!isFormValid" @click="onSubmitReportSongForm" class="submit">제출</v-btn>
+      <v-btn :disabled="!isFormValid" @click="onSubmitReportSongForm" class="submit-btn">제출</v-btn>
     </v-card-actions>
   </div>
 </template>
@@ -66,6 +41,15 @@ export default {
       reportedCategoryType: 'SONG', // 선택한 대상 (계정 또는 플레이리스트)
       reportContent: '', // 선택한 신고 유형
       otherDetails: '', // 기타 내용
+
+      songReportTypes: [
+          { name: "노래 가사 오류"},
+          { name: "저작권 침해"},
+          { name: "잘못된 링크"},
+          { name: "불쾌한 콘텐츠"},
+          { name: "허위"},
+          { name: "기타"},
+        ]
     };
   },
   methods: {
@@ -165,7 +149,7 @@ export default {
   right: 60px;
 }
 
-.submit {
-  color: white;
+.submit-btn {
+  color: white !important;
 }
 </style>
