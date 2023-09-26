@@ -30,7 +30,8 @@ export default {
     return {
       currentPage: 1,
       currentCategory: '',
-      selectedAccountId: ''
+      selectedAccountId: '',
+      searchKeyword: '',
     }
   },
   components: {
@@ -52,15 +53,22 @@ export default {
     async getCategorizedPlaylistList(selectedCategory) {
       this.currentCategory = selectedCategory
       this.currentPage = 1
+      this.searchKeyword = ''
       const sortType = selectedCategory
       const page = this.currentPage
       await this.requestPlaylistsForAdminToSpring({ sortType, page })
     },
 
     async getPaginatedPlaylist() {
-      const sortType = this.currentCategory
-      const page = this.currentPage
-      await this.requestPlaylistsForAdminToSpring({ sortType, page })
+      if (this.searchKeyword) {
+        const keyword = this.searchKeyword
+        const page = this.currentPage
+        await this.requestSearchPlaylistsForAdminToSpring({ page, keyword })
+      } else {
+        const sortType = this.currentCategory
+        const page = this.currentPage
+        await this.requestPlaylistsForAdminToSpring({ sortType, page })
+      }
     },
 
     async getPlaylistByAccountId(selectedAccountId) {
@@ -69,7 +77,9 @@ export default {
       await this.requestAccountPlaylistsToSpring({ accountId, page })
     },
     async searchPlaylist(payload) {
-      const keyword = payload
+      this.currentPage = 1;
+      this.searchKeyword = payload
+      const keyword = this.searchKeyword
       const page = this.currentPage
       await this.requestSearchPlaylistsForAdminToSpring({ page, keyword })
     }

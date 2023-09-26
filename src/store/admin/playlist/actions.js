@@ -26,7 +26,6 @@ export default {
       { headers: { Authorization: userToken } })
       .then((res) => {
         commit(REQUEST_PLAYLISTS_FOR_ADMIN_TO_SPRING, res.data)
-        console.log(res.data.totalPages)
       })
   },
   requestPlaylistForAdminToSpring({ commit }, selectedPlaylistId) {
