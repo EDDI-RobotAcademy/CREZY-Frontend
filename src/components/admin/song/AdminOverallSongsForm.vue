@@ -97,7 +97,10 @@
                         <tr class="overall-song-table-header">
                             <th style="width: 100px;"></th>
                             <th align="start">index</th>
-                            <th @click="toggleSortDirection" style="cursor: pointer;" align="start">
+                            <th v-if="selectedCategory === 'search'" align="start">
+                                title
+                            </th>
+                            <th v-else @click="toggleSortDirection" style="cursor: pointer;" align="start">
                                 title
                                 <v-icon v-if="selectedSort === 'ASC'">mdi-menu-up</v-icon>
                                 <v-icon v-else>mdi-menu-down</v-icon>
@@ -221,6 +224,7 @@ export default {
     methods: {
         selectCategory(category) {
             this.selectedCategory = category
+            this.keyword = ''
             const selectedCategory = category
             this.$emit("switchCategory", selectedCategory)
         },
@@ -270,7 +274,6 @@ export default {
             if (this.keyword.trim() != '') {
                 const keyword = this.keyword
                 this.$emit("searchSong", keyword)
-                this.keyword = ''
                 this.selectedCategory = 'search'
             } else {
                 alert('공백이 입력되었습니다.')

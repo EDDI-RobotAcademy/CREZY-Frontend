@@ -193,6 +193,7 @@ export default {
   methods: {
     selectCategory(category) {
       this.selectedCategory = category
+      this.keyword = ''
       const selectedCategory = category
       this.$emit("switchCategory", selectedCategory)
     },
@@ -220,7 +221,6 @@ export default {
       if (this.keyword.trim() != '') {
         const keyword = this.keyword
         this.$emit("searchPlaylist", keyword)
-        this.keyword = ''
         this.selectedCategory = 'search'
       } else {
         alert('공백이 입력되었습니다.')
