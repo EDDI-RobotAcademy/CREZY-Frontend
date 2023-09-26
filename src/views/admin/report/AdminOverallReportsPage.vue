@@ -19,7 +19,7 @@
 import AdminOverallReportsForm from "@/components/admin/report/AdminOverallReportsForm.vue";
 import { mapActions, mapState } from "vuex";
 
-const reportModule = "reportModule";
+const adminReportModule = "adminReportModule";
 const adminAccountModule = "adminAccountModule";
 const adminPlaylistModule = "adminPlaylistModule";
 const adminSongModule = "adminSongModule";
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     ...mapActions(
-      reportModule, [
+      adminReportModule, [
       "requestReportListToSpring",
       "requestAccountReportDetailToSpring",
       "requestPlaylistReportDetailToSpring",
@@ -106,7 +106,7 @@ export default {
   },
   computed: {
     ...mapState(
-      reportModule, [
+      adminReportModule, [
         "reportList",
         "accountReportDetail",
         "playlistReportDetail",

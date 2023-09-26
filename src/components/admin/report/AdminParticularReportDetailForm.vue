@@ -17,7 +17,7 @@
                           <td>신고 수 {{ accountReportDetail.reportedCounts }} 개</td>
                       </tr>                                        
                       <tr>
-                          <td>경고 수 {{ accountReportDetail.warningCounts }} 곡</td>
+                          <td>경고 수 {{ accountReportDetail.warningCounts }} 개</td>
                       </tr>                                       
                       <tr>                          
                           <td>문의 수 {{ accountReportDetail.inquiryCounts }} 개</td>
