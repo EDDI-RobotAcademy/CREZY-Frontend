@@ -22,7 +22,8 @@ export default {
         return {
             currentPage: 1,
             currentSort: 'ASC',
-            currentCategory: 'TOTAL'
+            currentCategory: 'TOTAL',
+            searchKeyword: ''
         }
     },
     components: {
@@ -46,6 +47,8 @@ export default {
 
         async getCategorizedSongList(selectedCategory) {
             this.currentCategory = selectedCategory;
+            this.currentPage = 1;
+            this.searchKeyword = ''
 
             const songStatusType = selectedCategory;
             const sortType = this.currentSort
@@ -63,10 +66,17 @@ export default {
         },
 
         async getPaginatedSongs() {
-            const sortType = this.currentSort;
-            const page = this.currentPage;
-            const songStatusType = this.currentCategory;
-            await this.requestSongListForAdminToSpring({ songStatusType, sortType, page });
+            if (this.searchKeyword !== '') {
+                const keyword = this.searchKeyword
+                const page = this.currentPage
+                await this.requestSearchSongForAdminToSpring({ page, keyword })
+            } 
+            else {
+                const sortType = this.currentSort;
+                const page = this.currentPage;
+                const songStatusType = this.currentCategory;
+                await this.requestSongListForAdminToSpring({ songStatusType, sortType, page });
+            }
         },
 
         async getSongInfo(selectedSongId) {
@@ -105,7 +115,9 @@ export default {
             await this.getSongInfo(selectedSongId)
         },
         async searchSong(payload) {
-            const keyword = payload
+            this.currentPage = 1
+            this.searchKeyword = payload
+            const keyword = this.searchKeyword
             const page = this.currentPage
             await this.requestSearchSongForAdminToSpring({ page, keyword })
         },

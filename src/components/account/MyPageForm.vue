@@ -3,17 +3,19 @@
     <div class="my-page-title">
       <div>
         <v-row class="nickname">
-          <div class="profile-image-container">
+          <v-col class="profile-image-container" cols="6">
             <div class="profile-image-circle">
               <v-img @click="goToModifyAccountPage(account.accountId)" :src="getProfileImage(account.profileImageName)"
                 width="100%" height="100%"></v-img>
             </div>
             <div class="profile-name">{{ account.nickname }}의 MUSE</div>
-            <div class="warnings-icon" style="font-size: small;">
+          </v-col>
+          <v-col cols="4">
+            <div class="warnings-icon">
               ⚠️ 회원님은 경고를 {{ account.warningCounts }}회 받았습니다
             </div>
-          </div>
-          <v-col class="my-page-menu-icon" style="display: flex; justify-content: flex-end;">
+          </v-col>
+          <v-col class="my-page-menu-icon" style="" cols="2">
             <v-menu offset-y v-model="isMyPageMenuButton">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn v-show="!isMyPageMenuButton" class="my-page-menu-button" small @click="myPageMenuButton" icon
@@ -111,7 +113,7 @@
 
   <!-- 플레이리스트 생성 팝업 -->
   <v-dialog v-model="showAddPlaylistDialog" max-width="500px">
-    <v-card style="border-radius: 0px;" class="playlist-dialog">
+    <v-card style="" class="playlist-dialog">
       <v-card-title class="playlist-dialog-title">새 재생목록</v-card-title>
       <v-card-text>
         <my-page-playlist-register-form v-if="showAddPlaylistDialog" @submit="onSubmitForm" />
@@ -232,7 +234,12 @@ export default {
     
 <style scoped>
 .warnings-icon {
-  margin-left: 270px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 .nickname {
@@ -267,6 +274,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.912) !important;
   padding: 10px;
   height: 400px;
+  border-radius: 0px;
 }
 
 .playlist-dialog-title {
@@ -341,10 +349,11 @@ export default {
 }
 
 .my-page-menu-icon {
-  margin-top: -20px;
-  margin-right: -20px;
   position: relative;
   height: 48px;
+  display: flex; 
+  justify-content: flex-end; 
+  align-items: center;
 }
 
 .my-page-menu-button {

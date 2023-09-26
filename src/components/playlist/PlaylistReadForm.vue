@@ -96,7 +96,7 @@
                             <v-icon style="color: white">mdi-playlist-music</v-icon>
                           </button>
                           <v-card
-                            style="position:absolute; top: 30px; left: 10px; width: 60px; height: auto; background-color: rgb(84, 82, 82); z-index: 1000 !important;">
+                            class="song-actions-modal">
                             <div v-if="isPlaylistButton[index]" class="playlist-menu-items">
                               <v-list style="background-color: rgba(0, 0, 0, 0) !important">
                                 <v-list-item @click="reportSong(song.songId, index)" style="color: white">
@@ -468,6 +468,7 @@ export default {
     },
     startDrag(index) {
       this.draggedIndex = index;
+      this.menuIsOpen = false
       this.isPlaylistButton = {}
     },
     dragOver(index) {
@@ -483,7 +484,6 @@ export default {
 
         this.draggedIndex = null;
         this.dragOverIndex = null;
-
       }
     },
     dragEnter(event) {
@@ -506,8 +506,8 @@ export default {
       await this.$emit("submit", {
         newPlaylist, title, singer, link, lyrics
       })
-    }
-  },
+    },
+  
     getImage(link) {
       if (link) {
         return (
@@ -548,6 +548,7 @@ export default {
       this.loadYouTubeApi();
     }
   },
+
 };
 </script>
 
@@ -739,10 +740,11 @@ export default {
 
 /* 신고폼 스타일 시작 */
 .report-dialog {
-  background-color: #3a3838;
+  background-color: rgba(23, 23, 23, 0.9);
   /* 다이얼로그 배경색 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   /* 그림자 효과 */
+  border: 1px solid rgba(46, 46, 46)
 }
 
 .report-dialog-title {
@@ -771,5 +773,15 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.song-actions-modal {
+  position:absolute; 
+  top: 30px; 
+  left: 10px; 
+  width: 60px; 
+  height: auto; 
+  background-color: rgba(23, 23, 23, 0.9); 
+  z-index: 1000 !important;
 }
 </style>

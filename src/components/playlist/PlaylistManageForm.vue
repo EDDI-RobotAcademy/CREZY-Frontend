@@ -62,7 +62,7 @@
         <PlaylistModifyForm :playlist="playlist" @submit="onSubmit" @cancel="showSongModificationForm = false" />
       </v-card>
     </div>
-    <SonglistForm @submitModifySong="submitModifySong" :playlist="playlist" @deleteSubmit="deleteSubmit"
+    <SonglistForm @submitModifySong="submitModifySong" :playlist="playlist" :playlistId="playlistId" @deleteSubmit="deleteSubmit"
       @saveSongOrder="onSaveSongOrder" />
   </div>
 </template>

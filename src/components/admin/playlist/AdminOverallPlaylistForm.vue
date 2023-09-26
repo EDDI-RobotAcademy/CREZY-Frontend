@@ -349,7 +349,8 @@ export default {
   background-color: #485463;
   color: white;
   height: 100px;
-  padding: 20px
+  padding: 20px;
+  cursor: pointer;
 }
 
 .overall-playlist-song-marker-container {
