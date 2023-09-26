@@ -5,46 +5,21 @@
       <div class="custom-label">
         <label for="reportedCategoryType" class="font-color">신고 대상 선택</label>
       </div>
-      <div class="custom-radio-group">
-        <input type="radio" id="reportAccount" value="ACCOUNT" v-model="reportedCategoryType" class="custom-radio" />
-        <label for="reportAccount" class="custom-radio-label">계정</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportPlaylist" value="PLAYLIST" v-model="reportedCategoryType" class="custom-radio" />
-        <label for="reportPlaylist" class="custom-radio-label">플레이리스트</label>
+      <div class="custom-radio-group" v-for="category in categories">
+        <input type="radio" :value="category.value" v-model="reportedCategoryType" class="custom-radio"/>
+        <label class="custom-radio-label">{{ category.name }}</label>
       </div>
     </div>
 
     <!-- 선택한 대상에 따른 신고 유형 -->
-    <div class="custom-section" v-if="reportedCategoryType === 'ACCOUNT'">
+    <div class="custom-section">
       <div class="custom-label">
         <label for="reportContent" class="font-color">신고 유형</label>
       </div>
 
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent1" value="부적절한 닉네임" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent1" class="custom-radio-label">부적절한 닉네임</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent2" value="불법 광고 계정" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent2" class="custom-radio-label">불법 광고 계정</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent3" value="계정 도용" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent3" class="custom-radio-label">계정 도용</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent4" value="유해한 프로필 사진" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent4" class="custom-radio-label">유해한 프로필 사진</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent5" value="기타" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent5" class="custom-radio-label">기타</label>
+      <div class="custom-radio-group" v-for="reportContentType in reportContentTypes()">
+        <input type="radio" :value="reportContentType.name" v-model="reportContent" class="custom-radio" />
+        <label class="custom-radio-label">{{ reportContentType.name }}</label>
       </div>
 
       <div class="custom-section">
@@ -57,50 +32,11 @@
       </div>
     </div>
 
-    <!-- 플레이리스트 신고 목록 -->
-    <div v-if="reportedCategoryType === 'PLAYLIST'">
-      <div class="custom-label">
-        <label for="reportContent" class="font-color">신고 유형</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent6" value="부적절한 제목" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent6" class="custom-radio-label">부적절한 제목</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent7" value="유해한 플레이리스트 사진" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent7" class="custom-radio-label">유해한 플레이리스트 사진</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent8" value="허위 콘텐츠" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent8" class="custom-radio-label">허위 콘텐츠</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent9" value="기만적인 정보" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent9" class="custom-radio-label">기만적인 정보</label>
-      </div>
-
-      <div class="custom-radio-group">
-        <input type="radio" id="reportContent10" value="기타" v-model="reportContent" class="custom-radio" />
-        <label for="reportContent10" class="custom-radio-label">기타</label>
-      </div>
-
-      <div class="custom-section">
-        <div class="custom-label-content" v-if="reportContent === '기타'">
-          <label for="details">기타 내용</label>
-        </div>
-        <div v-if="reportContent === '기타'">
-          <textarea id="details" v-model="otherDetails" class="custom-textarea"></textarea>
-        </div>
-      </div>
-    </div>
   </div>
+
   <div>
     <v-card-actions class="custom-submit-button">
-      <v-btn :disabled="!isFormValid" @click="onSubmitReportAccountPlaylistForm" class="submit">제출</v-btn>
+      <v-btn :disabled="!isFormValid" @click="onSubmitReportAccountPlaylistForm" class="submit-btn">제출</v-btn>
     </v-card-actions>
   </div>
 </template>
@@ -118,6 +54,12 @@ export default {
       reportedCategoryType: '', // 선택한 대상 (계정 또는 플레이리스트)
       reportContent: '', // 선택한 신고 유형
       otherDetails: '', // 기타 내용
+
+      categories: [
+        { name: "계정", value: "ACCOUNT" },
+        { name: "플레이리스트", value: "PLAYLIST" },
+      ],
+
     };
   },
   methods: {
@@ -137,6 +79,29 @@ export default {
       this.otherDetails = '';
 
     },
+
+    reportContentTypes() {
+      if (this.reportedCategoryType === "ACCOUNT") {
+          const  accountWarnings = [
+          { name: "부적절한 닉네임"},
+          { name: "불법 광고 계정"},
+          { name: "계정 도용"},
+          { name: "유해한 프로필 사진"},
+          { name: "기타"},
+        ]
+        return accountWarnings
+      }
+      if (this.reportedCategoryType === "PLAYLIST") {
+          const  playlistWarnings = [
+          { name: "부적절한 제목"},
+          { name: "유해한 플레이리스트 사진"},
+          { name: "허위 콘텐츠"},
+          { name: "기만적인 정보"},
+          { name: "기타"},
+        ]
+        return playlistWarnings
+      }
+    }
   },
 
   computed: {
@@ -217,7 +182,7 @@ export default {
   right: 60px;
 }
 
-.submit {
-  color: white;
+.submit-btn {
+  color: white !important;
 }
 </style>
