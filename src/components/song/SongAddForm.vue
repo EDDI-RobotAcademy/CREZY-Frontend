@@ -2,7 +2,7 @@
   <v-card class="song-add-card">
     <v-card-title class="song-add-card-title">노래 추가하기</v-card-title>
     <v-card-text>
-      <v-list lines="three" class="song-add-list">
+      <v-list class="song-add-list">
         <v-list-item v-for="playlist in myPlaylists" @click="addSongToPlaylist(playlist.playlistId)">
           <div class="my-playlist-item">
             <div style="font-size: 20px;">{{ playlist.playlistName }}</div>
@@ -77,10 +77,12 @@ export default {
 
 <style>
 .song-add-card {
-  background-color: #3a3838;
+  background-color: rgba(23, 23, 23, 0.9);
+  /* background-color: #212121; */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 0px;
   padding: 10px;
+  border: 1px solid rgba(46, 46, 46)
 }
 
 .song-add-card-title {
@@ -90,7 +92,7 @@ export default {
 }
 
 .song-add-list {
-  background-color: #3a3838 !important;
+  background-color: transparent!important;
   color: white;
   max-height: 500px;
   scrollbar-width: thin;
@@ -103,6 +105,10 @@ export default {
 
 .song-add-list::-webkit-scrollbar-track {
   display: none;
+}
+
+.song-add-list:not(:hover)::-webkit-scrollbar-thumb {
+  background: transparent;
 }
 
 .song-add-list::-webkit-scrollbar-thumb {
@@ -118,7 +124,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #1c1b1b;
   border-radius: 5px;
   padding: 10px;
 }
