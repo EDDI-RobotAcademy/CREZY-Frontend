@@ -3,7 +3,8 @@ import {
     REQUEST_ACCOUNT_REPORT_DETAIL_TO_SPRING,
     REQUEST_PLAYLIST_REPORT_DETAIL_TO_SPRING,
     REQUEST_SONG_REPORT_DETAIL_TO_SPRING,
-    REQUEST_REPORT_LIST_TOTAL_TO_SPRING
+    REQUEST_REPORT_LIST_TOTAL_TO_SPRING,
+    REQUEST_REPORT_STATUS_COUNT_TO_SPRING
   } from "./mutation-types"
   import axiosInst from "@/utility/axiosInst"
   
@@ -26,6 +27,16 @@ import {
           commit(REQUEST_REPORT_LIST_TOTAL_TO_SPRING, res.data);
         });   
     }, 
+
+    async requestReportStatusCountToSpring({ commit }, ) {
+      const userToken = localStorage.getItem('userToken');
+      return axiosInst.springAxiosInst.get(`/admin-report/count-report`,  
+      { headers: { Authorization: userToken } }).then((res) => {
+        commit(REQUEST_REPORT_STATUS_COUNT_TO_SPRING, res.data);
+        console.log("실행")
+      });   
+    }, 
+
   
     requestAccountReportDetailToSpring({ commit }, selectedReportId) {
       const userToken = localStorage.getItem('userToken');

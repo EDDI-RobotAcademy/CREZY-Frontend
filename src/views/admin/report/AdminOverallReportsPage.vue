@@ -7,7 +7,8 @@
       :reportList="reportList"
       :accountReportDetail="accountReportDetail"
       :playlistReportDetail="playlistReportDetail"
-      :songReportDetail="songReportDetail"      
+      :songReportDetail="songReportDetail" 
+      :reportStatusCount="reportStatusCount"     
     />
     <v-pagination style="color: white" v-model="currentPage" :length="this.reportListNum" @click="getPaginatedReports">
     </v-pagination>
@@ -42,6 +43,7 @@ export default {
       "requestSongReportDetailToSpring",
       "requestChangeReportStatusToSpring",
       "requestReportListTotalToSpring",
+      "requestReportStatusCountToSpring"
     ]),
 
     ...mapActions(  
@@ -86,6 +88,7 @@ export default {
       };        
       await this.requestChangeReportStatusToSpring(payload);
       await this.requestReportListToSpring(this.currentPage);
+      await this.requestReportStatusCountToSpring();
       
     },
 
@@ -96,6 +99,7 @@ export default {
       };
       await this.requestChangeReportStatusToSpring(payload);
       await this.requestReportListToSpring(this.currentPage);
+      await this.requestReportStatusCountToSpring();
     },
 
     async foundReport(selectedReportId) {
@@ -111,7 +115,8 @@ export default {
         "accountReportDetail",
         "playlistReportDetail",
         "songReportDetail",
-        "reportListNum"
+        "reportListNum",
+        "reportStatusCount"
       ],
      
     ),
@@ -128,6 +133,8 @@ export default {
       await this.requestReportListToSpring(this.currentPage);
     }
     await this.requestReportListTotalToSpring();
+    await this.requestReportStatusCountToSpring();
+    
   },
 };
 </script>
