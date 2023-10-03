@@ -3,7 +3,7 @@
         <AdminOverallSongsForm @getStatus="getSongsStatus" @switchCategory="getCategorizedSongList" :songs="songs"
             :songInfo="songInfo" :songsStatus="songsStatus" @openManage="getSongInfo" @modifyLyrics="modifyLyrics"
             @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" @switchSort="getSortedSongList"
-            @giveWarning="giveWarning" />
+            @searchSong="searchSong" @giveWarning="giveWarning"/>
         <v-pagination style="color: white" v-model="currentPage" :length="songListCount" @click="getPaginatedSongs">
         </v-pagination>
     </div>
@@ -56,16 +56,13 @@ export default {
             await this.requestSongListForAdminToSpring({ songStatusType, sortType, page });
         },
 
-        async getSortedSongList(selectedType) {
-            const { sortType, isSearch } = selectedType
-            if (isSearch) {
-                await this.searchSong(selectedType)
-            } else {
-                const songStatusType = this.currentCategory;
-                const page = this.currentPage;
-                await this.requestSongListForAdminToSpring({ songStatusType, sortType, page });
-            }
+        async getSortedSongList(selectedSort) {
+            this.currentSort = selectedSort;
 
+            const songStatusType = this.currentCategory;
+            const sortType = selectedSort
+            const page = this.currentPage;
+            await this.requestSongListForAdminToSpring({ songStatusType, sortType, page });
         },
 
         async getPaginatedSongs() {
@@ -73,7 +70,7 @@ export default {
                 const keyword = this.searchKeyword
                 const page = this.currentPage
                 await this.requestSearchSongForAdminToSpring({ page, keyword })
-            }
+            } 
             else {
                 const sortType = this.currentSort;
                 const page = this.currentPage;
@@ -119,11 +116,10 @@ export default {
         },
         async searchSong(payload) {
             this.currentPage = 1
-
-            const { keyword, sortType } = payload
+            this.searchKeyword = payload
+            const keyword = this.searchKeyword
             const page = this.currentPage
-
-            await this.requestSearchSongForAdminToSpring({ page, keyword, sortType })
+            await this.requestSearchSongForAdminToSpring({ page, keyword })
         },
         async giveWarning(payload) {
             const songId = payload.reportedId
