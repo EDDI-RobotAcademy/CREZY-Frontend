@@ -97,7 +97,10 @@
                         <tr class="overall-song-table-header">
                             <th style="width: 100px;"></th>
                             <th align="start">index</th>
-                            <th @click="toggleSortDirection" style="cursor: pointer;" align="start">
+                            <th v-if="selectedCategory === 'search'" align="start">
+                                title
+                            </th>
+                            <th v-else @click="toggleSortDirection" style="cursor: pointer;" align="start">
                                 title
                                 <v-icon v-if="selectedSort === 'ASC'">mdi-menu-up</v-icon>
                                 <v-icon v-else>mdi-menu-down</v-icon>
@@ -126,7 +129,7 @@
                                 <td style="color: white;" colspan="6">
                                     <ParticularSongDetailForm :songInfo="songInfo" :songThumbnail="songThumbnail"
                                         @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" @openSong="openSong"
-                                        @blockSong="blockSong" @giveWarning="giveWarning" />
+                                        @blockSong="blockSong" @giveWarning="giveWarning"/>
                                 </td>
                             </tr>
                         </template>
@@ -191,7 +194,6 @@ export default {
             songCategories: ["TOTAL", "OPEN", "BLOCK"],
             chooseSongCategory: false,
             selectedCategory: 'TOTAL',
-            isSearch: false,
 
             selectedSort: 'ASC',
 
@@ -228,11 +230,7 @@ export default {
         },
         toggleSortDirection() {
             this.selectedSort = this.selectedSort === 'ASC' ? 'DESC' : 'ASC';
-            const sortType = this.selectedSort
-            const isSearch = this.isSearch
-            const keyword = this.keyword
-            console.log(isSearch)
-            this.$emit('switchSort', { sortType, isSearch, keyword });
+            this.$emit('switchSort', this.selectedSort);
         },
         forManage(songId) {
             if (this.selectedSongId == songId.toString()) {
@@ -274,11 +272,8 @@ export default {
         },
         searchSong() {
             if (this.keyword.trim() != '') {
-                this.isSearch = true
                 const keyword = this.keyword
-                const isSearch = this.isSearch
-                const sortType = this.selectedSort
-                this.$emit("switchSort", { keyword, isSearch, sortType })
+                this.$emit("searchSong", keyword)
                 this.selectedCategory = 'search'
             } else {
                 alert('공백이 입력되었습니다.')

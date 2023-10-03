@@ -20,7 +20,6 @@ export default {
   },
   requestSongListForAdminToSpring({ commit }, payload) {
     const { songStatusType, sortType, page } = payload
-
     const userToken = localStorage.getItem("userToken")
     return axiosInst.springAxiosInst.post("/admin-song/song-list",
       { songStatusType, sortType, page },
@@ -81,11 +80,10 @@ export default {
     })
   },
   requestSearchSongForAdminToSpring({ commit }, payload) {
-    const { page, keyword, sortType } = payload
+    const { page, keyword } = payload
     const userToken = localStorage.getItem("userToken")
-
     return axiosInst.springAxiosInst.post("/admin-song/search-song",
-      { page, keyword, sortType },
+      { page, keyword },
       { headers: { Authorization: userToken } })
       .then((res) => {
         commit(REQUEST_SONG_LIST_FOR_ADMIN_TO_SPRING, res.data)
