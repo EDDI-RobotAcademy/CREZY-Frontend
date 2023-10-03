@@ -1,18 +1,12 @@
 <template>
   <div>
-    <AdminOverallReportsForm
-      @openManage="getReportInfo"
-      @changeStatusTypeApprove="changeStatusTypeApprove"
-      @changeStatusTypeReturn="changeStatusTypeReturn"
-      :reportList="reportList"
-      :accountReportDetail="accountReportDetail"
-      :playlistReportDetail="playlistReportDetail"
-      :songReportDetail="songReportDetail" 
-      :reportStatusCount="reportStatusCount"     
-    />
+    <AdminOverallReportsForm @openManage="getReportInfo" @changeStatusTypeApprove="changeStatusTypeApprove"
+      @changeStatusTypeReturn="changeStatusTypeReturn" :reportList="reportList" :accountReportDetail="accountReportDetail"
+      :playlistReportDetail="playlistReportDetail" :songReportDetail="songReportDetail"
+      :reportStatusCount="reportStatusCount" />
     <v-pagination style="color: white" v-model="currentPage" :length="this.reportListNum" @click="getPaginatedReports">
     </v-pagination>
-    
+
   </div>
 </template>
 
@@ -27,10 +21,10 @@ const adminSongModule = "adminSongModule";
 
 export default {
   data() {
-        return {
-            currentPage: 1,       
-        }
-    },    
+    return {
+      currentPage: 1,
+    }
+  },
   components: {
     AdminOverallReportsForm,
   },
@@ -46,38 +40,40 @@ export default {
       "requestReportStatusCountToSpring"
     ]),
 
-    ...mapActions(  
+    ...mapActions(
       adminAccountModule, [
       "requestChangeBadNicknameToSpring",
       "requestRemoveProfileImageToSpring",
     ]),
 
-    ...mapActions(  
+    ...mapActions(
       adminPlaylistModule, [
       "requestChangePlaylistNameToSpring",
       "requestRemovePlaylistThumbnailToSpring",
     ]),
 
-    ...mapActions(  
+    ...mapActions(
       adminSongModule, [
-        "requestBlockSongToSpring"
+      "requestBlockSongToSpring"
     ]),
 
     async getPaginatedReports() {
       const page = this.currentPage
       await this.requestReportListToSpring(page)
-      
-      },
+
+    },
 
     async getReportInfo(selectedReportId) {
       const reportId = selectedReportId;
       const foundReportInfo = await this.foundReport(reportId);
-      if(foundReportInfo.reportedCategoryType === 'ACCOUNT') {
+      if (foundReportInfo.reportedCategoryType === 'ACCOUNT') {
         await this.requestAccountReportDetailToSpring(reportId);
-      }else if (foundReportInfo.reportedCategoryType === 'PLAYLIST') {
-          await this.requestPlaylistReportDetailToSpring(reportId);
-      }else if (foundReportInfo.reportedCategoryType === 'SONG') {
+      } else if (foundReportInfo.reportedCategoryType === 'PLAYLIST') {
+        await this.requestPlaylistReportDetailToSpring(reportId);
+        await this.requestAccountReportDetailToSpring(reportId);
+      } else if (foundReportInfo.reportedCategoryType === 'SONG') {
         await this.requestSongReportDetailToSpring(reportId);
+        await this.requestAccountReportDetailToSpring(reportId);
       }
     },
 
@@ -85,11 +81,11 @@ export default {
       const payload = {
         reportId: selectedReportId,
         reportStatus: "APPROVE",
-      };        
+      };
       await this.requestChangeReportStatusToSpring(payload);
       await this.requestReportListToSpring(this.currentPage);
       await this.requestReportStatusCountToSpring();
-      
+
     },
 
     async changeStatusTypeReturn(selectedReportId) {
@@ -103,25 +99,25 @@ export default {
     },
 
     async foundReport(selectedReportId) {
-      await this.requestReportListToSpring(this.currentPage); 
-      return this.reportList.find(report => report.reportId === selectedReportId); 
+      await this.requestReportListToSpring(this.currentPage);
+      return this.reportList.find(report => report.reportId === selectedReportId);
     },
 
   },
   computed: {
     ...mapState(
       adminReportModule, [
-        "reportList",
-        "accountReportDetail",
-        "playlistReportDetail",
-        "songReportDetail",
-        "reportListNum",
-        "reportStatusCount"
-      ],
-     
+      "reportList",
+      "accountReportDetail",
+      "playlistReportDetail",
+      "songReportDetail",
+      "reportListNum",
+      "reportStatusCount"
+    ],
+
     ),
 
-    
+
   },
   async mounted() {
     if (
@@ -134,7 +130,7 @@ export default {
     }
     await this.requestReportListTotalToSpring();
     await this.requestReportStatusCountToSpring();
-    
+
   },
 };
 </script>
