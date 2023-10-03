@@ -118,6 +118,8 @@ export default {
             draggedIndex: null,
             dragOverIndex: null,
             isChangeSongOrder: false,
+            previousSongOrder: [],
+
         }
     },
     methods: {
@@ -187,16 +189,20 @@ export default {
         },
         onSaveSongOrder() {
             if (this.isChangeSongOrder) {
-                const playlistId = this.playlistId
-                const changedOrder = this.playlist.songlist.map(song => song.songIndex);
-                const payload = { playlistId, songIndexList: changedOrder }
+                const playlistId = this.playlistId;
+                this.previousSongOrder = [...this.playlist.songlist];
+                const songIndexList = this.playlist.songlist.map(song => song.songIndex);
+                const payload = { playlistId, songIndexList };
                 this.$emit("saveSongOrder", payload);
                 this.isChangeSongOrder = false;
             }
         },
         cancelChangeSongOrder() {
-            this.isChangeSongOrder = false
-        }
+            if (this.isChangeSongOrder) {
+                this.playlist.songlist = [...this.previousSongOrder];
+                this.isChangeSongOrder = false;
+            }
+        },
     }
 }
 </script>
