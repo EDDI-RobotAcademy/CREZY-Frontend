@@ -504,10 +504,14 @@ export default {
     },
     async drop(index) {
       if (this.draggedIndex !== null) {
-        // const playingSong = this.playlist.songlist[this.currentIdx]
+        const playingSong = this.playlist.songlist[this.currentIdx];
         const draggedSong = this.playlist.songlist[this.draggedIndex];
+
         this.playlist.songlist.splice(this.draggedIndex, 1);
         this.playlist.songlist.splice(index, 0, draggedSong);
+
+        const playingSongIndex = this.playlist.songlist.indexOf(playingSong);
+        this.currentIdx = playingSongIndex;
 
         const videoLinks = await this.playlist.songlist.map((song) => song.link);
         this.videoIds = await videoLinks.map((url) => this.extractVideoId(url));
