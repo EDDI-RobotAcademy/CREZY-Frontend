@@ -212,7 +212,7 @@ export default {
       videoIds: [],
 
       isPlaying: false,
-      isShuffled: false, 
+      isShuffled: false,
       savedSonglist: [],
       isRepeatOne: false,
       currentIframe: {},
@@ -288,10 +288,9 @@ export default {
     },
 
     savePlaylistSonglist() {
-        
-        this.savedSonglist = [...this.playlist.songlist];
-      },
-      
+      this.savedSonglist = [...this.playlist.songlist];
+    },
+
     async initializeVideos() {
       this.savePlaylistSonglist()
       const videoLinks = await this.playlist.songlist.map((song) => song.link);
@@ -305,30 +304,21 @@ export default {
     },
 
     async reInitializeVideos() {
-      
+      const playingSong = this.playlist.songlist[this.currentIdx];
+
       this.playlist.songlist = [...this.savedSonglist];
+
+      const playingSongIndex = this.playlist.songlist.indexOf(playingSong);
+      this.currentIdx = playingSongIndex;
+
       const videoLinks = await this.playlist.songlist.map((song) => song.link);
       this.videoIds = await videoLinks.map((url) => this.extractVideoId(url));
-
-      this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[this.currentIdx]
-        }?autoplay=0&mute=0&enablejsapi=1`;
-
-      this.setupPlayer();
-      console.log("다시초기화")
     },
 
     async initializeShuffledVideos() {
       const videoLinks = await this.playlist.songlist.map((song) => song.link);
       this.videoIds = await videoLinks.map((url) => this.extractVideoId(url));
-
-      this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[this.currentIdx]
-        }?autoplay=0&mute=0&enablejsapi=1`;
-
-      this.setupPlayer();
-      console.log("셔플")
     },
-
-
 
     extractVideoId(url) {
       const regex =
@@ -408,34 +398,34 @@ export default {
     toggleSetShuffle() {
       if (this.isShuffled) {
         this.isShuffled = false;
-        this.reInitializeVideos(); 
+        this.reInitializeVideos();
       } else {
         this.isShuffled = true;
-        this.shuffleVideoIdx(); 
+        this.shuffleVideoIdx();
       }
     },
 
     shuffleVideoIdx() {
       const shuffledVideoIds = [...this.videoIds];
       const songNum = shuffledVideoIds.length;
+      const playingSong = this.playlist.songlist[this.currentIdx];
 
       for (let i = 0; i < songNum - 1; i++) {
         const n = Math.floor(Math.random() * (songNum - i)) + i;
         this.swapSongIdx(i, n, shuffledVideoIds);
       }
 
-      this.initializeShuffledVideos(shuffledVideoIds); 
-      this.currentIdx = 0;
-    },
+      const playingSongIndex = this.playlist.songlist.indexOf(playingSong);
+      this.currentIdx = playingSongIndex;
 
-  
+      this.initializeShuffledVideos(shuffledVideoIds);
+    },
 
     swapSongIdx(indxA, indxB) {
       const temp = this.playlist.songlist[indxA];
       this.playlist.songlist[indxA] = this.playlist.songlist[indxB];
       this.playlist.songlist[indxB] = temp;
     },
-
 
     togglePlay() {
       if (this.totalTimeText !== "0000") {
@@ -469,8 +459,7 @@ export default {
     },
     updateProgressBar() {
       if (!this.ytPlayer || typeof this.ytPlayer.getPlayerState !== 'function') {
-   
-      return;
+        return;
       }
       if (!this.ytPlayer) return;
       if (this.ytPlayer.getPlayerState() == 0) {
@@ -638,7 +627,7 @@ export default {
     },
   },
   mounted() {
-  
+
     console.log(this.playlist.songlist)
     if (localStorage.getItem("userToken") !== null) {
       this.loadYouTubeApi();
