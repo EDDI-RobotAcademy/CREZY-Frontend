@@ -58,9 +58,9 @@
                             </dl>
                         </div>
                         <div v-if="isChangeImage || isChangeNickname">
-                            <button class="account-save-button" @click="submitAccountInfo()">
+                            <v-btn class="account-save-button" @click="submitAccountInfo">
                                 저장
-                            </button>
+                            </v-btn>
                         </div>
                     </li>
                 </div>
@@ -152,24 +152,27 @@ export default {
         async submitAccountInfo() {
             if (this.isChangeNickname && !this.isNicknamecheck) {
                 alert('닉네임 중복체크를 진행해주세요!');
-                return;
+                
             }
 
-            const newProfileImageName = this.newProfileImageName || this.account.profileImageName;
-            const newNickname = this.newNickname || this.account.nickname;
-            if (newProfileImageName !== null) {
-                this.$emit("submitAccountInfo", { newNickname, newProfileImageName });
-                if (this.file) {
-                    this.uploadAwsS3();
+            else {
+                const newProfileImageName = this.newProfileImageName || this.account.profileImageName;
+                const newNickname = this.newNickname || this.account.nickname;
+                if (newProfileImageName !== null) {
+                    this.$emit("submitAccountInfo", { newNickname, newProfileImageName });
+                    if (this.file) {
+                        this.uploadAwsS3();
+                    }
+
+                } else {
+                    this.$emit("submitAccountInfo", { newNickname, newProfileImageName: "" });
                 }
+                this.account.nickname = newNickname;
 
-            } else {
-                this.$emit("submitAccountInfo", { newNickname, newProfileImageName: "" });
+                this.isChangeImage = false;
+                this.isChangeNickname = false;
             }
-            this.account.nickname = newNickname;
 
-            this.isChangeImage = false;
-            this.isChangeNickname = false;
         },
 
         startEditNickname() {
@@ -264,6 +267,16 @@ export default {
                         console.log('프로필 이미지 삭제 완료');
                     }
                 });
+            }
+        }
+    },
+
+    watch: {
+        newNickname: {
+            handler(newVal) {
+                if (newVal) {
+                    this.isNicknamecheck = false
+                }
             }
         }
     }
