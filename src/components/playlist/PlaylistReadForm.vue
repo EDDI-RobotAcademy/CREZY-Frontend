@@ -103,8 +103,7 @@
                             style="margin-left: 10px;">
                             <v-icon style="color: white">mdi-playlist-music</v-icon>
                           </button>
-                          <v-card
-                            class="song-actions-modal">
+                          <v-card class="song-actions-modal">
                             <div v-if="isPlaylistButton[index]" class="playlist-menu-items">
                               <v-list style="background-color: rgba(0, 0, 0, 0) !important">
                                 <v-list-item @click="reportSong(song.songId, index)" style="color: white">
@@ -348,26 +347,23 @@ export default {
     },
 
     playSong(index) {
-      if (this.currentIdx !== index) {
-        this.currentIdx = index;
-        this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[index]}?autoplay=1&mute=0&enablejsapi=1`;
-        this.isPlaying = true;
-      } 
+      this.currentIdx = index;
+      this.$refs.ytPlayer.src = `https://www.youtube.com/embed/${this.videoIds[index]}?autoplay=1&mute=0&enablejsapi=1`;
+      this.isPlaying = true;
     },
-    
+
     onPlayerStateChange() {
       console.log("onPlayerStateChange");
-      if (this.isRepeatOne) {
-        this.currentIdx;
-      } else {
+      if (!this.isRepeatOne) {
+
         this.currentIdx++;
-      
+
         if (this.currentIdx >= this.videoIds.length) {
           this.currentIdx = 0;
         }
       }
       this.playSong(this.currentIdx);
-    },    
+    },
 
     toggleSetRepeat() {
       this.isRepeatOne = !this.isRepeatOne;
@@ -379,8 +375,8 @@ export default {
 
     // 랜덤으로 인덱스 설정
     shuffleVideoIdx() {
-      
-            
+
+
     },
 
 
@@ -506,12 +502,15 @@ export default {
       event.preventDefault();
       this.dragOverIndex = index;
     },
-    drop(index) {
+    async drop(index) {
       if (this.draggedIndex !== null) {
-
+        // const playingSong = this.playlist.songlist[this.currentIdx]
         const draggedSong = this.playlist.songlist[this.draggedIndex];
         this.playlist.songlist.splice(this.draggedIndex, 1);
         this.playlist.songlist.splice(index, 0, draggedSong);
+
+        const videoLinks = await this.playlist.songlist.map((song) => song.link);
+        this.videoIds = await videoLinks.map((url) => this.extractVideoId(url));
 
         this.draggedIndex = null;
         this.dragOverIndex = null;
@@ -538,7 +537,7 @@ export default {
         newPlaylist, title, singer, link, lyrics
       })
     },
-  
+
     getImage(link) {
       if (link) {
         return (
@@ -807,12 +806,12 @@ export default {
 }
 
 .song-actions-modal {
-  position:absolute; 
-  top: 30px; 
-  left: 10px; 
-  width: 60px; 
-  height: auto; 
-  background-color: rgba(23, 23, 23, 0.9); 
+  position: absolute;
+  top: 30px;
+  left: 10px;
+  width: 60px;
+  height: auto;
+  background-color: rgba(23, 23, 23, 0.9);
   z-index: 1000 !important;
 }
 </style>
