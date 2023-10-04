@@ -269,6 +269,16 @@ export default {
                 });
             }
         }
+    },
+
+    watch: {
+        newNickname: {
+            handler(newVal) {
+                if (newVal) {
+                    this.isNicknamecheck = false
+                }
+            }
+        }
     }
 }
 </script>
