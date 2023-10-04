@@ -46,7 +46,7 @@
                   처리할 신고 개수
                 </div>
                 <div class="overall-playlist-stat-num">
-                  {{ holdonReports }}
+                  {{ reportStatusCount.holdonCount }}
                 </div>
               </div>
             </v-card>
@@ -178,6 +178,10 @@ export default {
       type: Object,
       required: false,
     },
+    reportStatusCount: {
+      type: Object,
+      required: true,
+    },
   },
   methods: {
 
@@ -209,16 +213,16 @@ export default {
   computed: {
 
     approveReports() {
-      return this.reportList.filter(report => report.reportStatusType === 'APPROVE').length;
+      return this.reportStatusCount.approveCount;
     },
     returnReports() {
-      return this.reportList.filter(report => report.reportStatusType === 'RETURN').length;
+      return this.reportStatusCount.returnCount;
     },
     holdonReports() {
-      return this.reportList.filter(report => report.reportStatusType === 'HOLDON').length;
+      return this.reportStatusCount.holdonCount;
     },
     totalReports() {
-      return this.returnReports + this.approveReports + this.holdonReports
+      return this.reportStatusCount.totalCount;
     },
 
 
@@ -262,6 +266,11 @@ export default {
       this.selectedCategory = '전체';
     },
   },
+
+  mounted() {
+    
+
+  }
 }
 
 </script>

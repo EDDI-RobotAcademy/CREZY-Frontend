@@ -1,10 +1,7 @@
 <template>
   <div>
-    <MusicRecommendationForm 
-      :musicList="musicList"
-      :myPlaylists="myPlaylists"
-      @addSongToPlaylist="addSongToPlaylist"
-      @openAddSongDialog="openAddSongDialog"/>
+    <MusicRecommendationForm :musicList="musicList" :myPlaylists="myPlaylists" @addSongToPlaylist="addSongToPlaylist"
+      @openAddSongDialog="openAddSongDialog" @submit="onSubmitForm" />
   </div>
 </template>
 
@@ -32,12 +29,13 @@ export default {
   },
   methods: {
     ...mapActions(songModule, [
-      "requestRecommendationToSpring", 
+      "requestRecommendationToSpring",
       "removeRecommendations",
       "requestSongRegisterToSpring"
     ]),
 
-    ...mapActions(playlistModule, ["requestMyPlaylistsToSpring"]),
+    ...mapActions(playlistModule, ["requestMyPlaylistsToSpring",
+      "requestPlaylistRegisterToSpring"]),
 
     async getRecommendation(inputedSentence) {
       const sentence = inputedSentence
@@ -52,6 +50,11 @@ export default {
 
     async openAddSongDialog() {
       await this.requestMyPlaylistsToSpring()
+    },
+
+    async onSubmitForm(payload) {
+      await this.requestPlaylistRegisterToSpring(payload)
+      await this.requestMyPlaylistsToSpring()
     }
   },
   mounted() {
@@ -60,6 +63,4 @@ export default {
 }
 </script>
 
-<style>
-    
-</style>
+<style></style>

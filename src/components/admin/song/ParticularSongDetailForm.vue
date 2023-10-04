@@ -2,7 +2,7 @@
   <div style="display: flex; justify-content: space-between;">
     <div class="d-flex">
       <div class="admin-song-img-wrapper">
-        <v-img class="mx-auto" height="200" :src="songThumbnail"> </v-img>
+        <v-img class="mx-auto" height="200" :src="getSongImage(songInfo.link)"> </v-img>
       </div>
       <div style="margin: 8px">
         <div>{{ songInfo.title }}</div>
@@ -43,11 +43,24 @@
           삭제
         </v-btn>
       </div>
+      <div v-if="!isLyricModify">
+        <v-btn class="particular-song-btn" @click="openGiveWarningModal">
+          경고 주기
+        </v-btn>
+      </div>
     </div>
+    <v-dialog v-model="openGiveWarning" max-width="600px">
+      <AdminGiveWarningForm 
+        :selectedWarningCategory="selectedWarningCategory"
+        @giveWarning="giveWarning"
+        @cancelWarning="cancelWarning"/>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import AdminGiveWarningForm from "@/components/admin/warning/AdminGiveWarningForm.vue"
+
 export default {
   props: {
     songInfo: {
@@ -59,10 +72,15 @@ export default {
       required: true
     }
   },
+  components: {
+    AdminGiveWarningForm
+  },
   data() {
     return {
       isLyricModify: false,
-      modifiedLyrics: ""
+      modifiedLyrics: "",
+
+      openGiveWarning: false
     }
   },
   methods: {
@@ -70,12 +88,16 @@ export default {
       this.modifiedLyrics = this.songInfo.lyrics
       this.isLyricModify = false
     },
-    getImage(link) {
-      return (
-        "https://img.youtube.com/vi/" +
-        link.substring(link.lastIndexOf("=") + 1) +
-        "/mqdefault.jpg"
-      );
+    getSongImage(link) {
+      if (!link) {
+        return require("@/assets/images/Logo_only_small-removebg-preview.png")
+      } else {
+        return (
+          "https://img.youtube.com/vi/" +
+          link.substring(link.lastIndexOf("=") + 1) +
+          "/mqdefault.jpg"
+        );
+      }
     },
     modifyLyrics() {
       const songId = this.songInfo.songId
@@ -102,7 +124,21 @@ export default {
     blockSong() {
       const selectedSongId = this.songInfo.songId
       this.$emit('blockSong', selectedSongId)
-    }
+    },
+
+    openGiveWarningModal() {
+      this.selectedWarningCategory = "SONG"
+      this.openGiveWarning = true
+    },
+
+    giveWarning(payload) {
+      this.$emit("giveWarning", payload)
+      this.openGiveWarning = false
+    },
+
+    cancelWarning() {
+      this.openGiveWarning = false
+    },
   },
   watch: {
     isLyricModify(newVal) {

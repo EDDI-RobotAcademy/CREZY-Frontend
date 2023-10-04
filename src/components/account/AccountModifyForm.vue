@@ -3,8 +3,8 @@
         <v-form @submitAccountInfo.prevent="onSubmit" ref="form">
             <h2 class="account-modify-title">회원 정보</h2>
             <div class="account-modify-bigbox">
-                <ul class="account-modify-table">
-                    <li>
+                <div class="account-modify-table">
+                    <li style="list-style: none;">
                         <dl>
                             <div>
                                 <dd class="profile-image-container">
@@ -24,28 +24,25 @@
                                 </dd>
                                 </dd>
                             </div>
-
                         </dl>
-                        <dl>
-                            <dt>이메일</dt>
-                            <div style="color: rgb(157, 155, 155);">
-                                <dd id="email">{{ account.email }}</dd>
-                            </div>
-                        </dl>
-                        <dl>
-                            <dt>닉네임</dt>
-                            <div style=" margin-bottom: 10px;">
-
-                                <dd v-if="!isChangeNickname" @click="startEditNickname">
-                                    {{ account.nickname }}
-                                    <v-icon style="font-size:14px; left: 5px; bottom: 2px;">mdi-pencil</v-icon>
-
-                                </dd>
-                                <dd v-else>
-
-                                    <input ref="nicknameInput" v-model="newNickname" type="text" style="color: white;" />
-
-                                    <div>
+                        <div style="margin-top: 10px; padding: 10px;">
+                            <dl>
+                                <dt>이메일</dt>
+                                <div style="color: rgb(157, 155, 155);">
+                                    <dd id="email">{{ account.email }}</dd>
+                                </div>
+                            </dl>
+                            <dl>
+                                <dt>닉네임</dt>
+                                <div>
+                                    <dd v-if="!isChangeNickname" @click="startEditNickname">
+                                        {{ account.nickname }}
+                                        <v-icon
+                                            style="font-size:14px; left: 5px; bottom: 2px; cursor: pointer;">mdi-pencil</v-icon>
+                                    </dd>
+                                    <dd v-else>
+                                        <input ref="nicknameInput" v-model="newNickname" type="text"
+                                            style="color: white; border: 1px solid white; outline: none; border-radius: 5px;" />
                                         <v-btn class="account-modify-button" style="height: 23px;" @click="checkNickname()">
                                             중복확인
                                         </v-btn>
@@ -53,17 +50,20 @@
                                             @click="cancelChangeNickname">
                                             취소
                                         </v-btn>
-                                    </div>
-                                </dd>
-                            </div>
-                        </dl>
+                                        <div style="font-size: 12px; margin-top: 5px;">닉네임은 2~6글자로 한글, 영어대소문자, 숫자만 가능합니다
+                                        </div>
+
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
                         <div v-if="isChangeImage || isChangeNickname">
-                            <v-btn class="account-save-button" @click="submitAccountInfo()">
-                                저장하기
-                            </v-btn>
+                            <button class="account-save-button" @click="submitAccountInfo()">
+                                저장
+                            </button>
                         </div>
                     </li>
-                </ul>
+                </div>
                 <div>
                     <dd class="withdrawal-letter">회원을 탈퇴하시겠어요?</dd>
                     <button class="withdrawal-button" @click="withdrawSubmit">회원탈퇴</button>
@@ -195,6 +195,7 @@ export default {
             this.file = null;
             this.newProfileImageName = null;
             this.account.profileImageName = null;
+            this.isChangeImage = false;
         },
 
         awsS3Config() {
@@ -278,9 +279,10 @@ export default {
 }
 
 .account-modify-bigbox {
+    padding: 20px;
     display: block;
-    padding: 24px 20px 20px 20px;
     box-sizing: border-box;
+    margin-top: -30px;
 }
 
 .account-modify-bigbox div {
@@ -311,12 +313,14 @@ export default {
 
 .account-modify-table {
     border-bottom: 1px solid rgb(146, 134, 134);
-    padding: 0 20px 30px 0;
+    padding: 10px;
     display: block;
     margin-top: 35px;
+    padding-bottom: -5px;
 }
 
 .account-modify-title {
+    padding: 20px;
     position: relative;
     font-size: 18px;
     font-weight: 700;
@@ -412,14 +416,23 @@ export default {
 
 .account-modify-button,
 .account-cancel-button {
-    background-color: rgba(0, 0, 0, 0.4) !important;
+    background-color: white;
     font-size: 12px;
     width: 20px;
     margin-left: 10px;
+    color: black !important;
 }
 
 .account-save-button {
-    background-color: rgba(0, 0, 0, 0.4) !important;
+    background-color: white;
+    color: black !important;
+    margin-left: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    height: 33px;
+    border-radius: 5px;
+    width: 60px;
 }
 
 .delete-image-button {

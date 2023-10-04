@@ -2,7 +2,8 @@
   <div>
     <AdminParticularPlaylistDetailForm :playlist="playlist" :songInfo="songInfo" @openManage="getSongInfo"
       @deleteThumbnail="removeThumbnail" @changePlaylistName="changePlaylistName" @deletePlaylist="deletePlaylist"
-      @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" />
+      @modifyLyrics="modifyLyrics" @deleteSong="deleteSong" @openSong="openSong" @blockSong="blockSong" 
+      @giveSongWarning="giveSongWarning" @givePlaylistWarning="givePlaylistWarning"/>
   </div>
 </template>
 
@@ -13,6 +14,7 @@ import AdminParticularPlaylistDetailForm from "@/components/admin/playlist/Admin
 
 const adminPlaylistModule = "adminPlaylistModule"
 const adminSongModule = "adminSongModule"
+const adminWarningModule = "adminWarningModule"
 
 export default {
   props: {
@@ -39,6 +41,10 @@ export default {
       'removeSongFromState',
       'requestOpenSongToSpring',
       'requestBlockSongToSpring'
+    ]),
+
+    ...mapActions(adminWarningModule, [
+      'requestGiveWarningToSpring',
     ]),
 
 
@@ -94,6 +100,20 @@ export default {
       await this.requestBlockSongToSpring(selectedSongId)
       await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
       await this.getSongInfo(selectedSongId)
+    },
+
+    async giveSongWarning(payload) {
+      const songId = payload.reportedId
+      await this.requestGiveWarningToSpring(payload)
+      await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
+      await this.getSongInfo(songId)
+    },
+
+    async givePlaylistWarning(payload) {
+      const reportedId = this.selectedPlaylistId
+      const { reportedCategoryType, reportContent } = payload
+      await this.requestGiveWarningToSpring({ reportedCategoryType, reportContent, reportedId })
+      await this.requestPlaylistForAdminToSpring(this.selectedPlaylistId)
     }
   },
   computed: {

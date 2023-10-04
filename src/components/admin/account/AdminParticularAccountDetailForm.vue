@@ -221,7 +221,6 @@ export default {
       this.accountWarnings = false
       const reportedId = this.accountInfo.accountId
       const { reportedCategoryType, reportContent } = payload
-      console.log(payload)
       this.$emit("giveWarning", { reportedCategoryType, reportContent, reportedId })
     },
 

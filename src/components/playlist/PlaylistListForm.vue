@@ -1,23 +1,31 @@
 <template lang="">
   <v-container>
     <v-card class="playlist-list-card" flat>
-      <div class="playlist-list-title-container">
-        <div class="playlist-list-title">Playlists</div>
-        <div style="width: 250px;">
-          <v-text-field class="playlist-search-field" placeholder="Search Playlist" density="compact" variant="underlined" append-inner-icon="mdi-magnify" single-line hide-details
-            @click:append-inner="onClick" v-model="keyword" @keyup.enter="searchPlaylist"></v-text-field>
-        </div>
-        <v-btn-toggle
-          rounded="xl"
-          v-model="selectedBtn"
-          class="btn-toggle"
-          selected-class="selected-toggle-btn"
-          mandatory="force"
-          @click="selectCategory">
-          <v-btn class="toggle-btn" value="recent">Recent</v-btn>
-          <v-btn class="toggle-btn" value="trending">Trending</v-btn>
-        </v-btn-toggle>
-      </div>
+      <v-row>
+        <v-col cols="3">
+          <div class="playlist-list-title">Playlists</div>
+        </v-col>
+        <v-col cols="6" style="padding: 0 !important">
+          <div class="playlist-search-field-wrapper">
+            <div style="width: 250px;">
+              <v-text-field class="playlist-search-field" placeholder="Search Playlist" density="compact" variant="underlined" append-inner-icon="mdi-magnify" single-line hide-details
+                @click:append-inner="onClick" v-model="keyword" @keyup.enter="searchPlaylist"></v-text-field>
+            </div>
+          </div>
+        </v-col>
+        <v-col cols="3">
+          <v-btn-toggle
+            rounded="xl"
+            v-model="selectedBtn"
+            class="btn-toggle"
+            selected-class="selected-toggle-btn"
+            mandatory="force"
+            @click="selectCategory">
+            <v-btn class="toggle-btn" value="recent">Recent</v-btn>
+            <v-btn class="toggle-btn" value="trending">Trending</v-btn>
+          </v-btn-toggle>
+        </v-col>
+      </v-row>
 
       <div class="playlist-list">
         <v-row>
@@ -154,15 +162,13 @@ export default {
   background-color: rgba(0, 0, 0, 0.4) !important;
 }
 
-.playlist-list-title-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .playlist-list-title {
   font-size: 22px;
   color: #ccff00;
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+  height: 100%
 }
 
 .playlist-list {
@@ -241,5 +247,15 @@ export default {
 .playlist-search-field {
   color: greenyellow;
   font-size: 12px;
+  padding: 0 !important;
+}
+
+.playlist-search-field-wrapper {
+  width: 100%; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items:center; 
+  height: 80%;
 }
 </style>
