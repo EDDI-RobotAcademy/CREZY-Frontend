@@ -141,8 +141,9 @@ export default {
   methods: {
     selectSong(songId, index) {
       if (this.selectedSongId != songId) {
-         this.selectedSongId = songId;
-         this.playSong(index)
+        this.currentIframe.pauseVideo()
+        this.selectedSongId = songId;
+        this.playSong(index)
       }
       else {
         this.selectedSongId = ''
@@ -222,15 +223,15 @@ export default {
       console.log("onPlayerReady");
       this.currentIframe = event.target;
 
-      // if (this.progressInterval) {
-      //   clearInterval(this.progressInterval);
-      // }
+      if (this.progressInterval) {
+        clearInterval(this.progressInterval);
+      }
 
-      // this.progressInterval = setInterval(() => {
-      //   this.updateProgressBar();
-      //   this.currentTimeText = this.formatTime(this.currentTime);
-      //   this.totalTimeText = this.formatTime(this.duration);
-      // }, 1000);
+      this.progressInterval = setInterval(() => {
+        this.updateProgressBar();
+        this.currentTimeText = this.formatTime(this.currentTime);
+        this.totalTimeText = this.formatTime(this.duration);
+      }, 1000);
     },
 
     playSong(index) {
@@ -289,14 +290,14 @@ export default {
     },
     updateProgressBar() {
       if (!this.ytPlayer) return;
-      // if (this.ytPlayer.getPlayerState() == 0) {
-      //   this.onPlayerStateChange();
-      // }
+      if (this.ytPlayer.getPlayerState() == 0) {
+        this.onPlayerStateChange();
+      }
       const duration = this.ytPlayer.getDuration();
       const currentTime = this.ytPlayer.getCurrentTime();
       if (!isNaN(duration)) {
         this.duration = duration;
-
+        
         this.currentTime = currentTime;
         const progressBar = document.getElementById("progress-bar");
         if (progressBar) {
@@ -356,7 +357,17 @@ export default {
   },
   mounted() {
     this.loadYouTubeApi();
-  }
+  },
+  beforeUnmount() {
+    clearInterval(this.progressInterval);
+    this.progressInterval = null;
+
+    if (this.ytPlayer) {
+      this.ytPlayer.destroy();
+
+      console.log("destroy");
+    }
+  },
 };
 </script>
 
