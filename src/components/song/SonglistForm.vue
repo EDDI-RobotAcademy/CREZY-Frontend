@@ -120,6 +120,7 @@ export default {
             isChangeSongOrder: false,
             previousSongOrder: [],
 
+            initialize: false,
         }
     },
     methods: {
@@ -203,7 +204,21 @@ export default {
                 this.isChangeSongOrder = false;
             }
         },
-    }
+        savePreviousSongList() {
+            if (this.playlist.songlist && !this.initialize) {
+                this.previousSongOrder = [...this.playlist.songlist]
+                this.initialize = true
+            }
+        }
+    },
+    watch: {
+        playlist: {
+            immediate: true,
+            handler() {
+                this.savePreviousSongList();
+            },
+        },
+    },
 }
 </script>
 <style>
