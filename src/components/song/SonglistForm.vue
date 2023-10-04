@@ -118,8 +118,7 @@ export default {
             draggedIndex: null,
             dragOverIndex: null,
             isChangeSongOrder: false,
-            previousSongOrder: [],
-
+            previousSongOrder: [...this.playlist.songlist],
         }
     },
     methods: {
