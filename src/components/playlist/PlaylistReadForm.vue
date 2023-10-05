@@ -85,6 +85,7 @@
               width: 100%;
               border-collapse: separate;
               border-spacing: 0 15px;
+              overflow-x: visible;
             ">
             <tbody>
               <tr v-for="(song, index) in playlist.songlist" :key="index" @click="playSong(index)"
@@ -95,11 +96,11 @@
                 <td style="padding-right: 10px">{{ song.title }}</td>
                 <td>{{ song.singer }}</td>
                 <td>
-                  <div style="position: relative; display: flex;">
+                  <div style="display: flex;">
                     <v-menu v-model="menuIsOpen" @click:outside="closeMenu(currentIdx)">
                       <template v-slot:activator="{ attrs, on }">
                         <div class="playlist-button-container">
-                          <button small @click="playlistButton(index)" v-bind="attrs" v-on="on"
+                          <button small @click="playlistButton(index, $event)" v-bind="attrs" v-on="on"
                             style="margin-left: 10px;">
                             <v-icon style="color: white">mdi-playlist-music</v-icon>
                           </button>
@@ -511,7 +512,9 @@ export default {
       }
     },
 
-    playlistButton(index) {
+    playlistButton(index, event) {
+      event.stopPropagation();
+
       this.menuIsOpen = !this.menuIsOpen
       this.isPlaylistButton[index] = !this.isPlaylistButton[index];
       // this.$set(this.isPlaylistButton, index, !this.isPlaylistButton[index]);
@@ -684,7 +687,8 @@ export default {
 }
 
 .playlist-table {
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-y: visible;
   /* padding-right: 15px; */
   height: 450px !important;
 }
@@ -698,10 +702,6 @@ export default {
 }
 
 .playlist-table::-webkit-scrollbar-corner {
-  display: none;
-}
-
-.playlist-table::-webkit-scrollbar-horizontal {
   display: none;
 }
 
