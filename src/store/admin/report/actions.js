@@ -3,7 +3,6 @@ import {
     REQUEST_ACCOUNT_REPORT_DETAIL_TO_SPRING,
     REQUEST_PLAYLIST_REPORT_DETAIL_TO_SPRING,
     REQUEST_SONG_REPORT_DETAIL_TO_SPRING,
-    REQUEST_REPORT_LIST_TOTAL_TO_SPRING,
     REQUEST_REPORT_STATUS_COUNT_TO_SPRING
   } from "./mutation-types"
   import axiosInst from "@/utility/axiosInst"
@@ -12,20 +11,13 @@ import {
       
     async requestReportListToSpring({ commit }, payload ) {
       const userToken = localStorage.getItem('userToken');
-      const  page  = payload;
-          return axiosInst.springAxiosInst.get(`/admin-report/list`,
-          { 
-            params: { page: page },
-            headers: { Authorization: userToken } 
-          }).then((res) => {
+      const { page, statusType, categoryType } = payload;
+          return axiosInst.springAxiosInst.post('/admin-report/list',
+          { page, statusType, categoryType },
+          { headers: { Authorization: userToken }})
+          .then((res) => {
             commit(REQUEST_REPORT_LIST_TO_SPRING, res.data);
           });
-    }, 
-  
-    async requestReportListTotalToSpring({ commit }, ) {
-        return axiosInst.springAxiosInst.get(`/admin-report/list/total-page`,).then((res) => {
-          commit(REQUEST_REPORT_LIST_TOTAL_TO_SPRING, res.data);
-        });   
     }, 
 
     async requestReportStatusCountToSpring({ commit }, ) {

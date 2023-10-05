@@ -90,7 +90,8 @@
       <SongAddForm
         :myPlaylists="myPlaylists"
         @cancel="cancelAddSong"
-        @addSongToPlaylist="addSongToPlaylist"/>
+        @addSongToPlaylist="addSongToPlaylist"
+        @submit="createAndAddSongToPlaylist"/>
     </v-dialog>
   </div>
 </template>
@@ -337,6 +338,22 @@ export default {
       
       this.showAddSongDialog = false
       this.$emit("addSongToPlaylist", { playlistId, title, singer, link, lyrics })
+    },
+
+    createAndAddSongToPlaylist(payload) {
+      const newPlaylist = {
+        playlistName: payload.playlistName,
+        playlistThumbnail: payload.playlistThumbnail,
+      };
+
+      const title = this.currentSong.title
+      const singer = this.currentSong.singer
+      const link = this.currentSong.link
+      const lyrics = this.currentSong.lyrics
+
+      this.$emit("submit", {
+        newPlaylist, title, singer, link, lyrics
+      })
     }
   },
   watch: {

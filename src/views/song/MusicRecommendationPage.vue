@@ -1,7 +1,7 @@
 <template>
   <div>
     <MusicRecommendationForm :musicList="musicList" :myPlaylists="myPlaylists" @addSongToPlaylist="addSongToPlaylist"
-      @openAddSongDialog="openAddSongDialog" @submit="onSubmitForm" />
+      @openAddSongDialog="openAddSongDialog" @submit="onSubmitForm"/>
   </div>
 </template>
 
@@ -53,8 +53,22 @@ export default {
     },
 
     async onSubmitForm(payload) {
-      await this.requestPlaylistRegisterToSpring(payload)
-      await this.requestMyPlaylistsToSpring()
+      const newPlaylist = {
+        playlistName: payload.newPlaylist.playlistName,
+        playlistThumbnail: payload.newPlaylist.playlistThumbnail,
+      };
+      const newPlaylistId = await this.requestPlaylistRegisterToSpring(newPlaylist);
+
+      const songToAdd = {
+        playlistId: newPlaylistId,
+        title: payload.title,
+        singer: payload.singer,
+        link: payload.link,
+        lyrics: payload.lyrics,
+      };
+      await this.addSongToPlaylist(songToAdd);
+
+      await this.requestMyPlaylistsToSpring();
     }
   },
   mounted() {
