@@ -75,13 +75,16 @@ export default {
         this.selectedStatusType = payload.selectedStatusType
         await this.requestReportListToSpring({ page, statusType, categoryType })
       }
-      if (payload.selectedCategory !== this.selectedCategory) {
+      else if (payload.selectedCategory !== this.selectedCategory) {
         this.currentPage = 1
         const page = this.currentPage
         const statusType = payload.selectedStatusType
         const categoryType = payload.selectedCategory
         this.selectedCategory = payload.selectedCategory
         await this.requestReportListToSpring({ page, statusType, categoryType })
+      }
+      else {
+        this.getPaginatedReports()
       }
     },
 
@@ -146,7 +149,6 @@ export default {
     } else {
       await this.requestReportStatusCountToSpring()
       await this.getPaginatedReports()
-      console.log(this.reportList[0])
     }
   }
 };
