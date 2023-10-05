@@ -1,10 +1,10 @@
 <template>
   <div>
     <AdminOverallReportsForm @openManage="getReportInfo" @changeStatusTypeApprove="changeStatusTypeApprove"
-      @changeStatusTypeReturn="changeStatusTypeReturn" :reportList="reportList" :accountReportDetail="accountReportDetail"
-      :playlistReportDetail="playlistReportDetail" :songReportDetail="songReportDetail"
+      @changeStatusTypeReturn="changeStatusTypeReturn" @getReports="getReports" :reportList="reportList" 
+      :accountReportDetail="accountReportDetail" :playlistReportDetail="playlistReportDetail" :songReportDetail="songReportDetail"
       :reportStatusCount="reportStatusCount" />
-    <v-pagination style="color: white" v-model="currentPage" :length="this.reportListNum" @click="getPaginatedReports">
+    <v-pagination style="color: white" v-model="currentPage" :length="reportListNum" @click="getPaginatedReports">
     </v-pagination>
 
   </div>
@@ -23,6 +23,8 @@ export default {
   data() {
     return {
       currentPage: 1,
+      selectedStatusType: 'TOTAL',
+      selectedCategory: 'TOTAL',
     }
   },
   components: {
@@ -36,7 +38,6 @@ export default {
       "requestPlaylistReportDetailToSpring",
       "requestSongReportDetailToSpring",
       "requestChangeReportStatusToSpring",
-      "requestReportListTotalToSpring",
       "requestReportStatusCountToSpring"
     ]),
 
@@ -59,8 +60,29 @@ export default {
 
     async getPaginatedReports() {
       const page = this.currentPage
-      await this.requestReportListToSpring(page)
+      const statusType = this.selectedStatusType
+      const categoryType = this.selectedCategory
+      await this.requestReportListToSpring({ page, statusType, categoryType })
 
+    },
+
+    async getReports(payload) {
+      if (payload.selectedStatusType !== this.selectedStatusType) {
+        this.currentPage = 1
+        const page = this.currentPage
+        const statusType = payload.selectedStatusType
+        const categoryType = payload.selectedCategory
+        this.selectedStatusType = payload.selectedStatusType
+        await this.requestReportListToSpring({ page, statusType, categoryType })
+      }
+      if (payload.selectedCategory !== this.selectedCategory) {
+        this.currentPage = 1
+        const page = this.currentPage
+        const statusType = payload.selectedStatusType
+        const categoryType = payload.selectedCategory
+        this.selectedCategory = payload.selectedCategory
+        await this.requestReportListToSpring({ page, statusType, categoryType })
+      }
     },
 
     async getReportInfo(selectedReportId) {
@@ -98,8 +120,7 @@ export default {
       await this.requestReportStatusCountToSpring();
     },
 
-    async foundReport(selectedReportId) {
-      await this.requestReportListToSpring(this.currentPage);
+    foundReport(selectedReportId) {
       return this.reportList.find(report => report.reportId === selectedReportId);
     },
 
@@ -113,12 +134,9 @@ export default {
       "songReportDetail",
       "reportListNum",
       "reportStatusCount"
-    ],
-
-    ),
-
-
+    ]),
   },
+
   async mounted() {
     if (
       !localStorage.getItem("roleType") === "ADMIN" ||
@@ -126,12 +144,11 @@ export default {
     ) {
       this.$router.push({ name: "home" });
     } else {
-      await this.requestReportListToSpring(this.currentPage);
+      await this.requestReportStatusCountToSpring()
+      await this.getPaginatedReports()
+      console.log(this.reportList[0])
     }
-    await this.requestReportListTotalToSpring();
-    await this.requestReportStatusCountToSpring();
-
-  },
+  }
 };
 </script>
 
