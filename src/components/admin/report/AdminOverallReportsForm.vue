@@ -118,6 +118,7 @@ export default {
       selectedReportId: '',
       chooseReportCategory: false,
       selectedCategory: '전체',
+      selectedCategoryValue: 'TOTAL',
       reportCategories: [
         { value: 'TOTAL', name: "전체"}, 
         { value: 'ACCOUNT', name: "계정"},
@@ -127,8 +128,8 @@ export default {
       selectedStatusType: 'TOTAL',
 
       statusTypes: [
-        { title: "승인된 신고 개수", value: "APPROVED" },
-        { title: "반려된 신고 개수", value: "RETURNED" },
+        { title: "승인된 신고 개수", value: "APPROVE" },
+        { title: "반려된 신고 개수", value: "RETURN" },
         { title: "총 신고 개수", value: "TOTAL" },
         { title: "처리할 신고 개수", value: "HOLDON" },
       ]
@@ -172,6 +173,7 @@ export default {
 
     selectCategory(category) {
       this.selectedCategory = category.name
+      this.selectedCategoryValue = category.value
       const selectedStatusType = this.selectedStatusType
       const selectedCategory = category.value
       
@@ -188,10 +190,10 @@ export default {
     },
 
     statusCount(value) {
-      if (value === "APPROVED") {
+      if (value === "APPROVE") {
         return this.reportStatusCount.approveCount; 
       }
-      if (value === "RETURNED") {
+      if (value === "RETURN") {
         return this.reportStatusCount.returnCount;
       }
       if (value === "TOTAL") {
@@ -205,12 +207,13 @@ export default {
     selectStatusType(value) {
       this.selectedStatusType = value
       const selectedStatusType = value
-      const selectedCategory = this.selectedCategory
+      const selectedCategory = this.selectedCategoryValue
       this.getReports({ selectedStatusType, selectedCategory })
     },
 
     getReports(payload) {
       this.$emit("getReports", payload)
+      console.log(this.reportList[0])
     }
   },
 }
