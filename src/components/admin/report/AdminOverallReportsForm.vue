@@ -213,7 +213,6 @@ export default {
 
     getReports(payload) {
       this.$emit("getReports", payload)
-      console.log(this.reportList[0])
     }
   },
 }
