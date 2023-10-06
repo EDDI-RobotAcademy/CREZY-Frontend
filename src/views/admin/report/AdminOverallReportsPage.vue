@@ -108,7 +108,7 @@ export default {
         reportStatus: "APPROVE",
       };
       await this.requestChangeReportStatusToSpring(payload);
-      await this.requestReportListToSpring(this.currentPage);
+      await this.getPaginatedReports()
       await this.requestReportStatusCountToSpring();
 
     },
@@ -119,7 +119,7 @@ export default {
         reportStatus: "RETURN",
       };
       await this.requestChangeReportStatusToSpring(payload);
-      await this.requestReportListToSpring(this.currentPage);
+      await this.getPaginatedReports()
       await this.requestReportStatusCountToSpring();
     },
 
